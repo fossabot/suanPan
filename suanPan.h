@@ -19,7 +19,7 @@
 #define SUANPAN_H
 
 constexpr auto SUANPAN_MAJOR = 1;
-constexpr auto SUANPAN_MINOR = 0;
+constexpr auto SUANPAN_MINOR = 1;
 constexpr auto SUANPAN_PATCH = 0;
 constexpr auto SUANPAN_CODE = "     Acrux";
 constexpr auto SUANPAN_ARCH = 64;
@@ -181,10 +181,10 @@ SUANPAN_EXPORT const char* SUANPAN_EXE;
 #include <Toolbox/debug.h>
 
 #include <armadillo/armadillo>
+#include <filesystem>
+#include <future>
 #include <memory>
 #include <typeinfo>
-#include <future>
-#include <filesystem>
 namespace fs = std::filesystem;
 
 #ifdef SUANPAN_MAGMA
@@ -199,8 +199,8 @@ namespace fs = std::filesystem;
 #ifdef SUANPAN_MSVC
 #include <tbb/tbbmalloc_proxy.h>
 #endif
-#include <tbb/parallel_sort.h>
 #include <tbb/parallel_for_each.h>
+#include <tbb/parallel_sort.h>
 #define suanpan_sort tbb::parallel_sort
 #define suanpan_for_each tbb::parallel_for_each
 #else

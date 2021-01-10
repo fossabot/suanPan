@@ -10,7 +10,7 @@ The `.clang-format` generated can also be used to override format settings in va
 
 1. Please use `snake_case` instead of `CamelCase`.
 2. Please use meaningful variable names instead of abstract names such as `a`, `tt`, etc.
-3. Please avoid abbreviations, except for common ones such as `ptr` and `tmp`. For variables related to the corresponding theories, they can be spelled out. It does not hurt to define `epsilon_vol` instead of `ev` to represent volumetric strain variable. This is for the ease of readability and maintainance.
+3. Please avoid abbreviations, except for common ones such as `ptr` and `tmp`. For variables related to the corresponding theories, they can be spelled out. It does not hurt to define `epsilon_vol` instead of `ev` to represent volumetric strain variable. This is for the ease of readability and maintenance.
 
 ## Some Tips
 
