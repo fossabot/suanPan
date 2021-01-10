@@ -35,7 +35,7 @@ matrix:
         - git tag $SP_TIME
       deploy:
         provider: releases
-        github_token: $TOKEN
+        api_key: $TOKEN
         file: suanPan-macos-openblas.tar.gz
         overwrite: true
         skip_cleanup: true

@@ -56,8 +56,8 @@ void argument_parser(const int argc, char** argv) {
 			} else if(is_equal(argv[I], "-ctest") || is_equal(argv[I], "--catch2test")) {
 				catchtest_main(argc, argv);
 				return;
-			} else if(is_equal(argv[I], "-ma") || is_equal(argv[I], "--magma")) {
 #ifdef SUANPAN_MAGMA
+			} else if(is_equal(argv[I], "-ma") || is_equal(argv[I], "--magma")) {
 				magma_print_environment();
 #endif
 			}
@@ -154,7 +154,7 @@ void print_version() {
 	suanpan_info("    The binary is compiled on %s\n", __DATE__);
 	suanpan_info("    The source code of suanPan is hosted on GitHub. https://tlcfem.github.io/suanPan/\n");
 	suanpan_info("    The documentation is hosted on GitBook and readthedocs. https://tlcfem.gitbook.io/suanpan-manual/ and https://suanpan-manual.readthedocs.io/\n");
-#ifdef ARMA_USE_MKL_ALLOC
+#ifdef MKL_DIRECT_CALL
 	suanpan_info("    The linear algebra support is provided by Armadillo with Intel MKL. http://arma.sourceforge.net/\n");
 #else
 	suanpan_info("    The linear algebra support is provided by Armadillo. http://arma.sourceforge.net/\n");
@@ -178,7 +178,7 @@ void print_helper() {
 	suanpan_info("\t-%-10s  --%-20s%s\n", "np", "noprint", "suppress most console output");
 	suanpan_info("\t-%-10s  --%-20s%s\n", "f", "file", "process model file");
 	suanpan_info("\t-%-10s  --%-20s%s\n", "o", "output", "set output file for logging");
-	suanpan_info("\t-%-10s  --%-20s%s\n", "ma", "magma", "print magma environment");
+	// suanpan_info("\t-%-10s  --%-20s%s\n", "ma", "magma", "print magma environment");
 	suanpan_info("\n");
 }
 
