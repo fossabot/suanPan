@@ -1,0 +1,21 @@
+#include "MetaMat.hpp"
+
+#include "BandMat.hpp"
+#include "BandMatSpike.hpp"
+#include "BandSymmMat.hpp"
+#include "FullMat.hpp"
+#include "FullMatMAGMA.hpp"
+#include "SparseMat.hpp"
+#include "SparseMatMAGMA.hpp"
+#include "SparseMatMUMPS.hpp"
+#include "SparseMatSuperLU.hpp"
+#include "SymmPackMat.hpp"
+
+// my sparse implementation
+#include "comparator.hpp"
+#include "csc_form.hpp"
+#include "csr_form.hpp"
+#include "sparse_form.hpp"
+#include "triplet_form.hpp"
+
+#include "operator_times.hpp"

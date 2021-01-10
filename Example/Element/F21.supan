@@ -1,0 +1,47 @@
+# A TEST MODEL FOR F21 ELEMENT
+
+node 1 0 0
+node 2 1000 0
+
+# material Bilinear1D 1 10 .1 .1
+material MPF 1 1E8 300 .02
+
+section Rectangle2D 1 12 1 1 12
+
+element F21 1 1 2 1 6
+
+fix 1 P 1
+
+cload 1 0 1 2 2
+
+recorder 1 hdf5 Element S 1
+recorder 2 hdf5 Element E 1
+recorder 3 hdf5 Element PE 1
+recorder 4 hdf5 Node U2 2
+recorder 5 hdf5 Node Rf2 2
+
+step static 1 1
+set ini_step_size .1
+set fixed_step_size true
+set band_mat 0
+set symm_mat 0
+
+converger RelIncreDisp 1 1E-12 10 1
+
+analyze
+
+# Node 2:
+#    1.0000e+03            0
+# Displacement:
+#    4.1821e-19   6.2790e+00   8.1392e-03
+# Resistance:
+#   -1.7913e-20   1.0000e+00  -2.1540e-05
+peek node 2
+
+peek element 1
+
+# save recorder 1 2 3 4 5
+
+reset
+clear
+exit

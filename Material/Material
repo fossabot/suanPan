@@ -1,0 +1,8 @@
+#include "Material1D/Material1D"
+#include "Material2D/Material2D"
+#include "Material3D/Material3D"
+
+#include "Material.h"
+#include "MaterialTemplate.h"
+#include "MaterialParser.h"
+#include "MaterialTester.h"

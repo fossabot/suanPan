@@ -1,0 +1,9 @@
+#include "Criterion.h"
+
+#include "MaxDisplacement.h"
+#include "MaxHistory.h"
+#include "MaxResistance.h"
+#include "MinDisplacement.h"
+#include "MinResistance.h"
+#include "NodeBasedCriterion.h"
+#include "StrainEnergyEvolution.h"

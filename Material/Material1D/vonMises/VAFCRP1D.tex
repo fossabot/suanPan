@@ -1,0 +1,105 @@
+\documentclass[a4paper,10pt,fleqn]{article}
+\usepackage[margin=20mm]{geometry}
+\usepackage{mathpazo,amsmath,amsfonts,amssymb}
+\newcommand*{\md}[1]{\mathrm{d}#1}
+\newcommand*{\sign}[1]{\mathrm{sign}\left(#1\right)}
+\newcommand*{\pfrac}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand*{\ddfrac}[2]{\dfrac{\md#1}{\md#2}}
+\title{Armstrong--Frederick Steel Model}
+\author{Theodore Chang}
+\date{}\pagestyle{empty}
+\begin{document}
+\noindent{}This document introduces the implementation of the uniaxial version of the VAFCRP Model.
+\section{Yield Function}
+A von Mises yielding function is used.
+\begin{gather}
+F=\Big|\eta\Big|-k,
+\end{gather}
+in which $\eta=\sigma-\beta$ is the shifted stress, $\beta$ is the back stress and $k$ is the isotropic hardening stress.
+\section{Flow Rule}
+The associated plasticity flow is adopted. The plastic strain rate is then
+\begin{gather}
+\md{\varepsilon^p}=\gamma\pfrac{F}{\sigma}=\gamma{}n=\gamma~\sign{\eta},
+\end{gather}
+where $n=\dfrac{\eta}{\Big|\eta\Big|}=\sign{\eta}$. The corresponding accumulated plastic strain rate is
+\begin{gather}
+\md{p}=\Big|\md{\varepsilon^p}\Big|=\gamma.
+\end{gather}
+\section{Hardening Rules}
+An exponential function with a linear component is used for isotropic hardening stress.
+\begin{gather}
+k=\sigma_y+k_lp+k_s-k_se^{-mp}.
+\end{gather}
+The corresponding derivative is
+\begin{gather}
+\ddfrac{k}{\gamma}=k_l+k_sme^{-mp}.
+\end{gather}
+The rate form of back stress $\displaystyle\beta=\sum\beta^i$ is defined as
+\begin{gather*}
+\md{\beta^i}=a^i\md{\varepsilon^p}-b^i\beta^i\md{p}.
+\end{gather*}
+In terms of $\gamma$, it is $\md{\beta^i}=a^i\gamma{}n-b^i\beta^i\gamma$. The incremental form is thus
+\begin{gather}
+\beta^i=\beta_n^i+a^i\gamma{}n-b^i\beta^i\gamma,\qquad
+\beta^i=\dfrac{\beta_n^i+a^i\gamma{}n}{1+b^i\gamma}.
+\end{gather}
+\section{Plastic Multiplier}
+The rate of plastic multiplier is defined as
+\begin{gather}
+\dfrac{\gamma}{\Delta{}t}=\dot{\gamma}=\dfrac{1}{\mu}\left(\left(\dfrac{\Big|\eta\Big|}{k}\right)^{\dfrac{1}{\epsilon}}-1\right),
+\end{gather}
+in which $\mu$ and $\epsilon$ are two material constants. Equivalently, it is
+\begin{gather}
+R=\Big|\eta\Big|\left(\dfrac{\Delta{}t}{\Delta{}t+\mu\gamma}\right)^\epsilon-k=0.
+\end{gather}
+\section{Incremental Form}
+The shifted stress can be computed as
+\begin{gather}
+\eta=\sigma-\beta=E\left(\varepsilon^{tr}-\varepsilon^p_n-\gamma{}n\right)-\beta=\sigma^{tr}-nE\gamma-\sum\dfrac{\beta_n^i+na^i\gamma}{1+b^i\gamma}
+\end{gather}
+with $\sigma^{tr}=E(\varepsilon^{tr}-\varepsilon^p_n)$. Hence,
+\begin{gather*}
+\Big|\eta\Big|+E\gamma+\sum\dfrac{a^i\gamma}{1+b^i\gamma}=\Big|\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\Big|.
+\end{gather*}
+Eventually,
+\begin{gather}
+\Big|\eta\Big|=\Big|\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\Big|-E\gamma-\sum\dfrac{a^i\gamma}{1+b^i\gamma}.
+\end{gather}
+Then $\eta$ can be expressed as,
+\begin{gather*}
+\eta=\dfrac{\Big|\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\Big|-E\gamma-\sum\dfrac{a^i\gamma}{1+b^i\gamma}}{\Big|\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\Big|}\left(\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\right).
+\end{gather*}
+It is equivalent to
+\begin{gather*}
+\eta=\left(\Big|\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\Big|-E\gamma-\sum\dfrac{a^i\gamma}{1+b^i\gamma}\right)u.
+\end{gather*}
+It is easy to see that $n=u$ with $\displaystyle{}u=\dfrac{\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}}{\Big|\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\Big|}$.
+
+The corresponding derivatives are
+\begin{gather*}
+\pfrac{\Big|\eta\Big|}{\varepsilon^{tr}}=uE,\qquad\pfrac{\Big|\eta\Big|}{\gamma}=\sum\dfrac{b^i\beta_n^iu-a^i}{(1+b^i\gamma)^2}-E.
+\end{gather*}
+\section{Scalar Equation Iteration}
+The residual equation is then
+\begin{gather}
+R=\left(\Big|\sigma^{tr}-\sum\dfrac{\beta_n^i}{1+b^i\gamma}\Big|-E\gamma-\sum\dfrac{a^i\gamma}{1+b^i\gamma}\right)\left(\dfrac{\Delta{}t}{\Delta{}t+\mu\gamma}\right)^\epsilon-\left(\sigma_y+k_l\left(p_n+\gamma\right)+k_s\left(1-e^{-m\left(p_n+\gamma\right)}\right)\right).
+\end{gather}
+The corresponding derivative is then
+\begin{gather}
+\pfrac{R}{\gamma}=\left(\sum\dfrac{b^i\beta_n^iu-a^i}{(1+b^i\gamma)^2}-E-\dfrac{\epsilon\mu\Big|\eta\Big|}{\Delta{}t+\mu\gamma}\right)\left(\dfrac{\Delta{}t}{\Delta{}t+\mu\gamma}\right)^\epsilon-\ddfrac{k}{\gamma},\qquad
+\pfrac{R}{\varepsilon^{tr}}=uE\left(\dfrac{\Delta{}t}{\Delta{}t+\mu\gamma}\right)^\epsilon.
+\end{gather}
+\section{Consistent Tangent Stiffness}
+For stiffness, $\varepsilon^{tr}$ is now varying, then
+\begin{gather}
+\pfrac{R}{\varepsilon^{tr}}+\pfrac{R}{\gamma}\ddfrac{\gamma}{\varepsilon^{tr}}=0,\qquad\ddfrac{\gamma}{\varepsilon^{tr}}=-\left(\pfrac{R}{\gamma}\right)^{-1}\pfrac{R}{\varepsilon^{tr}}.
+\end{gather}
+Since the stress can be written as
+\begin{gather}
+\sigma=E(\varepsilon^{tr}-\varepsilon^p)=E(\varepsilon^{tr}-\varepsilon^p_n-\Delta\varepsilon^p)=E(\varepsilon^{tr}-\varepsilon^p_n)-E\gamma{}u.
+\end{gather}
+The derivative is
+\begin{gather}
+\ddfrac{\sigma}{\varepsilon^{tr}}=E-Eu\ddfrac{\gamma}{\varepsilon^{tr}}=E+E^2\left(\pfrac{R}{\gamma}\right)^{-1}\left(\dfrac{\Delta{}t}{\Delta{}t+\mu\gamma}\right)^\epsilon.
+\end{gather}
+\end{document}

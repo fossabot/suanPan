@@ -1,0 +1,59 @@
+# A TEST MODEL FOR LEE DAMPING (FULL MODES) MODEL
+
+node 1 0 0
+node 2 1 0
+
+material Elastic1D 1 100
+
+element T2D2 1 1 2 1 1
+element Mass 2 2 100 1
+
+fix 1 1 1
+fix 2 2 1 2
+
+plainrecorder 1 Node U1 2
+plainrecorder 2 Node RF1 2
+plainrecorder 3 Node DF1 2
+
+step static 1 1
+set ini_step_size .1
+set fixed_step_size 1
+
+displacement 1 0 .2 1 2
+
+converger RelIncreDisp 1 1E-10 3 1
+
+step dynamic 2 6
+set ini_step_size .02
+set fixed_step_size 1
+set sparse_mat 1
+
+integrator LeeNewmarkFull 1 .25 .5 \
+-type0 .005 1 \
+-type1 .005 1 2 \
+-type1 .01 1 3 \
+-type2 .01 1 2 1 \
+-type2 .01 1 3 2 \
+-type3 .01 1 .5
+
+converger RelIncreDisp 2 1E-10 10 1
+
+analyze
+
+# Node 2:
+#    1.0000        0
+# Displacement:
+#    0.1394        0
+# Resistance:
+#    13.9376         0
+# Velocity:
+#    0.0440        0
+# Acceleration:
+#   -0.1438        0
+peek node 2
+
+# save recorder 1 2 3
+
+peek integrator 1
+
+exit

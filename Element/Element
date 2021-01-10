@@ -1,0 +1,20 @@
+#include "Beam/Beam"
+#include "Cube/Cube"
+#include "Membrane/Membrane"
+#include "Modifier/Modifier"
+#include "Plate/Plate"
+#include "Shell/Shell"
+#include "Special/Special"
+#include "Truss/Truss"
+#include "Utility/Utility"
+#include "Visualisation/Visualisation"
+#include "Patch/Patch"
+
+#include "Element.h"
+#include "ElementParser.h"
+#include "ElementTemplate.h"
+#include "MaterialElement.h"
+#include "SectionElement.h"
+
+#include <Section/Section.h>
+#include <Material/Material.h>

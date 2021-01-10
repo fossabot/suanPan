@@ -1,0 +1,21 @@
+coverage:
+  status:
+    project:
+      default:
+        threshould: .1%
+  range: 60..75
+  round: nearest
+  precision: 4
+ignore:
+  - "Toolbox/amd-src"
+  - "Toolbox/arpack-src"
+  - "Toolbox/feast-src"
+  - "Toolbox/lapack-ext"
+  - "Toolbox/mumps-src"
+  - "Toolbox/superlu-src"
+  - "Toolbox/superlumt-src"
+  - "Domain/MetaMat"
+  - "Include"
+  - "MSVC"
+  - "UnitTest"
+  - "Developer"

@@ -1,0 +1,48 @@
+name: Stable Release
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  linux:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone
+        uses: actions/checkout@v2
+      - name: Compile
+        run: |
+          echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
+          sudo apt update
+          sudo apt install gcc g++ gfortran libglu1-mesa-dev freeglut3-dev mesa-common-dev
+          wget https://www.vtk.org/files/release/9.0/VTK-9.0.1.tar.gz
+          tar -xf VTK-9.0.1.tar.gz
+          mkdir VTK-build && cd VTK-build
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ../VTK-9.0.1
+          sudo make install -j4
+          cd ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON .
+          make -j4
+          cp Enhancement/suanPan.sh .
+          cp Enhancement/suanPan.sublime-completions .
+          cp Enhancement/suanPan.sublime-syntax .
+          cp Libs/gcc-linux/libtbb.so .
+          cp Libs/gcc-linux/libtbb.so.2 .
+          cp Libs/gcc-linux/libtbbmalloc.so .
+          cp Libs/gcc-linux/libtbbmalloc.so.2 .
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so .
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 .
+          tar -cvzf suanPan-linux-openblas-vtk.tar.gz suanPan suanPan.sh suanPan.sublime-completions suanPan.sublime-syntax LICENSE README.md CHANGELOG.md libtbb.so libtbb.so.2 libtbbmalloc.so libtbbmalloc.so.2 libtbbmalloc_proxy.so libtbbmalloc_proxy.so.2
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: suanPan-linux-openblas-vtk
+          path: suanPan-linux-openblas-vtk.tar.gz
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: suanPan-linux-openblas-vtk.tar.gz
+          asset_name: suanPan-linux-openblas-vtk.tar.gz
+          tag: ${{ env.SP_TIME }}
+          overwrite: true

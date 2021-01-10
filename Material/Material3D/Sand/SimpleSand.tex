@@ -1,0 +1,138 @@
+\documentclass[11pt,fleqn,3p]{elsarticle}
+\usepackage{amsmath,amsfonts,amssymb,mathpazo,indentfirst}
+\newcommand*{\md}[1]{\mathrm{d}#1}
+\newcommand*{\mT}{\mathrm{T}}
+\newcommand*{\tr}[1]{\mathrm{tr}~#1}
+\newcommand*{\dev}[1]{\mathrm{dev}~#1}
+\newcommand*{\ddfrac}[2]{\dfrac{\md#1}{\md#2}}
+\newcommand*{\pfrac}[2]{\dfrac{\partial#1}{\partial#2}}
+\title{SimpleSand Model}\date{}\author{tlc}
+\begin{document}\pagestyle{empty}
+\section{Yield Function}
+A wedge-like function is chosen to be the yield surface.
+\begin{gather*}
+F=\big|\mathbold{s}+p\mathbold{\alpha}\big|+mp=\big|\mathbold{\eta}\big|+mp,
+\end{gather*}
+where $\mathbold{s}=\dev{\mathbold{\sigma}}$ is the deviatoric stress, $p=\dfrac{1}{3}\tr{\mathbold{\sigma}}$ is the hydrostatic stress, $\alpha$ is the so called back stress ratio and $m$ characterises the size of the wedge. For simplicity, $m$ is assumed to be a constant in this model.
+\section{Flow Rule}
+A non-associated plastic flow is used, the corresponding flow rule is defined as follows.
+\begin{gather*}
+\Delta\mathbold{\varepsilon}^p=\gamma\left(\mathbold{n}+\dfrac{1}{3}A\left(\alpha^d-\mathbold{\alpha}:\mathbold{n}\right)\mathbold{I}\right),
+\end{gather*}
+where $D=A\left(\alpha^d-\mathbold{\alpha}:\mathbold{n}\right)$ is the dilatancy parameter, $A$ is a model constant, it can also be defined as a function of current state.
+
+Again for simplicity, the linear elasticity is applied, hence the following expressions hold.
+\begin{gather*}
+\mathbold{s}=\mathbold{s}^{tr}-2G\gamma\mathbold{n},\qquad
+p=p^{tr}-KA\gamma\left(\alpha^d-\mathbold{\alpha}:\mathbold{n}\right).
+\end{gather*}
+A hyper-elastic response can also be applied. However, in that case, the $G$ and $K$ would be zero for zero hydrostatic pressure.
+\section{Hardening Rule}
+The evolution rate of the back stress ratio $\mathbold{\alpha}$ is defined in terms of a proper distance measure from the bounding surface, Here, such a distance measure is chosen to be $\alpha^b\mathbold{n}-h\mathbold{\alpha}$, where $h$ is a model constant. Thus,
+\begin{gather*}
+\Delta\mathbold{\alpha}=\gamma{}\left(\alpha^b\mathbold{n}-h\mathbold{\alpha}\right).
+\end{gather*}
+Essentially, this is similar to the Armstrong--Frederick type kinematic hardening rule.
+\section{Critical State}
+The state parameter is defined to be
+\begin{gather*}
+\psi=v_0\left(1+\tr{\mathbold{\varepsilon}^{tr}}\right)-v_c+\lambda_c\ln\left(\dfrac{p}{p_c}\right),
+\end{gather*}
+where $v_0$ is the initial specific volume, $v_c$ is the corresponding specific volume on the critical line at $p_c$ and $\lambda_c$ is absolute value of the slope of the critical line in $v$--$\ln(-p)$ space.
+
+The Lode angle dependence is removed for simple derivations of the corresponding terms. Hence both the dilatancy surface and bounding surface will be circular cones in the principal stress space.
+
+The dilatancy surface is defined as
+\begin{gather*}
+\alpha^d=\alpha^c\exp\left(n^d\psi\right).
+\end{gather*}
+The corresponding derivatives are
+\begin{gather*}
+\pfrac{\alpha^d}{\mathbold{\varepsilon}^{tr}}=\alpha^dn^dv_0\mathbold{I},\qquad
+\pfrac{\alpha^d}{p}=\alpha^dn^d\dfrac{\lambda_c}{p}.
+\end{gather*}
+
+The bounding surface is defined as
+\begin{gather*}
+\alpha^b=\alpha^c\exp\left(-n^b\psi\right).
+\end{gather*}
+The corresponding derivatives are
+\begin{gather*}
+\pfrac{\alpha^b}{\mathbold{\varepsilon}^{tr}}=-\alpha^bn^bv_0\mathbold{I},\qquad
+\pfrac{\alpha^b}{p}=-\alpha^bn^b\dfrac{\lambda_c}{p}.
+\end{gather*}
+
+The symbol $\mathbold{I}$ denotes the unit second order tensor.
+\section{Local Iteration}
+According to tensor algebra, the following expressions can be derived.
+\begin{gather*}
+\pfrac{|\mathbold{\eta}|}{}=\mathbold{n}:\pfrac{\mathbold{\eta}}{},\qquad
+\pfrac{\mathbold{n}}{}=\dfrac{1}{|\mathbold{\eta}|}\left(\pfrac{\mathbold{\eta}}{}-\mathbold{n}\otimes\left(\mathbold{n}:\pfrac{\mathbold{\eta}}{}\right)\right).
+\end{gather*}
+Hence,
+\begin{gather*}
+\pfrac{|\mathbold{\eta}|}{p}=\mathbold{n}:\mathbold{\alpha},\qquad
+\pfrac{\mathbold{n}}{p}=\dfrac{1}{|\mathbold{\eta}|}\left(\mathbold{\alpha}-\left(\mathbold{n}:\mathbold{\alpha}\right)\mathbold{n}\right),\\
+\pfrac{|\mathbold{\eta}|}{\mathbold{s}}=\mathbold{n}:\mathbf{I},\qquad
+\pfrac{\mathbold{n}}{\mathbold{s}}=\dfrac{1}{|\mathbold{\eta}|}\left(\mathbf{I}-\mathbold{n}\otimes\left(\mathbold{n}:\mathbf{I}\right)\right),\\
+\pfrac{|\mathbold{\eta}|}{\mathbold{\alpha}}=p\mathbold{n}:\mathbf{I},\qquad
+\pfrac{\mathbold{n}}{\mathbold{\alpha}}=\dfrac{p}{|\mathbold{\eta}|}\left(\mathbf{I}-\mathbold{n}\otimes\left(\mathbold{n}:\mathbf{I}\right)\right).
+\end{gather*}
+In summary, there are four residual equations.
+\begin{gather*}
+\mathbold{R}=\left\{\begin{array}{l}
+|\mathbold{\eta}|+mp,\\[3mm]
+p-p^{tr}+KA\gamma\left(\alpha^d-\mathbold{\alpha}:\mathbold{n}\right),\\[3mm]
+\mathbold{s}-\mathbold{s}^{tr}+2G\gamma\mathbold{n},\\[3mm]
+\mathbold{\alpha}_n+\gamma{}\alpha^b\mathbold{n}-\left(\gamma{}h+1\right)\mathbold{\alpha}.
+\end{array}\right.
+\end{gather*}
+
+By defined $\mathbold{x}=\begin{bmatrix}\gamma&p&\mathbold{s}&\mathbold{\alpha}\end{bmatrix}^\mT$, the local Jacobian can be derived as
+\begin{small}
+\begin{gather*}
+\pfrac{\mathbold{R}}{\mathbold{x}}=
+\begin{bmatrix}
+	0                                                      & \mathbold{\alpha}:\mathbold{n}+m                                                     & \mathbold{n}:\mathbf{I}                                       & p\mathbold{n}:\mathbf{I}                                                                                \\[4mm]
+	KA\left(\alpha^d-\mathbold{\alpha}:\mathbold{n}\right) & 1+KA\gamma\left(\pfrac{\alpha^d}{p}-\mathbold{\alpha}:\pfrac{\mathbold{n}}{p}\right) & -KA\gamma\mathbold{\alpha}:\pfrac{\mathbold{n}}{\mathbold{s}} & -KA\gamma\left(\mathbf{I}:\mathbold{n}+\mathbold{\alpha}:\pfrac{\mathbold{n}}{\mathbold{\alpha}}\right) \\[4mm]
+	2G\mathbold{n}                                         & 2G\gamma\pfrac{\mathbold{n}}{p}                                                      & \mathbf{I}+2G\gamma\pfrac{\mathbold{n}}{\mathbold{s}}         & 2G\gamma\pfrac{\mathbold{n}}{\mathbold{\alpha}}                                                         \\[4mm]
+	\alpha^b\mathbold{n}-h\mathbold{\alpha}                & \gamma\left(\pfrac{\alpha^b}{p}\mathbold{n}+\alpha^b\pfrac{\mathbold{n}}{p}\right)   & \gamma\alpha^b\pfrac{\mathbold{n}}{\mathbold{s}}              & \gamma\alpha^b\pfrac{\mathbold{n}}{\mathbold{\alpha}}-\left(\gamma{}h+1\right)\mathbf{I}
+\end{bmatrix}.
+\end{gather*}
+\end{small}
+In the explicit form, it is
+\begin{scriptsize}
+\begin{gather*}
+\begin{bmatrix}
+	0                                                      & \mathbold{\alpha}:\mathbold{n}+m                                                                                                                                                  & \mathbold{n}:\mathbf{I}                                                                                                                   & p\mathbold{n}:\mathbf{I}                                                                                                                                             \\[4mm]
+	KA\left(\alpha^d-\mathbold{\alpha}:\mathbold{n}\right) & 1+KA\gamma\left(\pfrac{\alpha^d}{p}-\dfrac{\mathbold{\alpha}:\mathbold{\alpha}-\left(\mathbold{n}:\mathbold{\alpha}\right)^2}{|\mathbold{\eta}|}\right)                           & \dfrac{KA\gamma}{|\mathbold{\eta}|}\left(\left(\mathbold{\alpha}:\mathbold{n}\right)\cdot\mathbold{n}-\mathbold{\alpha}\right):\mathbf{I} & KA\gamma\left(\mathbold{n}+\dfrac{p}{|\mathbold{\eta}|}\left(\left(\mathbold{\alpha}:\mathbold{n}\right)\cdot\mathbold{n}-\mathbold{\alpha}\right)\right):\mathbf{I} \\[4mm]
+	2G\mathbold{n}                                         & \dfrac{2G\gamma}{|\mathbold{\eta}|}\left(\mathbold{\alpha}-\left(\mathbold{n}:\mathbold{\alpha}\right)\cdot\mathbold{n}\right)                                                    & \mathbf{I}+\dfrac{2G\gamma}{|\mathbold{\eta}|}\left(\mathbf{I}-\mathbold{n}\otimes\left(\mathbold{n}:\mathbf{I}\right)\right)             & \dfrac{2G\gamma{}p}{|\mathbold{\eta}|}\left(\mathbf{I}-\mathbold{n}\otimes\left(\mathbold{n}:\mathbf{I}\right)\right)                                                \\[4mm]
+	\alpha^b\mathbold{n}-h\mathbold{\alpha}                & \gamma\left(\pfrac{\alpha^b}{p}\mathbold{n}+\dfrac{\alpha^b}{|\mathbold{\eta}|}\left(\mathbold{\alpha}-\left(\mathbold{n}:\mathbold{\alpha}\right)\cdot\mathbold{n}\right)\right) & \dfrac{\gamma\alpha^b}{|\mathbold{\eta}|}\left(\mathbf{I}-\mathbold{n}\otimes\left(\mathbold{n}:\mathbf{I}\right)\right)                  & \dfrac{\gamma\alpha^bp}{|\mathbold{\eta}|}\left(\mathbf{I}-\mathbold{n}\otimes\left(\mathbold{n}:\mathbf{I}\right)\right)-\left(\gamma{}h+1\right)\mathbf{I}
+\end{bmatrix}.
+\end{gather*}
+\end{scriptsize}
+\section{Consistent Tangent Stiffness}
+Accordingly,
+\begin{gather*}
+\pfrac{\mathbold{R}}{\mathbold{\varepsilon}^{tr}}=
+\begin{bmatrix}
+	0                                                    \\[3mm]
+	\left(KA\gamma\alpha^dn^dv_0-K\right)\mathbold{I}    \\[3mm]
+	-2G\mathbf{I}_{d}                                    \\[3mm]
+	-\alpha^bn^bv_0\gamma\mathbold{n}\otimes\mathbold{I}
+\end{bmatrix}.
+\end{gather*}
+Thus,
+\begin{gather*}
+\ddfrac{\mathbold{x}}{\mathbold{\varepsilon}^{tr}}=-\left(\pfrac{\mathbold{R}}{\mathbold{x}}\right)^{-1}\pfrac{\mathbold{R}}{\mathbold{\varepsilon}^{tr}}.
+\end{gather*}
+
+The stress update is
+\begin{gather*}
+\mathbold{\sigma}=\mathbold{s}+p\mathbold{I}.
+\end{gather*}
+The consistent tangent stiffness is
+\begin{gather*}
+\ddfrac{\mathbold{\sigma}}{\mathbold{\varepsilon}^{tr}}=\ddfrac{\mathbold{s}}{\mathbold{\varepsilon}^{tr}}+\mathbold{I}\otimes\ddfrac{p}{\mathbold{\varepsilon}^{tr}}.
+\end{gather*}
+\end{document}
