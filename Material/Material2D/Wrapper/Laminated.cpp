@@ -19,7 +19,7 @@
 #include <Domain/DomainBase.h>
 
 Laminated::Laminated(const unsigned T, uvec&& MT)
-	: Material2D(T)
+	: Material2D(T, PlaneType::S, 0.)
 	, mat_tag(std::forward<uvec>(MT)) {}
 
 Laminated::Laminated(const Laminated& old_obj)

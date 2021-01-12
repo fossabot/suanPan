@@ -47,9 +47,11 @@ public:
 	Rotation2D(Rotation2D&&) = delete;
 	Rotation2D& operator=(const Rotation2D&) = delete;
 	Rotation2D& operator=(Rotation2D&&) = delete;
-	~Rotation2D() = default;
+	~Rotation2D() override = default;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
+
+	[[nodiscard]] double get_parameter(ParameterType) const override;
 
 	unique_ptr<Material> get_copy() override;
 

@@ -111,7 +111,7 @@ public:
 	             double    // density
 	);
 
-	void initialize(const shared_ptr<DomainBase>& = nullptr) override;
+	void initialize(const shared_ptr<DomainBase>&) override;
 
 	[[nodiscard]] double get_parameter(ParameterType) const override;
 

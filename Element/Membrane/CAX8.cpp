@@ -57,9 +57,9 @@ CAX8::CAX8(const unsigned T, uvec&& N, const unsigned M, const bool R, const boo
 	, reduced_scheme(R) {}
 
 void CAX8::initialize(const shared_ptr<DomainBase>& D) {
-	const auto material_proto = std::dynamic_pointer_cast<Material2D>(D->get_material(static_cast<unsigned>(material_tag(0))));
+	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(material_proto->plane_type != PlaneType::A) {
+	if(material_proto->get_parameter(ParameterType::PLANETYPE) != static_cast<double>(PlaneType::A)) {
 		D->disable_element(get_tag());
 		return;
 	}

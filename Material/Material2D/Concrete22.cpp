@@ -27,10 +27,10 @@ Concrete22::Concrete22(const unsigned T, const double CS, const double TS, const
 	, shear_retention(SR) {}
 
 void Concrete22::initialize(const shared_ptr<DomainBase>&) {
-	concrete_major.Material::initialize();
-	concrete_major.initialize();
-	concrete_minor.Material::initialize();
-	concrete_minor.initialize();
+	concrete_major.Material::initialize(nullptr);
+	concrete_major.initialize(nullptr);
+	concrete_minor.Material::initialize(nullptr);
+	concrete_minor.initialize(nullptr);
 
 	initial_stiffness.zeros(3, 3);
 	initial_stiffness(2, 2) = shear_modulus = .5 * (initial_stiffness(0, 0) = initial_stiffness(1, 1) = concrete_major.get_parameter(ParameterType::ELASTICMODULUS));
@@ -44,7 +44,10 @@ void Concrete22::initialize(const shared_ptr<DomainBase>&) {
 
 unique_ptr<Material> Concrete22::get_copy() { return make_unique<Concrete22>(*this); }
 
-double Concrete22::get_parameter(const ParameterType P) const { return concrete_major.get_parameter(P); }
+double Concrete22::get_parameter(const ParameterType P) const {
+	if(ParameterType::PLANETYPE == P) return static_cast<double>(plane_type);
+	return concrete_major.get_parameter(P);
+}
 
 int Concrete22::update_trial_status(const vec& t_strain) {
 	incre_strain = (trial_strain = t_strain) - current_strain;

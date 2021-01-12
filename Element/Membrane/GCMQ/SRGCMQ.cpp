@@ -157,9 +157,9 @@ void SRGCMQ::initialize(const shared_ptr<DomainBase>& D) {
 	diff_coor(6) = ele_coor(2, 0) - ele_coor(3, 0);
 	diff_coor(7) = ele_coor(3, 0) - ele_coor(0, 0);
 
-	const auto mat_proto = std::dynamic_pointer_cast<Material2D>(D->get<Material>(material_tag(0)));
+	auto& mat_proto = D->get<Material>(material_tag(0));
 
-	if(PlaneType::E == mat_proto->plane_type) suanpan::hacker(thickness) = 1.;
+	if(static_cast<double>(PlaneType::E) == mat_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
 
 	auto mat_stiff = mat_proto->get_initial_stiffness();
 

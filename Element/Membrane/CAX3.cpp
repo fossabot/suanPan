@@ -24,9 +24,9 @@ CAX3::CAX3(const unsigned T, uvec&& NT, const unsigned MT, const bool R)
 	: MaterialElement2D(T, m_node, m_dof, std::forward<uvec>(NT), uvec{MT}, R) {}
 
 void CAX3::initialize(const shared_ptr<DomainBase>& D) {
-	const auto material_proto = std::dynamic_pointer_cast<Material2D>(D->get<Material>(material_tag(0)));
+	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(PlaneType::A != material_proto->plane_type) {
+	if(material_proto->get_parameter(ParameterType::PLANETYPE) != static_cast<double>(PlaneType::A)) {
 		D->disable_element(get_tag());
 		return;
 	}

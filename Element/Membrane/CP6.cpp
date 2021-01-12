@@ -35,9 +35,9 @@ CP6::CP6(const unsigned T, uvec&& NT, const unsigned MT, const double TH, const 
 	, thickness(TH) {}
 
 void CP6::initialize(const shared_ptr<DomainBase>& D) {
-	const auto material_proto = std::dynamic_pointer_cast<Material2D>(D->get<Material>(material_tag(0)));
+	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(PlaneType::E == material_proto->plane_type) suanpan::hacker(thickness) = 1.;
+	if(static_cast<double>(PlaneType::E) == material_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
 
 	mat ele_coor(m_node, m_node);
 	ele_coor.col(0).fill(1.);

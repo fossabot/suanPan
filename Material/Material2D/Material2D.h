@@ -38,16 +38,16 @@
 
 #include <Material/Material.h>
 
-class Material2D : public Material {
-public:
-	const PlaneType plane_type;
+enum class PlaneType : unsigned { S = 1, E = 2, A = 3, N = 0 };
 
-	explicit Material2D(unsigned = 0, const PlaneType& PT = PlaneType::S, double = 0.);
-	Material2D(const Material2D&) = default;
-	Material2D(Material2D&&) noexcept = delete;
-	Material2D& operator=(const Material2D&) = delete;
-	Material2D& operator=(Material2D&&) noexcept = delete;
-	virtual ~Material2D() = default;
+class Material2D : public Material {
+protected:
+	const PlaneType plane_type;
+public:
+	Material2D(unsigned,  // tag
+	           PlaneType, // plane type
+	           double     // density
+	);
 
 	vector<vec> record(OutputType) override;
 };

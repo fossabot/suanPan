@@ -172,10 +172,6 @@ int Material::reset_status() {
 
 vector<vec> Material::record(const OutputType) { return {}; }
 
-unique_ptr<Material> suanpan::make_copy(const shared_ptr<Material>& P) { return nullptr == P ? nullptr : P->get_copy(); }
-
-unique_ptr<Material> suanpan::make_copy(const unique_ptr<Material>& P) { return nullptr == P ? nullptr : P->get_copy(); }
-
 void ConstantDamping(MaterialData* M) {
 	M->current_damping = mat(M->initial_damping.memptr(), M->initial_damping.n_rows, M->initial_damping.n_cols, false, true);
 	M->trial_damping = mat(M->initial_damping.memptr(), M->initial_damping.n_rows, M->initial_damping.n_cols, false, true);
@@ -211,3 +207,7 @@ void PureWrapper(MaterialData* M) {
 	M->current_damping.reset();
 	M->trial_damping.reset();
 }
+
+unique_ptr<Material> suanpan::make_copy(const shared_ptr<Material>& P) { return nullptr == P ? nullptr : P->get_copy(); }
+
+unique_ptr<Material> suanpan::make_copy(const unique_ptr<Material>& P) { return nullptr == P ? nullptr : P->get_copy(); }

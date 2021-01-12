@@ -47,9 +47,9 @@ public:
 	MaterialBase& operator=(const MaterialBase&) = delete; // assign forbidden
 	MaterialBase& operator=(MaterialBase&&) = delete;      // assign forbidden
 
-	virtual ~MaterialBase() = default;
+	~MaterialBase() override = default;
 
-	virtual void initialize(const shared_ptr<DomainBase>& = nullptr) = 0;
+	virtual void initialize(const shared_ptr<DomainBase>&) = 0;
 
 	virtual void initialize_history(unsigned) = 0;
 	virtual void set_initial_history(const vec&) = 0;

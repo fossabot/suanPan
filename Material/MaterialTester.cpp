@@ -19,8 +19,8 @@
 
 mat material_tester(const shared_ptr<Material>& obj, const vector<unsigned>& idx, const vec& incre) {
 	if(!obj->is_initialized()) {
-		obj->Material::initialize();
-		obj->initialize();
+		obj->Material::initialize(nullptr);
+		obj->initialize(nullptr);
 		obj->set_initialized(true);
 	}
 
@@ -72,8 +72,8 @@ mat material_tester(const shared_ptr<Material>& obj, const vector<unsigned>& idx
 
 mat material_tester(const shared_ptr<Material>& obj, const vector<unsigned>& idx, const vec& incre, const vec& base) {
 	if(!obj->is_initialized()) {
-		obj->Material::initialize();
-		obj->initialize();
+		obj->Material::initialize(nullptr);
+		obj->initialize(nullptr);
 		obj->set_initialized(true);
 	}
 
@@ -132,8 +132,8 @@ mat material_tester(const shared_ptr<Material>& obj, const vector<unsigned>& idx
 
 mat material_tester_by_load(const shared_ptr<Material>& obj, const vector<unsigned>& idx, const vec& incre) {
 	if(!obj->is_initialized()) {
-		obj->Material::initialize();
-		obj->initialize();
+		obj->Material::initialize(nullptr);
+		obj->initialize(nullptr);
 		obj->set_initialized(true);
 	}
 
@@ -198,8 +198,8 @@ mat material_tester_by_load(const shared_ptr<Material>& obj, const vector<unsign
 
 mat material_tester_by_load(const shared_ptr<Material>& obj, const vector<unsigned>& idx, const vec& incre, const vec& base) {
 	if(!obj->is_initialized()) {
-		obj->Material::initialize();
-		obj->initialize();
+		obj->Material::initialize(nullptr);
+		obj->initialize(nullptr);
 		obj->set_initialized(true);
 	}
 

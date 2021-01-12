@@ -36,9 +36,9 @@ CP5::CP5(const unsigned T, uvec&& N, const unsigned M, const double TH, const bo
 	, thickness(TH) {}
 
 void CP5::initialize(const shared_ptr<DomainBase>& D) {
-	const auto material_proto = std::dynamic_pointer_cast<Material2D>(D->get<Material>(material_tag(0)));
+	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(PlaneType::E == material_proto->plane_type) suanpan::hacker(thickness) = 1.;
+	if(static_cast<double>(PlaneType::E) == material_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
 
 	const auto ele_coor = get_coordinate(m_dof);
 

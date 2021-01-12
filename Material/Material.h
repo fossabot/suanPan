@@ -33,8 +33,6 @@
 
 enum class MaterialType : unsigned { D0 = 0, D1 = 1, D2 = 3, D3 = 6 };
 
-enum class PlaneType { S, E, A, N };
-
 class DomainBase;
 enum class OutputType;
 
@@ -90,9 +88,9 @@ public:
 	Material& operator=(const Material&) = delete; // assign forbidden
 	Material& operator=(Material&&) = delete;      // assign forbidden
 
-	virtual ~Material();
+	~Material() override;
 
-	virtual void initialize(const shared_ptr<DomainBase>& = nullptr) = 0;
+	virtual void initialize(const shared_ptr<DomainBase>&) = 0;
 
 	void initialize_history(unsigned);
 	virtual void set_initial_history(const vec&);
@@ -146,11 +144,7 @@ public:
 namespace suanpan {
 	unique_ptr<Material> make_copy(const shared_ptr<Material>&);
 	unique_ptr<Material> make_copy(const unique_ptr<Material>&);
-} // namespace suanpan
-
-void ConstantDamping(MaterialData*);
-void ConstantStiffness(MaterialData*);
-void PureWrapper(MaterialData*);
+}
 
 #endif
 

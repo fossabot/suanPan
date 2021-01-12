@@ -56,9 +56,9 @@ public:
 	PlaneStress& operator=(PlaneStress&&) = delete;
 	~PlaneStress() = default;
 
-	void initialize(const shared_ptr<DomainBase>& = nullptr) override;
+	void initialize(const shared_ptr<DomainBase>&) override;
 
-	[[nodiscard]] double get_parameter(ParameterType = ParameterType::DENSITY) const override;
+	[[nodiscard]] double get_parameter(ParameterType) const override;
 
 	unique_ptr<Material> get_copy() override;
 

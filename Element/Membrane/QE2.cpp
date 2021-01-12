@@ -47,9 +47,9 @@ QE2::QE2(const unsigned T, uvec&& N, const unsigned M, const double TH)
 }
 
 void QE2::initialize(const shared_ptr<DomainBase>& D) {
-	const auto mat_proto = std::dynamic_pointer_cast<Material2D>(D->get<Material>(material_tag(0)));
+	auto& mat_proto = D->get<Material>(material_tag(0));
 
-	if(PlaneType::E == mat_proto->plane_type) suanpan::hacker(thickness) = 1.;
+	if(static_cast<double>(PlaneType::E) == mat_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
 
 	access::rw(mat_stiffness) = mat_proto->get_initial_stiffness();
 

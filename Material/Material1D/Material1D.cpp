@@ -20,7 +20,7 @@
 #include <Toolbox/utility.h>
 
 Material1D::Material1D(const unsigned T, const double D)
-	: Material(T, MaterialType::D1, D) {}
+	: Material(T, MaterialType::D1, D) { set_symmetric(true); }
 
 const mat& Material1D::get_trial_stiffness() {
 	// for exact zero case do not modify as the material may have no stiffness

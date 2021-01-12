@@ -77,9 +77,9 @@ Allman::Allman(const unsigned T, uvec&& NT, const unsigned MT, const double TH)
 	, thickness(TH) {}
 
 void Allman::initialize(const shared_ptr<DomainBase>& D) {
-	const auto mat_proto = std::dynamic_pointer_cast<Material2D>(D->get_material(static_cast<unsigned>(material_tag(0))));
+	auto& mat_proto = D->get<Material>(material_tag(0));
 
-	if(PlaneType::E == mat_proto->plane_type) suanpan::hacker(thickness) = 1.;
+	if(static_cast<double>(PlaneType::E) == mat_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
 
 	auto& mat_stiff = mat_proto->get_initial_stiffness();
 

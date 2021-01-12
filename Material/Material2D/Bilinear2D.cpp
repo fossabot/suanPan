@@ -31,15 +31,18 @@ Bilinear2D::Bilinear2D(const unsigned T, const double E, const double V, const d
 	, base(0, E, V, Y, H, B, D) {}
 
 void Bilinear2D::initialize(const shared_ptr<DomainBase>&) {
-	base.Material::initialize();
-	base.initialize();
+	base.Material::initialize(nullptr);
+	base.initialize(nullptr);
 
 	trial_full_strain = current_full_strain.zeros(6);
 
 	trial_stiffness = current_stiffness = initial_stiffness = form_stiffness(base.get_initial_stiffness());
 }
 
-double Bilinear2D::get_parameter(const ParameterType T) const { return base.get_parameter(T); }
+double Bilinear2D::get_parameter(const ParameterType T) const {
+	if(ParameterType::PLANETYPE == T) return static_cast<double>(plane_type);
+	return base.get_parameter(T);
+}
 
 unique_ptr<Material> Bilinear2D::get_copy() { return make_unique<Bilinear2D>(*this); }
 

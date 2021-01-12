@@ -71,7 +71,10 @@ void PlaneStress::initialize(const shared_ptr<DomainBase>& D) {
 	current_stiffness = trial_stiffness = initial_stiffness = form_stiffness(base->get_initial_stiffness());
 }
 
-double PlaneStress::get_parameter(const ParameterType P) const { return base->get_parameter(P); }
+double PlaneStress::get_parameter(const ParameterType P) const {
+	if(ParameterType::PLANETYPE == P) return static_cast<double>(plane_type);
+	return base->get_parameter(P);
+}
 
 unique_ptr<Material> PlaneStress::get_copy() { return make_unique<PlaneStress>(*this); }
 

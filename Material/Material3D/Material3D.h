@@ -35,13 +35,8 @@
 class Material3D : public Material {
 public:
 	Material3D(unsigned, // tag
-	           double    //density
+	           double    // density
 	);
-	Material3D(const Material3D&) = default;
-	Material3D(Material3D&&) = delete;
-	Material3D& operator=(const Material3D&) = delete;
-	Material3D& operator=(Material3D&&) = delete;
-	virtual ~Material3D() = default;
 
 	vector<vec> record(OutputType) override;
 };

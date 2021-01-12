@@ -115,11 +115,11 @@ SGCMQ::SGCMQ(const unsigned T, uvec&& N, const unsigned M, const double TH, cons
 }
 
 void SGCMQ::initialize(const shared_ptr<DomainBase>& D) {
-	const auto mat_proto = std::dynamic_pointer_cast<Material2D>(D->get<Material>(material_tag(0)));
+	auto& mat_proto = D->get<Material>(material_tag(0));
 
 	auto& mat_stiff = mat_proto->get_initial_stiffness();
 
-	if(PlaneType::E == mat_proto->plane_type) suanpan::hacker(thickness) = 1.;
+	if(mat_proto->get_parameter(ParameterType::PLANETYPE) == static_cast<double>(PlaneType::E)) suanpan::hacker(thickness) = 1.;
 
 	const auto ele_coor = get_coordinate(2);
 

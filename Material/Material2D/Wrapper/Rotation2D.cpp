@@ -45,7 +45,7 @@ void Rotation2D::form_transformation(mat&& R) {
 }
 
 Rotation2D::Rotation2D(const unsigned T, const unsigned MT, const double A)
-	: Material2D(T)
+	: Material2D(T, PlaneType::N, 0.)
 	, mat_tag(MT) {
 	const auto C = cos(A), S = sin(A);
 
@@ -70,10 +70,11 @@ void Rotation2D::initialize(const shared_ptr<DomainBase>& D) {
 	mat_obj->Material::initialize(D);
 	mat_obj->initialize(D);
 	access::rw(density) = mat_obj->get_parameter(ParameterType::DENSITY);
-	access::rw(plane_type) = std::dynamic_pointer_cast<Material2D>(D->get_material(mat_tag))->plane_type;
 
 	trial_stiffness = current_stiffness = initial_stiffness = left * mat_obj->get_initial_stiffness() * right;
 }
+
+double Rotation2D::get_parameter(const ParameterType P) const { return mat_obj->get_parameter(P); }
 
 unique_ptr<Material> Rotation2D::get_copy() { return make_unique<Rotation2D>(*this); }
 

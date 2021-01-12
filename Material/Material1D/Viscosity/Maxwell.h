@@ -58,7 +58,7 @@ public:
 	Maxwell& operator=(Maxwell&&) = delete;
 	~Maxwell() override = default;
 
-	void initialize(const shared_ptr<DomainBase>& = nullptr) override;
+	void initialize(const shared_ptr<DomainBase>&) override;
 
 	unique_ptr<Material> get_copy() override;
 

@@ -52,7 +52,7 @@ public:
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 
-	[[nodiscard]] double get_parameter(ParameterType = ParameterType::DENSITY) const override;
+	[[nodiscard]] double get_parameter(ParameterType) const override;
 
 	unique_ptr<Material> get_copy() override;
 

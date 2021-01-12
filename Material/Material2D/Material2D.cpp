@@ -19,7 +19,7 @@
 #include <Toolbox/tensorToolbox.h>
 #include <Recorder/OutputType.h>
 
-Material2D::Material2D(const unsigned T, const PlaneType& PT, const double R)
+Material2D::Material2D(const unsigned T, const PlaneType PT, const double R)
 	: Material(T, MaterialType::D2, R)
 	, plane_type(PT) {}
 

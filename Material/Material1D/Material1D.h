@@ -33,12 +33,9 @@
 
 class Material1D : public Material {
 public:
-	Material1D(unsigned, double);
-	Material1D(const Material1D&) = default;
-	Material1D(Material1D&&) = delete;
-	Material1D& operator=(const Material1D&) = delete;
-	Material1D& operator=(Material1D&&) = delete;
-	virtual ~Material1D() = default;
+	Material1D(unsigned, // tag
+	           double    // density
+	);
 
 	const mat& get_trial_stiffness() override;
 

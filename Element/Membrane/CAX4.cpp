@@ -42,9 +42,9 @@ CAX4::CAX4(const unsigned T, uvec&& N, const unsigned M, const bool F)
 	: MaterialElement2D(T, m_node, m_dof, std::forward<uvec>(N), uvec{M}, F) {}
 
 void CAX4::initialize(const shared_ptr<DomainBase>& D) {
-	const auto material_proto = std::dynamic_pointer_cast<Material2D>(D->get_material(static_cast<unsigned>(material_tag(0))));
+	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(material_proto->plane_type != PlaneType::A) {
+	if(static_cast<double>(PlaneType::A) != material_proto->get_parameter(ParameterType::PLANETYPE)) {
 		D->disable_element(get_tag());
 		return;
 	}

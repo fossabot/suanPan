@@ -42,7 +42,7 @@ public:
 	Laminated(Laminated&&) = delete;
 	Laminated& operator=(const Laminated&) = delete;
 	Laminated& operator=(Laminated&&) = delete;
-	~Laminated() = default;
+	~Laminated() override = default;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 

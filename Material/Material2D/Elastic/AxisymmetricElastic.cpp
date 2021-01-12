@@ -25,6 +25,15 @@ AxisymmetricElastic::AxisymmetricElastic(const unsigned T, const double E, const
 
 void AxisymmetricElastic::initialize(const shared_ptr<DomainBase>&) { trial_stiffness = current_stiffness = initial_stiffness = tensor::isotropic_stiffness(elastic_modulus, poissons_ratio)(span(0, 3), span(0, 3)); }
 
+double AxisymmetricElastic::get_parameter(const ParameterType P) const {
+	if(ParameterType::PLANETYPE == P) return static_cast<double>(plane_type);
+	if(ParameterType::DENSITY == P) return density;
+	if(ParameterType::ELASTICMODULUS == P || ParameterType::YOUNGSMODULUS == P || ParameterType::E == P) return elastic_modulus;
+	if(ParameterType::SHEARMODULUS == P || ParameterType::G == P) return elastic_modulus / (2. + 2. * poissons_ratio);
+	if(ParameterType::POISSONSRATIO == P) return poissons_ratio;
+	return 0.;
+}
+
 unique_ptr<Material> AxisymmetricElastic::get_copy() { return make_unique<AxisymmetricElastic>(*this); }
 
 int AxisymmetricElastic::update_trial_status(const vec& t_strain) {
@@ -55,12 +64,4 @@ void AxisymmetricElastic::print() {
 	get_trial_strain().t().print();
 	suanpan_info("stress: ");
 	get_trial_stress().t().print();
-}
-
-double AxisymmetricElastic::get_parameter(const ParameterType P) const {
-	if(ParameterType::DENSITY == P) return density;
-	if(ParameterType::ELASTICMODULUS == P || ParameterType::YOUNGSMODULUS == P || ParameterType::E == P) return elastic_modulus;
-	if(ParameterType::SHEARMODULUS == P || ParameterType::G == P) return elastic_modulus / (2. + 2. * poissons_ratio);
-	if(ParameterType::POISSONSRATIO == P) return poissons_ratio;
-	return 0.;
 }
