@@ -46,13 +46,14 @@ public:
 	Parallel(Parallel&&) = delete;
 	Parallel& operator=(const Parallel&) = delete;
 	Parallel& operator=(Parallel&&) = delete;
-	~Parallel() = default;
+	~Parallel() override = default;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 
 	unique_ptr<Material> get_copy() override;
 
 	int update_trial_status(const vec&) override;
+	int update_trial_status(const vec&, const vec&) override;
 	int clear_status() override;
 	int commit_status() override;
 	int reset_status() override;

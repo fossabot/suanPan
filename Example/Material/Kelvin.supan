@@ -6,9 +6,11 @@ node 2 1 0
 material Elastic1D 1 100 .1
 material Viscosity02 2 1. 1E3 1E3 1E3 1E3 1E3 1E3 1E3
 material Kelvin 3 2 1
+material Parallel 4 2 1
 
 element T2D2 1 1 2 1 10
 element Damper01 2 1 2 3
+element Damper01 4 1 2 4
 
 mass 3 2 10 1
 
@@ -40,13 +42,13 @@ analyze
 # Node 2:
 #    1.0000        0
 # Displacement:
-#    0.0003        0
+#   -0.0002        0
 # Resistance:
-#    0.2842        0
+#   -0.0690        0
 # Velocity:
-#    0.0449        0
+#    6.5088e-05            0
 # Acceleration:
-#   -0.0271        0
+#    0.0066        0
 peek node 2
 
 reset

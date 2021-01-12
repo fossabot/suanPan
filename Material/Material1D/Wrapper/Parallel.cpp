@@ -44,12 +44,15 @@ void Parallel::initialize(const shared_ptr<DomainBase>& D) {
 	}
 
 	initial_stiffness.zeros(1);
+	initial_damping.zeros(1);
 	for(const auto& I : mat_pool) {
 		I->Material::initialize(D);
 		I->initialize(D);
-		initial_stiffness += I->get_initial_stiffness();
+		if(!I->get_initial_stiffness().empty()) initial_stiffness += I->get_initial_stiffness();
+		if(!I->get_initial_damping().empty()) initial_damping += I->get_initial_damping();
 	}
 	trial_stiffness = current_stiffness = initial_stiffness;
+	trial_damping = current_damping = initial_damping;
 }
 
 unique_ptr<Material> Parallel::get_copy() { return make_unique<Parallel>(*this); }
@@ -64,7 +67,26 @@ int Parallel::update_trial_status(const vec& t_strain) {
 	for(const auto& I : mat_pool) {
 		if(I->update_trial_status(trial_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
 		trial_stress += I->get_trial_stress();
-		trial_stiffness += I->get_trial_stiffness();
+		if(!I->get_trial_stiffness().empty()) trial_stiffness += I->get_trial_stiffness();
+	}
+
+	return SUANPAN_SUCCESS;
+}
+
+int Parallel::update_trial_status(const vec& t_strain, const vec& t_strain_rate) {
+	incre_strain = (trial_strain = t_strain) - current_strain;
+	incre_strain_rate = (trial_strain_rate = t_strain_rate) - current_strain_rate;
+
+	if(fabs(incre_strain(0) + incre_strain_rate(0)) <= datum::eps) return SUANPAN_SUCCESS;
+
+	trial_stress.zeros();
+	trial_stiffness.zeros();
+	trial_damping.zeros();
+	for(const auto& I : mat_pool) {
+		if(I->update_trial_status(trial_strain, trial_strain_rate) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+		trial_stress += I->get_trial_stress();
+		if(!I->get_trial_stiffness().empty()) trial_stiffness += I->get_trial_stiffness();
+		if(!I->get_trial_damping().empty()) trial_damping += I->get_trial_damping();
 	}
 
 	return SUANPAN_SUCCESS;
