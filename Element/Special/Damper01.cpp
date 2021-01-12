@@ -45,6 +45,16 @@ void Damper01::initialize(const shared_ptr<DomainBase>& D) {
 	initial_damping(JS, IS) = initial_damping(IS, JS);
 
 	trial_damping = current_damping = initial_damping;
+
+	if(!damper->get_initial_stiffness().empty()) {
+		initial_stiffness.set_size(d_size, d_size);
+		initial_stiffness(IS, IS) = direction_cosine * damper->get_initial_stiffness() * direction_cosine.t();
+		initial_stiffness(IS, JS) = -initial_stiffness(IS, IS);
+		initial_stiffness(JS, JS) = initial_stiffness(IS, IS);
+		initial_stiffness(JS, IS) = initial_stiffness(IS, JS);
+
+		trial_stiffness = current_stiffness = initial_stiffness;
+	}
 }
 
 int Damper01::update_status() {
@@ -61,6 +71,14 @@ int Damper01::update_status() {
 	trial_damping(IS, JS) = -trial_damping(IS, IS);
 	trial_damping(JS, JS) = trial_damping(IS, IS);
 	trial_damping(JS, IS) = trial_damping(IS, JS);
+
+	if(!damper->get_trial_stiffness().empty()) {
+		trial_stiffness.set_size(d_size, d_size);
+		trial_stiffness(IS, IS) = direction_cosine * damper->get_trial_stiffness() * direction_cosine.t();
+		trial_stiffness(IS, JS) = -trial_stiffness(IS, IS);
+		trial_stiffness(JS, JS) = trial_stiffness(IS, IS);
+		trial_stiffness(JS, IS) = trial_stiffness(IS, JS);
+	}
 
 	return SUANPAN_SUCCESS;
 }
