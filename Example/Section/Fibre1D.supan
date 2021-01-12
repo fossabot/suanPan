@@ -23,11 +23,11 @@ step static 1
 
 cload 1 0 100 1 2
 
-converger AbsIncreDisp 1 1E-4 10 1
+converger RelIncreDisp 1 1E-10 10 1
 
 analyze
 
-# 0.7780 -1.0373
+#   0.6388  -0.6049
 peek node 2
 
 peek element 2

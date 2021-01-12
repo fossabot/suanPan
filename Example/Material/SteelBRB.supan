@@ -18,7 +18,7 @@ displacement 1 0 1 2 2
 
 step static 1
 set fixed_step_size 1
-set ini_step_size 1E-2
+set ini_step_size 1E-1
 set symm_mat 0
 
 converger RelIncreDisp 1 1E-10 10 1

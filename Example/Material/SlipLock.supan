@@ -26,7 +26,7 @@ converger RelIncreDisp 1 1E-10 10 1
 
 analyze
 
-save recorder 1 2
+# save recorder 1 2
 
 peek element 1
 

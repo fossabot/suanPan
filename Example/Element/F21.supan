@@ -21,7 +21,7 @@ recorder 4 hdf5 Node U2 2
 recorder 5 hdf5 Node Rf2 2
 
 step static 1 1
-set ini_step_size .1
+set ini_step_size 1E-1
 set fixed_step_size true
 set band_mat 0
 set symm_mat 0
