@@ -110,7 +110,7 @@ int Dynamic::analyze() {
 		G->update_incre_time(step_time);
 		// call solver
 		const auto code = S->analyze();
-		if(code == SUANPAN_SUCCESS) {
+		if(SUANPAN_SUCCESS == code) {
 			// success step
 			// commit converged iteration
 			G->commit_status();
@@ -124,7 +124,7 @@ int Dynamic::analyze() {
 			}
 			// check if time overflows
 			if(step_time > remain_time) step_time = remain_time;
-		} else if(code == SUANPAN_FAIL) {
+		} else if(SUANPAN_FAIL == code) {
 			// failed step
 			// reset to the start of current substep
 			G->reset_status();
