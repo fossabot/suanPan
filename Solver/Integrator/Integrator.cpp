@@ -82,9 +82,19 @@ mat Integrator::get_displacement_residual() {
 
 sp_mat Integrator::get_reference_load() { return database.lock()->get_factory()->get_reference_load(); }
 
-void Integrator::update_trial_time(const double T) const { database.lock()->get_factory()->update_trial_time(T); }
+void Integrator::update_trial_time(const double T) {
+	const auto& W = get_domain().lock()->get_factory();
 
-void Integrator::update_incre_time(const double T) const { database.lock()->get_factory()->update_incre_time(T); }
+	W->update_trial_time(T);
+	update_parameter(W->get_incre_time());
+}
+
+void Integrator::update_incre_time(const double T) {
+	const auto& W = get_domain().lock()->get_factory();
+
+	database.lock()->get_factory()->update_incre_time(T);
+	update_parameter(W->get_incre_time());
+}
 
 int Integrator::update_trial_status() { return database.lock()->update_trial_status(); }
 

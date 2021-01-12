@@ -143,8 +143,6 @@ void LeeNewmark::assemble_resistance() {
 	const auto& D = get_domain().lock();
 	const auto& W = factory;
 
-	update_parameter(W->get_incre_time());
-
 	D->assemble_resistance();
 	D->assemble_inertial_force();
 	// considier independent viscous device

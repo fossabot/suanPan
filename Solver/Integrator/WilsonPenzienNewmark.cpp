@@ -142,8 +142,6 @@ void WilsonPenzienNewmark::assemble_resistance() {
 	const auto& D = get_domain().lock();
 	auto& W = D->get_factory();
 
-	update_parameter(W->get_incre_time());
-
 	D->assemble_resistance();
 	D->assemble_inertial_force();
 	// considier independent viscous device
@@ -157,8 +155,6 @@ void WilsonPenzienNewmark::assemble_resistance() {
 void WilsonPenzienNewmark::assemble_matrix() {
 	const auto& D = get_domain().lock();
 	auto& W = D->get_factory();
-
-	update_parameter(W->get_incre_time());
 
 	D->assemble_trial_stiffness();
 	D->assemble_trial_mass();    // need a constant mass matrix

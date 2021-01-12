@@ -29,8 +29,6 @@ void Newmark::assemble_resistance() {
 	const auto& D = get_domain().lock();
 	auto& W = D->get_factory();
 
-	update_parameter(W->get_incre_time());
-
 	D->assemble_resistance();
 	D->assemble_inertial_force();
 	D->assemble_damping_force();
@@ -41,8 +39,6 @@ void Newmark::assemble_resistance() {
 void Newmark::assemble_matrix() {
 	const auto& D = get_domain().lock();
 	auto& W = D->get_factory();
-
-	update_parameter(W->get_incre_time());
 
 	D->assemble_trial_stiffness();
 	D->assemble_trial_mass();

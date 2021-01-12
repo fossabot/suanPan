@@ -78,8 +78,8 @@ public:
 	virtual mat get_displacement_residual();
 	virtual sp_mat get_reference_load();
 
-	void update_trial_time(double) const;
-	void update_incre_time(double) const;
+	void update_trial_time(double);
+	void update_incre_time(double);
 	virtual int update_trial_status();
 	virtual int update_incre_status();
 
