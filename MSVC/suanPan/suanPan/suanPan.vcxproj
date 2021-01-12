@@ -433,7 +433,7 @@
     <ClCompile Include="..\..\..\Toolbox\tensorToolbox.cpp" />
     <ClCompile Include="..\..\..\Toolbox\utility.cpp" />
     <ClCompile Include="..\..\..\UnitTest\CatchTest.cpp" />
-    <ClCompile Include="..\..\..\UnitTest\TestMaterial.cpp" />
+    <ClCompile Include="..\..\..\UnitTest\TestNURBS.cpp" />
     <ClCompile Include="..\..\..\UnitTest\TestMode.cpp" />
     <ClCompile Include="..\..\..\UnitTest\TestQuaternion.cpp" />
     <ClCompile Include="..\..\..\UnitTest\TestShape.cpp" />

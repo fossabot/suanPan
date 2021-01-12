@@ -48,6 +48,7 @@ public:
 	Quaternion& normalise();
 
 	Quaternion inv() const;
+	Quaternion conj() const;
 
 	Quaternion operator+(const Quaternion&) const;
 	Quaternion& operator+=(const Quaternion&);
@@ -58,7 +59,7 @@ public:
 	Quaternion operator/(const Quaternion&) const;
 	Quaternion& operator/=(const Quaternion&);
 
-	Col<T> operator*(const Col<T>&) const;
+	Mat<T> operator*(const Mat<T>&) const;
 };
 
 template<typename T> Quaternion<T>::Quaternion()
@@ -95,6 +96,8 @@ template<typename T> Quaternion<T> Quaternion<T>::inv() const {
 
 	return Quaternion<T>(re / L, -im / L);
 }
+
+template<typename T> Quaternion<T> Quaternion<T>::conj() const { return Quaternion<T>(re, -im); }
 
 template<typename T> Quaternion<T> Quaternion<T>::operator+(const Quaternion& B) const {
 	Quaternion<T> A = *this;
@@ -135,9 +138,9 @@ template<typename T> Quaternion<T>& Quaternion<T>::operator*=(const Quaternion& 
 
 template<typename T> Quaternion<T> Quaternion<T>::operator/(const Quaternion& B) const { return *this * B.inv(); }
 
-template<typename T> Quaternion<T>& Quaternion<T>::operator/=(const Quaternion& B) { return *this = *this / B; }
+template<typename T> Quaternion<T>& Quaternion<T>::operator/=(const Quaternion& B) { return *this = *this * B.inv(); }
 
-template<typename T> Col<T> Quaternion<T>::operator*(const Col<T>& I) const {
+template<typename T> Mat<T> Quaternion<T>::operator*(const Mat<T>& I) const {
 	const Mat<T> R = 2. * re * transform::skew_symm(im) + 2. * im * im.t() + (re * re - arma::dot(im, im)) * eye(3, 3);
 
 	return R * I;
