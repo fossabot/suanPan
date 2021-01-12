@@ -18,8 +18,8 @@
  * @class Element
  * @brief A Element class.
  * @author tlc
- * @date 24/05/2018
- * @version 0.2.0
+ * @date 12/01/2020
+ * @version 0.3.0
  * @file Element.h
  * @addtogroup Element
  * @{
@@ -166,7 +166,7 @@ public:
 
 	~Element() override;
 
-	void initialize_base(const shared_ptr<DomainBase>&) override final;
+	void initialize_base(const shared_ptr<DomainBase>&) final;
 
 	void set_initialized(bool) const override;
 	void set_symmetric(bool) const override;
