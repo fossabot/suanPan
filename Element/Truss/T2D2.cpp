@@ -55,14 +55,10 @@ int T2D2::update_status() {
 		trial_stiffness = t_trans->to_global_stiffness_mat(t_material->get_trial_stiffness() * new_area / d_strain + t_stiff);
 		trial_geometry = t_trans->to_global_geometry_mat(new_area / new_length * t_material->get_trial_stress());
 	} else {
-		if(t_material->update_trial_status(t_trans->to_local_vec(get_trial_displacement()) / length, t_trans->to_local_vec(get_trial_velocity()) / length) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+		if(t_material->update_trial_status(t_trans->to_local_vec(get_trial_displacement()) / length) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
 
 		trial_stiffness = t_trans->to_global_stiffness_mat(area / length * t_material->get_trial_stiffness());
 	}
-
-	const vec t_strain = t_trans->to_local_vec(get_trial_displacement()) / length;
-	const vec t_strain_rate = t_trans->to_local_vec(get_trial_velocity()) / length;
-	const auto t_stiff = t_material->get_trial_stiffness();
 
 	trial_resistance = t_trans->to_global_vec(new_area * t_material->get_trial_stress());
 
