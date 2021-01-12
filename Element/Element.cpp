@@ -335,7 +335,7 @@ Element::Element(const unsigned T, const unsigned ND, const unsigned ET, const u
 
 Element::~Element() { suanpan_debug("Element %u dtor() called.\n", get_tag()); }
 
-void Element::initialize(const shared_ptr<DomainBase>& D) {
+void Element::initialize_base(const shared_ptr<DomainBase>& D) {
 	// initialized already
 	// check node vadality
 	if(num_node == node_ptr.size()) {
@@ -373,7 +373,7 @@ void Element::initialize(const shared_ptr<DomainBase>& D) {
 
 			auto& n_encoding = access::rw(node_encoding);
 			n_encoding.resize(size);
-			n_encoding.tail(size - 1) = t_element->get_node_encoding();
+			n_encoding.tail(size - 1llu) = t_element->get_node_encoding();
 		} else {
 			D->disable_element(get_tag());
 			return;

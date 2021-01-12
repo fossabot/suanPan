@@ -87,6 +87,7 @@ public:
 
 	~ElementBase() override = default;
 
+	virtual void initialize_base(const shared_ptr<DomainBase>&) = 0;
 	virtual void initialize(const shared_ptr<DomainBase>&) = 0;
 
 	virtual void set_initialized(bool) const = 0;

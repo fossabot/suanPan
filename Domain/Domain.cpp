@@ -891,7 +891,7 @@ int Domain::initialize() {
 
 		// clear node pointer array to enable initialisation
 		t_element.second->clear_node_ptr();
-		t_element.second->Element::initialize(shared_from_this());
+		t_element.second->initialize_base(shared_from_this());
 	});
 	element_pond.update();
 

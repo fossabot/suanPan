@@ -166,7 +166,7 @@ public:
 
 	~Element() override;
 
-	void initialize(const shared_ptr<DomainBase>&) override = 0;
+	void initialize_base(const shared_ptr<DomainBase>&) override final;
 
 	void set_initialized(bool) const override;
 	void set_symmetric(bool) const override;
