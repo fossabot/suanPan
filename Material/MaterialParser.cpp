@@ -80,7 +80,7 @@ int create_new_material(const shared_ptr<DomainBase>& domain, istringstream& com
 	else if(is_equal(material_id, "Flag02")) new_flag02(new_material, command);
 	else if(is_equal(material_id, "Gap01")) new_gap01(new_material, command);
 	else if(is_equal(material_id, "IsotropicElastic3D")) new_isotropicelastic3d(new_material, command);
-	else if(is_equal(material_id, "Kevin")) new_kevin(new_material, command);
+	else if(is_equal(material_id, "Kelvin")) new_kelvin(new_material, command);
 	else if(is_equal(material_id, "Laminated")) new_laminated(new_material, command);
 	else if(is_equal(material_id, "LinearDamage")) new_lineardamage(new_material, command);
 	else if(is_equal(material_id, "Maxwell")) new_maxwell(new_material, command);
@@ -1691,26 +1691,26 @@ void new_isotropicelastic3d(unique_ptr<Material>& return_obj, istringstream& com
 	return_obj = make_unique<IsotropicElastic3D>(tag, elastic_modulus, poissons_ratio, density);
 }
 
-void new_kevin(unique_ptr<Material>& return_obj, istringstream& command) {
+void new_kelvin(unique_ptr<Material>& return_obj, istringstream& command) {
 	unsigned tag;
 	if(!get_input(command, tag)) {
-		suanpan_error("new_kevin() requires a valid tag.\n");
+		suanpan_error("new_kelvin() requires a valid tag.\n");
 		return;
 	}
 
 	unsigned damper_tag;
 	if(!get_input(command, damper_tag)) {
-		suanpan_error("new_kevin() requires a valid tag.\n");
+		suanpan_error("new_kelvin() requires a valid tag.\n");
 		return;
 	}
 
 	unsigned spring_tag;
 	if(!get_input(command, spring_tag)) {
-		suanpan_error("new_kevin() requires a valid tag.\n");
+		suanpan_error("new_kelvin() requires a valid tag.\n");
 		return;
 	}
 
-	return_obj = make_unique<Kevin>(tag, damper_tag, spring_tag);
+	return_obj = make_unique<Kelvin>(tag, damper_tag, spring_tag);
 }
 
 void new_lineardamage(unique_ptr<Material>& return_obj, istringstream& command) {

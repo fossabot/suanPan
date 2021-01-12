@@ -729,9 +729,6 @@
     <ClCompile Include="..\..\..\Material\Material1D\Viscosity\BilinearViscosity.cpp">
       <Filter>Material\Material1D\Viscosity</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Material\Material1D\Viscosity\Kevin.cpp">
-      <Filter>Material\Material1D\Viscosity</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Material\Material1D\Viscosity\Maxwell.cpp">
       <Filter>Material\Material1D\Viscosity</Filter>
     </ClCompile>
@@ -1197,6 +1194,9 @@
     <ClCompile Include="..\..\..\suanPan.cpp" />
     <ClCompile Include="..\..\..\UnitTest\TestNURBS.cpp">
       <Filter>UnitTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Material\Material1D\Viscosity\Kelvin.cpp">
+      <Filter>Material\Material1D\Viscosity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1821,9 +1821,6 @@
     <ClInclude Include="..\..\..\Material\Material1D\Viscosity\BilinearViscosity.h">
       <Filter>Material\Material1D\Viscosity</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Material\Material1D\Viscosity\Kevin.h">
-      <Filter>Material\Material1D\Viscosity</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Material\Material1D\Viscosity\Maxwell.h">
       <Filter>Material\Material1D\Viscosity</Filter>
     </ClInclude>
@@ -2284,6 +2281,9 @@
       <Filter>UnitTest</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\suanPan.h" />
+    <ClInclude Include="..\..\..\Material\Material1D\Viscosity\Kelvin.h">
+      <Filter>Material\Material1D\Viscosity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\..\Resource\suanPan.rc" />

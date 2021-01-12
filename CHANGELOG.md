@@ -12,6 +12,7 @@
 6. add shared memory `SuperLU` solver
 7. add `Spike` solver for banded matrices
 8. add displacement based beam element with end moment release: `B21EL` and `B21EH` elements
+9. correct name of `Kelvin` model
 
 ### Developer
 

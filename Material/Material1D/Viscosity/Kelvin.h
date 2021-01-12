@@ -15,35 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 /**
- * @class Kevin
- * @brief A 1D Kevin material class.
+ * @class Kelvin
+ * @brief A 1D Kelvin material class.
  * @author tlc
- * @date 07/09/2020
- * @version 0.1.0
- * @file Kevin.h
+ * @date 13/01/2021
+ * @version 0.2.0
+ * @file KELVIN.h
  * @addtogroup Material-1D
  * @{
  */
 
-#ifndef KEVIN_H
-#define KEVIN_H
+#ifndef KELVIN_H
+#define KELVIN_H
 
 #include <Material/Material1D/Material1D.h>
 
-class Kevin final : public Material1D {
+class Kelvin final : public Material1D {
 	const unsigned damper_tag, spring_tag;
 
 	unique_ptr<Material> damper, spring;
 public:
-	Kevin(unsigned, // tag
-	      unsigned, // damper tag
-	      unsigned  // spring tag
+	Kelvin(unsigned, // tag
+	       unsigned, // damper tag
+	       unsigned  // spring tag
 	);
-	Kevin(const Kevin&);
-	Kevin(Kevin&&) = delete;
-	Kevin& operator=(const Kevin&) = delete;
-	Kevin& operator=(Kevin&&) = delete;
-	~Kevin() override = default;
+	Kelvin(const Kelvin&);
+	Kelvin(Kelvin&&) = delete;
+	Kelvin& operator=(const Kelvin&) = delete;
+	Kelvin& operator=(Kelvin&&) = delete;
+	~Kelvin() override = default;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 

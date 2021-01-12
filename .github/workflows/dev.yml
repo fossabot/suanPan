@@ -1,212 +1,212 @@
 name: Edge Development
 on:
   push:
-    branches: [ dev ]
+    branches: [dev]
   pull_request:
-    branches: [ dev ]
+    branches: [dev]
 jobs:
   linux:
     runs-on: ubuntu-20.04
     steps:
-    - name: Clone
-      uses: actions/checkout@v2
-    - name: Compile
-      run: |
-        mkdir cmake-build-debug && cd cmake-build-debug
-        cmake -DCMAKE_BUILD_TYPE=Debug -DTEST_COVERAGE=ON -DUSE_HDF5=ON ../
-        make -j4
-        cp ../Example/Solver/EZ .
-        cp ../Example/Material/Table .
-        cp ../Example/Material/C.txt .
-        cp ../Example/Material/T.txt .
-        cp ../Example/Material/CYCLE.txt .
-        ./suanPan -t > /dev/null
-        ./suanPan -ctest > /dev/null
-        ./suanPan -c -f ../Example/Misc/Converter/TEST.inp > /dev/null
-        ./suanPan -s -f ../Example/Misc/Converter/TEST.inp > /dev/null
-        ./suanPan -f ../Example/Converger/AbsIncreDisp.supan > /dev/null
-        ./suanPan -f ../Example/Converger/AbsIncreEnergy.supan > /dev/null
-        ./suanPan -f ../Example/Converger/AbsResidual.supan > /dev/null
-        ./suanPan -f ../Example/Converger/FixedNumber.supan > /dev/null
-        ./suanPan -f ../Example/Converger/RelIncreDisp.supan > /dev/null
-        ./suanPan -f ../Example/Converger/RelIncreEnergy.supan > /dev/null
-        ./suanPan -f ../Example/Converger/RelResidual.supan > /dev/null
-        ./suanPan -f ../Example/Element/Allman.supan > /dev/null
-        ./suanPan -f ../Example/Element/B21.supan > /dev/null
-        ./suanPan -f ../Example/Element/B21E.supan > /dev/null
-        ./suanPan -f ../Example/Element/B21H.supan > /dev/null
-        ./suanPan -f ../Example/Element/B31.supan > /dev/null
-        ./suanPan -f ../Example/Element/C3D20.supan > /dev/null
-        ./suanPan -f ../Example/Element/C3D20NL.supan > /dev/null
-        ./suanPan -f ../Example/Element/C3D4.supan > /dev/null
-        ./suanPan -f ../Example/Element/C3D4NL.supan > /dev/null
-        ./suanPan -f ../Example/Element/C3D8.supan > /dev/null
-        ./suanPan -f ../Example/Element/C3D8I.supan > /dev/null
-        ./suanPan -f ../Example/Element/C3D8R.supan > /dev/null
-        ./suanPan -f ../Example/Element/CAX3.supan > /dev/null
-        ./suanPan -f ../Example/Element/CAX4.supan > /dev/null
-        ./suanPan -f ../Example/Element/CAX8.supan > /dev/null
-        ./suanPan -f ../Example/Element/CIN3D8.supan > /dev/null
-        ./suanPan -f ../Example/Element/CINP4.supan > /dev/null
-        ./suanPan -f ../Example/Element/Contact2D.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP3.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP3NL.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP4.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP4I.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP4NL.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP4R.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP5.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP6.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP6NL.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP7.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP8.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP8NL.supan > /dev/null
-        ./suanPan -f ../Example/Element/CP8R.supan > /dev/null
-        ./suanPan -f ../Example/Element/Damper01.supan > /dev/null
-        ./suanPan -f ../Example/Element/Damper02.supan > /dev/null
-        ./suanPan -f ../Example/Element/DC3D4.supan > /dev/null
-        ./suanPan -f ../Example/Element/DC3D8.supan > /dev/null
-        ./suanPan -f ../Example/Element/DCP3.supan > /dev/null
-        ./suanPan -f ../Example/Element/DCP4.supan > /dev/null
-        ./suanPan -f ../Example/Element/DKT3.supan > /dev/null
-        ./suanPan -f ../Example/Element/DKT4.supan > /dev/null
-        ./suanPan -f ../Example/Element/DKTS3.supan > /dev/null
-        ./suanPan -f ../Example/Element/EB21.supan > /dev/null
-        ./suanPan -f ../Example/Element/Embedded2D.supan > /dev/null
-        ./suanPan -f ../Example/Element/F21.supan > /dev/null
-        ./suanPan -f ../Example/Element/F21H.supan > /dev/null
-        ./suanPan -f ../Example/Element/F31.supan > /dev/null
-        ./suanPan -f ../Example/Element/GCMQ.supan > /dev/null
-        ./suanPan -f ../Example/Element/GQ12.supan > /dev/null
-        ./suanPan -f ../Example/Element/IP.supan > /dev/null
-        ./suanPan -f ../Example/Element/Joint.supan > /dev/null
-        ./suanPan -f ../Example/Element/Mindlin4.supan > /dev/null
-        ./suanPan -f ../Example/Element/MVLEM.supan > /dev/null
-        ./suanPan -f ../Example/Element/PatchCube.supan > /dev/null
-        ./suanPan -f ../Example/Element/PatchQuad.supan > /dev/null
-        ./suanPan -f ../Example/Element/PS.supan > /dev/null
-        ./suanPan -f ../Example/Element/QE2.supan > /dev/null
-        ./suanPan -f ../Example/Element/RCP4.supan > /dev/null
-        ./suanPan -f ../Example/Element/RebarLayer.supan > /dev/null
-        ./suanPan -f ../Example/Element/RGCMQ.supan > /dev/null
-        ./suanPan -f ../Example/Element/S4.supan > /dev/null
-        ./suanPan -f ../Example/Element/SGCMQ.supan > /dev/null
-        ./suanPan -f ../Example/Element/SGCMS.supan > /dev/null
-        ./suanPan -f ../Example/Element/SingleSection.supan > /dev/null
-        ./suanPan -f ../Example/Element/Spring01.supan > /dev/null
-        ./suanPan -f ../Example/Element/Spring02.supan > /dev/null
-        ./suanPan -f ../Example/Element/SRGCMQ.supan > /dev/null
-        ./suanPan -f ../Example/Element/T2D2.supan > /dev/null
-        ./suanPan -f ../Example/Element/T3D2.supan > /dev/null
-        ./suanPan -f ../Example/Element/T3D2S.supan > /dev/null
-        ./suanPan -f ../Example/Material/AFC.supan > /dev/null
-        ./suanPan -f ../Example/Material/AFC03.supan > /dev/null
-        ./suanPan -f ../Example/Material/ArmstrongFrederick.supan > /dev/null
-        ./suanPan -f ../Example/Material/ArmstrongFrederick1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/Bilinear1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/Bilinear2D.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearCC.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearElastic1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearHoffman.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearJ2.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearJ22.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearJ23.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearMises1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearOO.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearPeric.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearPO.supan > /dev/null
-        ./suanPan -f ../Example/Material/BilinearViscosity.supan > /dev/null
-        ./suanPan -f ../Example/Material/BlatzKo.supan > /dev/null
-        ./suanPan -f ../Example/Material/BoucWen.supan > /dev/null
-        ./suanPan -f ../Example/Material/BWBN.supan > /dev/null
-        ./suanPan -f ../Example/Material/CDP.supan > /dev/null
-        ./suanPan -f ../Example/Material/CDP2.supan > /dev/null
-        ./suanPan -f ../Example/Material/CDPPS.supan > /dev/null
-        ./suanPan -f ../Example/Material/Concrete01.supan > /dev/null
-        ./suanPan -f ../Example/Material/Concrete21.supan > /dev/null
-        ./suanPan -f ../Example/Material/Concrete22.supan > /dev/null
-        ./suanPan -f ../Example/Material/ConcreteCM.supan > /dev/null
-        ./suanPan -f ../Example/Material/ConcreteExp.supan > /dev/null
-        ./suanPan -f ../Example/Material/ConcreteTable.supan > /dev/null
-        ./suanPan -f ../Example/Material/ConcreteTsai.supan > /dev/null
-        ./suanPan -f ../Example/Material/Dhakal.supan > /dev/null
-        ./suanPan -f ../Example/Material/DP.supan > /dev/null
-        ./suanPan -f ../Example/Material/Elastic2D.supan > /dev/null
-        ./suanPan -f ../Example/Material/Elastic3D.supan > /dev/null
-        ./suanPan -f ../Example/Material/ExpCC.supan > /dev/null
-        ./suanPan -f ../Example/Material/ExpDP.supan > /dev/null
-        ./suanPan -f ../Example/Material/ExpGurson.supan > /dev/null
-        ./suanPan -f ../Example/Material/ExpGurson1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/ExpHoffman.supan > /dev/null
-        ./suanPan -f ../Example/Material/ExpJ2.supan > /dev/null
-        ./suanPan -f ../Example/Material/ExpMises1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/Flag02.supan > /dev/null
-        ./suanPan -f ../Example/Material/Gap01.supan > /dev/null
-        ./suanPan -f ../Example/Material/Kevin.supan > /dev/null
-        ./suanPan -f ../Example/Material/Laminated.supan > /dev/null
-        ./suanPan -f ../Example/Material/LinearDamage.supan > /dev/null
-        ./suanPan -f ../Example/Material/LinearHoffman.supan > /dev/null
-        ./suanPan -f ../Example/Material/MaterialTest.supan > /dev/null
-        ./suanPan -f ../Example/Material/Maxwell.supan > /dev/null
-        ./suanPan -f ../Example/Material/MooneyRivlin.supan > /dev/null
-        ./suanPan -f ../Example/Material/MPF.supan > /dev/null
-        ./suanPan -f ../Example/Material/MultilinearElastic1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/MultilinearJ2.supan > /dev/null
-        ./suanPan -f ../Example/Material/MultilinearMises1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/MultilinearOO.supan > /dev/null
-        ./suanPan -f ../Example/Material/MultilinearPO.supan > /dev/null
-        ./suanPan -f ../Example/Material/NLE3D01.supan > /dev/null
-        ./suanPan -f ../Example/Material/OrthotropicElastic3D.supan > /dev/null
-        ./suanPan -f ../Example/Material/ParabolicCC.supan > /dev/null
-        ./suanPan -f ../Example/Material/Parallel.supan > /dev/null
-        ./suanPan -f ../Example/Material/PlaneStrain.supan > /dev/null
-        ./suanPan -f ../Example/Material/PlaneStress.supan > /dev/null
-        ./suanPan -f ../Example/Material/PolyElastic1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/PolyJ2.supan > /dev/null
-        ./suanPan -f ../Example/Material/RO.supan > /dev/null
-        ./suanPan -f ../Example/Material/Sequential.supan > /dev/null
-        ./suanPan -f ../Example/Material/SimpleSand.supan > /dev/null
-        ./suanPan -f ../Example/Material/SlipLock.supan > /dev/null
-        ./suanPan -f ../Example/Material/SteelBRB.supan > /dev/null
-        ./suanPan -f ../Example/Material/Substepping.supan > /dev/null
-        ./suanPan -f ../Example/Material/TableGurson.supan > /dev/null
-        ./suanPan -f ../Example/Material/TrilinearDegradation.supan > /dev/null
-        ./suanPan -f ../Example/Material/Uniaxial.supan > /dev/null
-        ./suanPan -f ../Example/Material/VAFCRP.supan > /dev/null
-        ./suanPan -f ../Example/Material/VAFCRP1D.supan > /dev/null
-        ./suanPan -f ../Example/Material/Yeoh.supan > /dev/null
-        ./suanPan -f ../Example/Other/BodyForce.supan > /dev/null
-        ./suanPan -f ../Example/Other/Clear.supan > /dev/null
-        ./suanPan -f ../Example/Other/Collision.supan > /dev/null
-        ./suanPan -f ../Example/Other/Embed2D.supan > /dev/null
-        ./suanPan -f ../Example/Other/Group.supan > /dev/null
-        ./suanPan -f ../Example/Other/GroupBodyForce.supan > /dev/null
-        ./suanPan -f ../Example/Other/GroupDisplacement.supan > /dev/null
-        ./suanPan -f ../Example/Other/GroupLoad.supan > /dev/null
-        ./suanPan -f ../Example/Other/MPC.supan > /dev/null
-        ./suanPan -f ../Example/Other/Optimization.supan > /dev/null
-        ./suanPan -f ../Example/Other/RigidWall.supan > /dev/null
-        ./suanPan -f ../Example/Section/Code.supan > /dev/null
-        ./suanPan -f ../Example/Section/Fibre1D.supan > /dev/null
-        ./suanPan -f ../Example/Section/Fibre2D.supan > /dev/null
-        ./suanPan -f ../Example/Section/HSection2D.supan > /dev/null
-        ./suanPan -f ../Example/Section/ISection2D.supan > /dev/null
-        ./suanPan -f ../Example/Section/ISection3D.supan > /dev/null
-        ./suanPan -f ../Example/Solver/Amplitude.supan > /dev/null
-        ./suanPan -f ../Example/Solver/BatheTwoStep.supan > /dev/null
-        ./suanPan -f ../Example/Solver/BGFS.supan > /dev/null
-        ./suanPan -f ../Example/Solver/Buckle.supan > /dev/null
-        ./suanPan -f ../Example/Solver/CentralDifference.supan > /dev/null
-        ./suanPan -f ../Example/Solver/Frequency.supan > /dev/null
-        ./suanPan -f ../Example/Solver/GeneralizedAlpha.supan > /dev/null
-        ./suanPan -f ../Example/Solver/Lee.supan > /dev/null
-        ./suanPan -f ../Example/Solver/LeeFull.supan > /dev/null
-        ./suanPan -f ../Example/Solver/mNewton.supan > /dev/null
-        ./suanPan -f ../Example/Solver/Newmark.supan > /dev/null
-        ./suanPan -f ../Example/Solver/Newton.supan > /dev/null
-        ./suanPan -f ../Example/Solver/Ramm.supan > /dev/null
-        ./suanPan -f ../Example/Solver/RayleighNewmark.supan > /dev/null
-        ./suanPan -f ../Example/Solver/SHALLOW.ARC.supan > /dev/null
-        ./suanPan -f ../Example/Solver/WilsonPenzien.supan > /dev/null
-        for SRC in `find . | egrep '\.o'`; do gcov -n $SRC > /dev/null; done
-        bash <(curl -s https://codecov.io/bash)
+      - name: Clone
+        uses: actions/checkout@v2
+      - name: Compile
+        run: |
+          mkdir cmake-build-debug && cd cmake-build-debug
+          cmake -DCMAKE_BUILD_TYPE=Debug -DTEST_COVERAGE=ON -DUSE_HDF5=ON ../
+          make -j4
+          cp ../Example/Solver/EZ .
+          cp ../Example/Material/Table .
+          cp ../Example/Material/C.txt .
+          cp ../Example/Material/T.txt .
+          cp ../Example/Material/CYCLE.txt .
+          ./suanPan -t > /dev/null
+          ./suanPan -ctest > /dev/null
+          ./suanPan -c -f ../Example/Misc/Converter/TEST.inp > /dev/null
+          ./suanPan -s -f ../Example/Misc/Converter/TEST.inp > /dev/null
+          ./suanPan -f ../Example/Converger/AbsIncreDisp.supan > /dev/null
+          ./suanPan -f ../Example/Converger/AbsIncreEnergy.supan > /dev/null
+          ./suanPan -f ../Example/Converger/AbsResidual.supan > /dev/null
+          ./suanPan -f ../Example/Converger/FixedNumber.supan > /dev/null
+          ./suanPan -f ../Example/Converger/RelIncreDisp.supan > /dev/null
+          ./suanPan -f ../Example/Converger/RelIncreEnergy.supan > /dev/null
+          ./suanPan -f ../Example/Converger/RelResidual.supan > /dev/null
+          ./suanPan -f ../Example/Element/Allman.supan > /dev/null
+          ./suanPan -f ../Example/Element/B21.supan > /dev/null
+          ./suanPan -f ../Example/Element/B21E.supan > /dev/null
+          ./suanPan -f ../Example/Element/B21H.supan > /dev/null
+          ./suanPan -f ../Example/Element/B31.supan > /dev/null
+          ./suanPan -f ../Example/Element/C3D20.supan > /dev/null
+          ./suanPan -f ../Example/Element/C3D20NL.supan > /dev/null
+          ./suanPan -f ../Example/Element/C3D4.supan > /dev/null
+          ./suanPan -f ../Example/Element/C3D4NL.supan > /dev/null
+          ./suanPan -f ../Example/Element/C3D8.supan > /dev/null
+          ./suanPan -f ../Example/Element/C3D8I.supan > /dev/null
+          ./suanPan -f ../Example/Element/C3D8R.supan > /dev/null
+          ./suanPan -f ../Example/Element/CAX3.supan > /dev/null
+          ./suanPan -f ../Example/Element/CAX4.supan > /dev/null
+          ./suanPan -f ../Example/Element/CAX8.supan > /dev/null
+          ./suanPan -f ../Example/Element/CIN3D8.supan > /dev/null
+          ./suanPan -f ../Example/Element/CINP4.supan > /dev/null
+          ./suanPan -f ../Example/Element/Contact2D.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP3.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP3NL.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP4.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP4I.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP4NL.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP4R.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP5.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP6.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP6NL.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP7.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP8.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP8NL.supan > /dev/null
+          ./suanPan -f ../Example/Element/CP8R.supan > /dev/null
+          ./suanPan -f ../Example/Element/Damper01.supan > /dev/null
+          ./suanPan -f ../Example/Element/Damper02.supan > /dev/null
+          ./suanPan -f ../Example/Element/DC3D4.supan > /dev/null
+          ./suanPan -f ../Example/Element/DC3D8.supan > /dev/null
+          ./suanPan -f ../Example/Element/DCP3.supan > /dev/null
+          ./suanPan -f ../Example/Element/DCP4.supan > /dev/null
+          ./suanPan -f ../Example/Element/DKT3.supan > /dev/null
+          ./suanPan -f ../Example/Element/DKT4.supan > /dev/null
+          ./suanPan -f ../Example/Element/DKTS3.supan > /dev/null
+          ./suanPan -f ../Example/Element/EB21.supan > /dev/null
+          ./suanPan -f ../Example/Element/Embedded2D.supan > /dev/null
+          ./suanPan -f ../Example/Element/F21.supan > /dev/null
+          ./suanPan -f ../Example/Element/F21H.supan > /dev/null
+          ./suanPan -f ../Example/Element/F31.supan > /dev/null
+          ./suanPan -f ../Example/Element/GCMQ.supan > /dev/null
+          ./suanPan -f ../Example/Element/GQ12.supan > /dev/null
+          ./suanPan -f ../Example/Element/IP.supan > /dev/null
+          ./suanPan -f ../Example/Element/Joint.supan > /dev/null
+          ./suanPan -f ../Example/Element/Mindlin4.supan > /dev/null
+          ./suanPan -f ../Example/Element/MVLEM.supan > /dev/null
+          ./suanPan -f ../Example/Element/PatchCube.supan > /dev/null
+          ./suanPan -f ../Example/Element/PatchQuad.supan > /dev/null
+          ./suanPan -f ../Example/Element/PS.supan > /dev/null
+          ./suanPan -f ../Example/Element/QE2.supan > /dev/null
+          ./suanPan -f ../Example/Element/RCP4.supan > /dev/null
+          ./suanPan -f ../Example/Element/RebarLayer.supan > /dev/null
+          ./suanPan -f ../Example/Element/RGCMQ.supan > /dev/null
+          ./suanPan -f ../Example/Element/S4.supan > /dev/null
+          ./suanPan -f ../Example/Element/SGCMQ.supan > /dev/null
+          ./suanPan -f ../Example/Element/SGCMS.supan > /dev/null
+          ./suanPan -f ../Example/Element/SingleSection.supan > /dev/null
+          ./suanPan -f ../Example/Element/Spring01.supan > /dev/null
+          ./suanPan -f ../Example/Element/Spring02.supan > /dev/null
+          ./suanPan -f ../Example/Element/SRGCMQ.supan > /dev/null
+          ./suanPan -f ../Example/Element/T2D2.supan > /dev/null
+          ./suanPan -f ../Example/Element/T3D2.supan > /dev/null
+          ./suanPan -f ../Example/Element/T3D2S.supan > /dev/null
+          ./suanPan -f ../Example/Material/AFC.supan > /dev/null
+          ./suanPan -f ../Example/Material/AFC03.supan > /dev/null
+          ./suanPan -f ../Example/Material/ArmstrongFrederick.supan > /dev/null
+          ./suanPan -f ../Example/Material/ArmstrongFrederick1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/Bilinear1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/Bilinear2D.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearCC.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearElastic1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearHoffman.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearJ2.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearJ22.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearJ23.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearMises1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearOO.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearPeric.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearPO.supan > /dev/null
+          ./suanPan -f ../Example/Material/BilinearViscosity.supan > /dev/null
+          ./suanPan -f ../Example/Material/BlatzKo.supan > /dev/null
+          ./suanPan -f ../Example/Material/BoucWen.supan > /dev/null
+          ./suanPan -f ../Example/Material/BWBN.supan > /dev/null
+          ./suanPan -f ../Example/Material/CDP.supan > /dev/null
+          ./suanPan -f ../Example/Material/CDP2.supan > /dev/null
+          ./suanPan -f ../Example/Material/CDPPS.supan > /dev/null
+          ./suanPan -f ../Example/Material/Concrete01.supan > /dev/null
+          ./suanPan -f ../Example/Material/Concrete21.supan > /dev/null
+          ./suanPan -f ../Example/Material/Concrete22.supan > /dev/null
+          ./suanPan -f ../Example/Material/ConcreteCM.supan > /dev/null
+          ./suanPan -f ../Example/Material/ConcreteExp.supan > /dev/null
+          ./suanPan -f ../Example/Material/ConcreteTable.supan > /dev/null
+          ./suanPan -f ../Example/Material/ConcreteTsai.supan > /dev/null
+          ./suanPan -f ../Example/Material/Dhakal.supan > /dev/null
+          ./suanPan -f ../Example/Material/DP.supan > /dev/null
+          ./suanPan -f ../Example/Material/Elastic2D.supan > /dev/null
+          ./suanPan -f ../Example/Material/Elastic3D.supan > /dev/null
+          ./suanPan -f ../Example/Material/ExpCC.supan > /dev/null
+          ./suanPan -f ../Example/Material/ExpDP.supan > /dev/null
+          ./suanPan -f ../Example/Material/ExpGurson.supan > /dev/null
+          ./suanPan -f ../Example/Material/ExpGurson1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/ExpHoffman.supan > /dev/null
+          ./suanPan -f ../Example/Material/ExpJ2.supan > /dev/null
+          ./suanPan -f ../Example/Material/ExpMises1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/Flag02.supan > /dev/null
+          ./suanPan -f ../Example/Material/Gap01.supan > /dev/null
+          ./suanPan -f ../Example/Material/Kelvin.supan > /dev/null
+          ./suanPan -f ../Example/Material/Laminated.supan > /dev/null
+          ./suanPan -f ../Example/Material/LinearDamage.supan > /dev/null
+          ./suanPan -f ../Example/Material/LinearHoffman.supan > /dev/null
+          ./suanPan -f ../Example/Material/MaterialTest.supan > /dev/null
+          ./suanPan -f ../Example/Material/Maxwell.supan > /dev/null
+          ./suanPan -f ../Example/Material/MooneyRivlin.supan > /dev/null
+          ./suanPan -f ../Example/Material/MPF.supan > /dev/null
+          ./suanPan -f ../Example/Material/MultilinearElastic1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/MultilinearJ2.supan > /dev/null
+          ./suanPan -f ../Example/Material/MultilinearMises1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/MultilinearOO.supan > /dev/null
+          ./suanPan -f ../Example/Material/MultilinearPO.supan > /dev/null
+          ./suanPan -f ../Example/Material/NLE3D01.supan > /dev/null
+          ./suanPan -f ../Example/Material/OrthotropicElastic3D.supan > /dev/null
+          ./suanPan -f ../Example/Material/ParabolicCC.supan > /dev/null
+          ./suanPan -f ../Example/Material/Parallel.supan > /dev/null
+          ./suanPan -f ../Example/Material/PlaneStrain.supan > /dev/null
+          ./suanPan -f ../Example/Material/PlaneStress.supan > /dev/null
+          ./suanPan -f ../Example/Material/PolyElastic1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/PolyJ2.supan > /dev/null
+          ./suanPan -f ../Example/Material/RO.supan > /dev/null
+          ./suanPan -f ../Example/Material/Sequential.supan > /dev/null
+          ./suanPan -f ../Example/Material/SimpleSand.supan > /dev/null
+          ./suanPan -f ../Example/Material/SlipLock.supan > /dev/null
+          ./suanPan -f ../Example/Material/SteelBRB.supan > /dev/null
+          ./suanPan -f ../Example/Material/Substepping.supan > /dev/null
+          ./suanPan -f ../Example/Material/TableGurson.supan > /dev/null
+          ./suanPan -f ../Example/Material/TrilinearDegradation.supan > /dev/null
+          ./suanPan -f ../Example/Material/Uniaxial.supan > /dev/null
+          ./suanPan -f ../Example/Material/VAFCRP.supan > /dev/null
+          ./suanPan -f ../Example/Material/VAFCRP1D.supan > /dev/null
+          ./suanPan -f ../Example/Material/Yeoh.supan > /dev/null
+          ./suanPan -f ../Example/Other/BodyForce.supan > /dev/null
+          ./suanPan -f ../Example/Other/Clear.supan > /dev/null
+          ./suanPan -f ../Example/Other/Collision.supan > /dev/null
+          ./suanPan -f ../Example/Other/Embed2D.supan > /dev/null
+          ./suanPan -f ../Example/Other/Group.supan > /dev/null
+          ./suanPan -f ../Example/Other/GroupBodyForce.supan > /dev/null
+          ./suanPan -f ../Example/Other/GroupDisplacement.supan > /dev/null
+          ./suanPan -f ../Example/Other/GroupLoad.supan > /dev/null
+          ./suanPan -f ../Example/Other/MPC.supan > /dev/null
+          ./suanPan -f ../Example/Other/Optimization.supan > /dev/null
+          ./suanPan -f ../Example/Other/RigidWall.supan > /dev/null
+          ./suanPan -f ../Example/Section/Code.supan > /dev/null
+          ./suanPan -f ../Example/Section/Fibre1D.supan > /dev/null
+          ./suanPan -f ../Example/Section/Fibre2D.supan > /dev/null
+          ./suanPan -f ../Example/Section/HSection2D.supan > /dev/null
+          ./suanPan -f ../Example/Section/ISection2D.supan > /dev/null
+          ./suanPan -f ../Example/Section/ISection3D.supan > /dev/null
+          ./suanPan -f ../Example/Solver/Amplitude.supan > /dev/null
+          ./suanPan -f ../Example/Solver/BatheTwoStep.supan > /dev/null
+          ./suanPan -f ../Example/Solver/BGFS.supan > /dev/null
+          ./suanPan -f ../Example/Solver/Buckle.supan > /dev/null
+          ./suanPan -f ../Example/Solver/CentralDifference.supan > /dev/null
+          ./suanPan -f ../Example/Solver/Frequency.supan > /dev/null
+          ./suanPan -f ../Example/Solver/GeneralizedAlpha.supan > /dev/null
+          ./suanPan -f ../Example/Solver/Lee.supan > /dev/null
+          ./suanPan -f ../Example/Solver/LeeFull.supan > /dev/null
+          ./suanPan -f ../Example/Solver/mNewton.supan > /dev/null
+          ./suanPan -f ../Example/Solver/Newmark.supan > /dev/null
+          ./suanPan -f ../Example/Solver/Newton.supan > /dev/null
+          ./suanPan -f ../Example/Solver/Ramm.supan > /dev/null
+          ./suanPan -f ../Example/Solver/RayleighNewmark.supan > /dev/null
+          ./suanPan -f ../Example/Solver/SHALLOW.ARC.supan > /dev/null
+          ./suanPan -f ../Example/Solver/WilsonPenzien.supan > /dev/null
+          for SRC in `find . | egrep '\.o'`; do gcov -n $SRC > /dev/null; done
+          bash <(curl -s https://codecov.io/bash)

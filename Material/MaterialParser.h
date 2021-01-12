@@ -63,7 +63,7 @@ void new_flag01(unique_ptr<Material>&, istringstream&);
 void new_flag02(unique_ptr<Material>&, istringstream&);
 void new_gap01(unique_ptr<Material>&, istringstream&);
 void new_isotropicelastic3d(unique_ptr<Material>&, istringstream&);
-void new_kevin(unique_ptr<Material>&, istringstream&);
+void new_kelvin(unique_ptr<Material>&, istringstream&);
 void new_lineardamage(unique_ptr<Material>&, istringstream&);
 void new_maxwell(unique_ptr<Material>&, istringstream&);
 void new_mooneyrivlin(unique_ptr<Material>&, istringstream&);

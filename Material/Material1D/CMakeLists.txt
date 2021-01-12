@@ -30,7 +30,7 @@ set(M1D
     Material1D/Hysteresis/Trivial.cpp
     Material1D/Material1D.cpp
     Material1D/Viscosity/BilinearViscosity.cpp
-    Material1D/Viscosity/Kevin.cpp
+    Material1D/Viscosity/Kelvin.cpp
     Material1D/Viscosity/Maxwell.cpp
     Material1D/Viscosity/NonlinearViscosity.cpp
     Material1D/Viscosity/Viscosity01.cpp

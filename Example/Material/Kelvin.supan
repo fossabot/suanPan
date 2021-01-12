@@ -1,14 +1,14 @@
-# A TEST MODEL FOR KEVIN MODEL
+# A TEST MODEL FOR KELVIN MODEL
 
 node 1 0 0
 node 2 1 0
 
 material Elastic1D 1 100 .1
 material Viscosity02 2 1. 1E3 1E3 1E3 1E3 1E3 1E3 1E3
-material Kevin 3 2 1
+material Kelvin 3 2 1
 
 element T2D2 1 1 2 1 10
-element T2D2 2 1 2 3 10
+element Damper01 2 1 2 3
 
 mass 3 2 10 1
 
@@ -33,7 +33,7 @@ set fixed_step_size true
 
 integrator Newmark 1
 
-converger RelIncreDisp 1 1E-10 4 1
+converger RelIncreDisp 1 1E-11 10 1
 
 analyze
 
@@ -48,8 +48,6 @@ analyze
 # Acceleration:
 #   -0.0271        0
 peek node 2
-
-# save recorder 1 2
 
 reset
 clear

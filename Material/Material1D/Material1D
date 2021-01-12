@@ -29,7 +29,7 @@
 #include "Hysteresis/Trivial.h"
 #include "Material1D.h"
 #include "Viscosity/BilinearViscosity.h"
-#include "Viscosity/Kevin.h"
+#include "Viscosity/Kelvin.h"
 #include "Viscosity/Maxwell.h"
 #include "Viscosity/NonlinearViscosity.h"
 #include "Viscosity/Viscosity01.h"
