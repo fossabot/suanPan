@@ -13,15 +13,10 @@ jobs:
       - name: Compile
         run: |
           echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
-          sudo apt update
-          sudo apt install gcc g++ gfortran libglu1-mesa-dev freeglut3-dev mesa-common-dev
-          wget https://www.vtk.org/files/release/9.0/VTK-9.0.1.tar.gz
-          tar -xf VTK-9.0.1.tar.gz
-          mkdir VTK-build && cd VTK-build
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ../VTK-9.0.1
-          sudo make install -j4
-          cd ..
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON .
+          sudo apt update && sudo apt install gcc g++ gfortran libglu1-mesa-dev freeglut3-dev mesa-common-dev
+          wget https://github.com/TLCFEM/vtk-prebuild/releases/download/vtk-2021011321/VTK-9.0.1.tar.gz
+          mkdir VTK-build && tar -xf VTK-9.0.1.tar.gz -C VTK-build
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_PATH=./VTK-build .
           make -j4
           cp Enhancement/suanPan.sh .
           cp Enhancement/suanPan.sublime-completions .
