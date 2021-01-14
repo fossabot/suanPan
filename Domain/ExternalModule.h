@@ -46,6 +46,8 @@ class Constraint;
 class ExternalModule {
 	void* ext_library = nullptr;
 	void* ext_creator = nullptr;
+
+	bool locate_module(string);
 public:
 	const string library_name;
 
@@ -56,7 +58,8 @@ public:
 	ExternalModule& operator=(ExternalModule&&) = delete;
 	~ExternalModule();
 
-	bool locate_module(string);
+	bool locate_c_module(const string&);
+	bool locate_cpp_module(const string&);
 
 	void new_object(unique_ptr<Element>&, istringstream&) const;
 	void new_object(unique_ptr<Load>&, istringstream&) const;
@@ -66,6 +69,15 @@ public:
 	void new_object(unique_ptr<Amplitude>&, istringstream&) const;
 	void new_object(unique_ptr<Modifier>&, istringstream&) const;
 	void new_object(unique_ptr<Constraint>&, istringstream&) const;
+
+	void new_adapter(unique_ptr<Element>&, istringstream&) const;
+	void new_adapter(unique_ptr<Load>&, istringstream&) const;
+	void new_adapter(unique_ptr<Material>&, istringstream&) const;
+	void new_adapter(unique_ptr<Section>&, istringstream&) const;
+	void new_adapter(unique_ptr<Solver>&, istringstream&) const;
+	void new_adapter(unique_ptr<Amplitude>&, istringstream&) const;
+	void new_adapter(unique_ptr<Modifier>&, istringstream&) const;
+	void new_adapter(unique_ptr<Constraint>&, istringstream&) const;
 };
 
 class load {
@@ -77,7 +89,7 @@ template<typename T> void load::object(unique_ptr<T>& new_object, const shared_p
 	// check if the library is already loaded
 	auto loaded = false;
 	for(const auto& I : domain->get_external_module_pool())
-		if(is_equal(I->library_name, id) || I->locate_module(id)) {
+		if(is_equal(I->library_name, id) || I->locate_cpp_module(id) || I->locate_c_module(id)) {
 			loaded = true;
 			break;
 		}
@@ -86,7 +98,9 @@ template<typename T> void load::object(unique_ptr<T>& new_object, const shared_p
 	// if loaded find corresponding function
 	if(loaded || domain->insert(make_shared<ExternalModule>(id)))
 		for(const auto& I : domain->get_external_module_pool()) {
-			if(I->locate_module(id)) I->new_object(new_object, command);
+			if(I->locate_cpp_module(id)) I->new_object(new_object, command);
+			if(new_object != nullptr) break;
+			if(I->locate_c_module(id)) I->new_adapter(new_object, command);
 			if(new_object != nullptr) break;
 		}
 }

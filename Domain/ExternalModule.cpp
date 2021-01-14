@@ -15,22 +15,41 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////////////
 
+// ReSharper disable CppFunctionalStyleCast
 #include "ExternalModule.h"
+#include <Material/ExternalMaterial.h>
 #include <algorithm>
+
 #if defined(SUANPAN_WIN)
 #include <Windows.h>
 #elif defined(SUANPAN_UNIX)
 #include <dlfcn.h>
 #endif
 
-using element_creator = void (*)(unique_ptr<Element>&, istringstream&);
-using load_creator = void (*)(unique_ptr<Load>&, istringstream&);
-using material_creator = void (*)(unique_ptr<Material>&, istringstream&);
-using section_creator = void (*)(unique_ptr<Section>&, istringstream&);
-using solver_creator = void (*)(unique_ptr<Solver>&, istringstream&);
-using amplitude_creator = void (*)(unique_ptr<Amplitude>&, istringstream&);
-using modifier_creator = void (*)(unique_ptr<Modifier>&, istringstream&);
-using constraint_creator = void (*)(unique_ptr<Constraint>&, istringstream&);
+using element_creator = void(*)(unique_ptr<Element>&, istringstream&);
+using load_creator = void(*)(unique_ptr<Load>&, istringstream&);
+using material_creator = void(*)(unique_ptr<Material>&, istringstream&);
+using section_creator = void(*)(unique_ptr<Section>&, istringstream&);
+using solver_creator = void(*)(unique_ptr<Solver>&, istringstream&);
+using amplitude_creator = void(*)(unique_ptr<Amplitude>&, istringstream&);
+using modifier_creator = void(*)(unique_ptr<Modifier>&, istringstream&);
+using constraint_creator = void(*)(unique_ptr<Constraint>&, istringstream&);
+
+using external_handler = void(*)(ExternalMaterialData*, int*);
+
+bool ExternalModule::locate_module(string module_name) {
+	if(ext_library == nullptr) return false;
+
+	transform(module_name.begin(), module_name.end(), module_name.begin(), suanpan::to_lower);
+
+#ifdef SUANPAN_WIN
+	ext_creator = reinterpret_cast<void*>(GetProcAddress(HINSTANCE(ext_library), LPCSTR(module_name.c_str())));
+#elif defined(SUANPAN_UNIX)
+    ext_creator = dlsym(ext_library, module_name.c_str());
+#endif
+
+	return ext_creator != nullptr;
+}
 
 ExternalModule::ExternalModule(string L)
 	: library_name(std::move(L)) {
@@ -79,20 +98,9 @@ ExternalModule::~ExternalModule() {
 #endif
 }
 
-bool ExternalModule::locate_module(string module_name) {
-	if(ext_library == nullptr) return false;
+bool ExternalModule::locate_c_module(const string& module_name) { return locate_module(module_name + "_handler"); }
 
-	transform(module_name.begin(), module_name.end(), module_name.begin(), suanpan::to_lower);
-	module_name = "new_" + module_name;
-
-#ifdef SUANPAN_WIN
-	ext_creator = reinterpret_cast<void*>(GetProcAddress(HINSTANCE(ext_library), LPCSTR(module_name.c_str())));
-#elif defined(SUANPAN_UNIX)
-    ext_creator = dlsym(ext_library, module_name.c_str());
-#endif
-
-	return ext_creator != nullptr;
-}
+bool ExternalModule::locate_cpp_module(const string& module_name) { return locate_module("new_" + module_name); }
 
 void ExternalModule::new_object(unique_ptr<Element>& return_obj, istringstream& command) const { (element_creator(ext_creator))(return_obj, command); }
 
@@ -109,3 +117,36 @@ void ExternalModule::new_object(unique_ptr<Amplitude>& return_obj, istringstream
 void ExternalModule::new_object(unique_ptr<Modifier>& return_obj, istringstream& command) const { (modifier_creator(ext_creator))(return_obj, command); }
 
 void ExternalModule::new_object(unique_ptr<Constraint>& return_obj, istringstream& command) const { (constraint_creator(ext_creator))(return_obj, command); }
+
+void ExternalModule::new_adapter(unique_ptr<Element>&, istringstream&) const {}
+
+void ExternalModule::new_adapter(unique_ptr<Load>&, istringstream&) const {}
+
+void ExternalModule::new_adapter(unique_ptr<Material>& return_obj, istringstream& command) const {
+	unsigned tag;
+
+	if(!get_input(command, tag)) {
+		suanpan_error("new_wrapper() needs a valid tag.\n");
+		return;
+	}
+
+	vector<double> pool;
+
+	double para;
+
+	while(!command.eof() && get_input(command, para)) pool.emplace_back(para);
+
+	auto ext_obj = make_unique<ExternalMaterial>(tag, std::move(pool), ext_creator);
+
+	if(ext_obj->validate()) return_obj = std::move(ext_obj);
+}
+
+void ExternalModule::new_adapter(unique_ptr<Section>&, istringstream&) const {}
+
+void ExternalModule::new_adapter(unique_ptr<Solver>&, istringstream&) const {}
+
+void ExternalModule::new_adapter(unique_ptr<Amplitude>&, istringstream&) const {}
+
+void ExternalModule::new_adapter(unique_ptr<Modifier>&, istringstream&) const {}
+
+void ExternalModule::new_adapter(unique_ptr<Constraint>&, istringstream&) const {}

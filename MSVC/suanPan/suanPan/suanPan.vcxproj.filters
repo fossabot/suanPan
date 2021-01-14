@@ -1198,6 +1198,9 @@
     <ClCompile Include="..\..\..\Material\Material1D\Viscosity\Kelvin.cpp">
       <Filter>Material\Material1D\Viscosity</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Material\ExternalMaterial.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Constraint\BC\GroupMultiplierBC.h">
@@ -2283,6 +2286,12 @@
     <ClInclude Include="..\..\..\suanPan.h" />
     <ClInclude Include="..\..\..\Material\Material1D\Viscosity\Kelvin.h">
       <Filter>Material\Material1D\Viscosity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Material\ExternalMaterial.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Material\ExternalMaterialData.h">
+      <Filter>Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

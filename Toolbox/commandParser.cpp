@@ -1106,7 +1106,7 @@ int create_new_external_module(const shared_ptr<DomainBase>& domain, istringstre
 
 	auto code = 0;
 	for(const auto& I : domain->get_external_module_pool())
-		if(is_equal(I->library_name, library_name) || I->locate_module(library_name)) {
+		if(is_equal(I->library_name, library_name) || I->locate_cpp_module(library_name)) {
 			code = 1;
 			break;
 		}
@@ -1542,7 +1542,7 @@ int create_new_modifier(const shared_ptr<DomainBase>& domain, istringstream& com
 		// check if the library is already loaded
 		auto code = false;
 		for(const auto& I : domain->get_external_module_pool())
-			if(is_equal(I->library_name, modifier_type) || I->locate_module(modifier_type)) {
+			if(is_equal(I->library_name, modifier_type) || I->locate_cpp_module(modifier_type)) {
 				code = true;
 				break;
 			}
@@ -1553,7 +1553,7 @@ int create_new_modifier(const shared_ptr<DomainBase>& domain, istringstream& com
 		// if loaded find corresponding function
 		if(code)
 			for(const auto& I : domain->get_external_module_pool()) {
-				if(I->locate_module(modifier_type)) I->new_object(new_modifier, command);
+				if(I->locate_cpp_module(modifier_type)) I->new_object(new_modifier, command);
 				if(new_modifier != nullptr) break;
 			}
 	}

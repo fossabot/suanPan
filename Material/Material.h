@@ -92,7 +92,7 @@ public:
 
 	virtual void initialize(const shared_ptr<DomainBase>&) = 0;
 
-	void initialize_history(unsigned);
+	virtual void initialize_history(unsigned);
 	virtual void set_initial_history(const vec&);
 
 	void set_initialized(bool) const;

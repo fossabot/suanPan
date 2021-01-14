@@ -123,7 +123,7 @@ int create_new_material(const shared_ptr<DomainBase>& domain, istringstream& com
 	else if(is_equal(material_id, "Yeoh")) new_yeoh(new_material, command);
 	else load::object(new_material, domain, material_id, command);
 
-	if(new_material == nullptr || !domain->insert(std::move(new_material))) suanpan_debug("create_new_material() fails to insert new material.\n");
+	if(nullptr == new_material || !domain->insert(std::move(new_material))) suanpan_debug("create_new_material() fails to insert new material.\n");
 
 	return 0;
 }
