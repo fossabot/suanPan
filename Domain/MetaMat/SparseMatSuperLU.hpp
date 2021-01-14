@@ -70,19 +70,12 @@ public:
 
 	unique_ptr<MetaMat<T>> make_copy() override;
 
-	void zeros() override;
-	void reset() override;
-
 	int solve(Mat<T>&, const Mat<T>&) override;
 
 	void print() override;
 };
 
 template<typename T> unique_ptr<MetaMat<T>> SparseMatSuperLU<T>::make_copy() { return make_unique<SparseMatSuperLU<T>>(*this); }
-
-template<typename T> void SparseMatSuperLU<T>::zeros() { triplet_mat.zeros(); }
-
-template<typename T> void SparseMatSuperLU<T>::reset() { triplet_mat.reset(); }
 
 template<typename T> int SparseMatSuperLU<T>::solve(Mat<T>& out_mat, const Mat<T>& in_mat) {
 #ifdef SUANPAN_SUPERLUMT
