@@ -1637,13 +1637,13 @@ template<typename T> void Factory<T>::clear_eigen() {
 	if(!eigenvector.is_empty()) eigenvector.zeros();
 }
 
-template<typename T> void Factory<T>::clear_mass() { if(global_mass != nullptr && !global_mass->is_empty()) global_mass->zeros(); }
+template<typename T> void Factory<T>::clear_mass() { if(global_mass != nullptr) global_mass->zeros(); }
 
-template<typename T> void Factory<T>::clear_damping() { if(global_damping != nullptr && !global_damping->is_empty()) global_damping->zeros(); }
+template<typename T> void Factory<T>::clear_damping() { if(global_damping != nullptr) global_damping->zeros(); }
 
-template<typename T> void Factory<T>::clear_stiffness() { if(global_stiffness != nullptr && !global_stiffness->is_empty()) global_stiffness->zeros(); }
+template<typename T> void Factory<T>::clear_stiffness() { if(global_stiffness != nullptr) global_stiffness->zeros(); }
 
-template<typename T> void Factory<T>::clear_geometry() { if(global_geometry != nullptr && !global_geometry->is_empty()) global_geometry->zeros(); }
+template<typename T> void Factory<T>::clear_geometry() { if(global_geometry != nullptr) global_geometry->zeros(); }
 
 template<typename T> void Factory<T>::clear_auxiliary() {
 	n_mpc = 0;
