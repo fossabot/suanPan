@@ -45,7 +45,7 @@ protected:
 
 	shared_ptr<Factory<double>> factory = nullptr;
 
-	virtual uword get_total_size() const = 0;
+	[[nodiscard]] virtual uword get_total_size() const = 0;
 
 	virtual void update_stiffness() const = 0;
 	virtual void update_residual() const = 0;

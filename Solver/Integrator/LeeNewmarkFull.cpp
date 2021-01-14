@@ -161,7 +161,6 @@ void LeeNewmarkFull::assemble_by_mode_one(uword& current_pos, const double mass_
 			stiffness->at(O + J, R) = stiffness->at(Q, P + J) = stiffness_coefs * s_val[N];
 		}
 	}
-
 }
 
 void LeeNewmarkFull::assemble_by_mode_two(uword& current_pos, double mass_coef, double stiffness_coef, const double left_order, const double right_order) const {
@@ -328,6 +327,7 @@ int LeeNewmarkFull::process_constraint() const {
 		access::rw(current_mass) = std::move(t_mass);
 		access::rw(current_stiffness) = std::move(t_stiff);
 
+		// must initialise it since nothing will be checked in if left uninitialised
 		t_mass = triplet_form<double, uword>(n_block, n_block, t_rabbit.c_size);
 
 		// now current mass and stiffness are formulated
