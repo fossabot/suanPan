@@ -13,6 +13,7 @@ add_library(${PROJECT_NAME} STATIC
     MaterialTemplate.cpp
     MaterialParser.cpp
     MaterialTester.cpp
+    ExternalMaterial.cpp
     ${M1D}
     ${M2D}
     ${M3D}

@@ -6,3 +6,4 @@
 #include "MaterialTemplate.h"
 #include "MaterialParser.h"
 #include "MaterialTester.h"
+#include "ExternalMaterial.h"
