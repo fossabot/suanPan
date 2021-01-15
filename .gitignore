@@ -22,8 +22,6 @@ $RECYCLE.BIN/
 /cmake-build-debug/*
 /cmake-build-release/*
 /Document/*
-/Libs/vs/magma.lib
-/Libs/vs/magma_sparse.lib
 /MSVC/Debug/*
 /MSVC/Release/*
 /MSVC/suanPan/.vs/*
