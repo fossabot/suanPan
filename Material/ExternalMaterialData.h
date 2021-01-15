@@ -56,7 +56,7 @@ struct ExternalMaterialData {
 	double density = 0.;
 
 	double* pool = nullptr;     // stores states, should be allocated by dll
-	double* constant = nullptr; // stores model constants, shouldbe allocated by main exe
+	double* constant = nullptr; // stores model constants, should be allocated by main exe
 };
 
 #endif
