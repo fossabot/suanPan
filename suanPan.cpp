@@ -43,15 +43,7 @@ int main(int argc, char** argv) {
 
 	if(check_debugger()) return 0;
 
-#ifdef SUANPAN_MAGMA
-	magma_init();
-#endif
-
 	argument_parser(argc, argv);
-
-#ifdef SUANPAN_MAGMA
-	magma_finalize();
-#endif
 
 #ifdef SUANPAN_WIN
 	SetConsoleTextAttribute(handle, current_attribute);

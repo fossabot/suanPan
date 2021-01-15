@@ -6,12 +6,11 @@ target_sources(${PROJECT_NAME} PRIVATE
         Domain/MetaMat/csc_form.hpp
         Domain/MetaMat/csr_form.hpp
         Domain/MetaMat/FullMat.hpp
-        Domain/MetaMat/FullMatMAGMA.hpp
         Domain/MetaMat/MetaMat.hpp
         Domain/MetaMat/operator_times.hpp
         Domain/MetaMat/sparse_form.hpp
         Domain/MetaMat/SparseMat.hpp
-        Domain/MetaMat/SparseMatMAGMA.hpp
+        Domain/MetaMat/SparseMatCUDA.hpp
         Domain/MetaMat/SparseMatMUMPS.hpp
         Domain/MetaMat/SparseMatSuperLU.hpp
         Domain/MetaMat/SymmPackMat.hpp

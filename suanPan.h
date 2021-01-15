@@ -187,11 +187,6 @@ SUANPAN_EXPORT const char* SUANPAN_EXE;
 #include <typeinfo>
 namespace fs = std::filesystem;
 
-#ifdef SUANPAN_MAGMA
-#include <magma/magma_v2.h>
-#include <magma/magmasparse.h>
-#endif
-
 #ifdef SUANPAN_MT
 // ppl as alternative for MSVC platform
 // #include <ppl.h>

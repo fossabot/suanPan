@@ -80,7 +80,7 @@ Binaries precompiled with [OpenBLAS](https://www.openblas.net/) are provided by 
 
 Advanced users can compile the program from source by themselves in order to enable
 
-1. GPU based solvers which require available [MAGMA](http://icl.cs.utk.edu/magma/) library;
+1. GPU based solvers which require available [CUDA](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/) library;
 2. Visualization support provided by VTK library;
 3. High performing linear algebra provided by Intel MKL library.
 
@@ -98,7 +98,7 @@ Additional libraries used in **suanPan** are listed as follows.
 - [**HDF5**](https://www.hdfgroup.org/solutions/hdf5/) version 1.10.6
 - [**MUMPS**](http://mumps.enseeiht.fr/) version 5.2.1
 - [**VTK**](https://vtk.org/) version 8.2
-- [**MAGMA**](https://icl.cs.utk.edu/magma/) version 2.4.0
+- [**CUDA**](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/) version 11.2
 - [**Armadillo**](http://arma.sourceforge.net/) version 10.1
 - [**Intel MKL**](https://software.intel.com/en-us/mkl)
 

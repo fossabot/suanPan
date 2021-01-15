@@ -2447,7 +2447,7 @@ int set_property(const shared_ptr<DomainBase>& domain, istringstream& command) {
 		else if(is_equal(value, "SPIKE")) tmp_step->set_system_solver(SolverType::SPIKE);
 		else if(is_equal(value, "SUPERLU")) tmp_step->set_system_solver(SolverType::SUPERLU);
 		else if(is_equal(value, "MUMPS")) tmp_step->set_system_solver(SolverType::MUMPS);
-		else if(is_equal(value, "MAGMA")) tmp_step->set_system_solver(SolverType::MAGMA);
+		else if(is_equal(value, "CUDA")) tmp_step->set_system_solver(SolverType::CUDA);
 		else suanpan_error("set_property() need a valid precision.\n");
 	} else if(is_equal(property_id, "precision")) {
 		string value;

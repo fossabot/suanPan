@@ -56,10 +56,6 @@ void argument_parser(const int argc, char** argv) {
 			} else if(is_equal(argv[I], "-ctest") || is_equal(argv[I], "--catch2test")) {
 				catchtest_main(argc, argv);
 				return;
-#ifdef SUANPAN_MAGMA
-			} else if(is_equal(argv[I], "-ma") || is_equal(argv[I], "--magma")) {
-				magma_print_environment();
-#endif
 			}
 		}
 
@@ -178,7 +174,6 @@ void print_helper() {
 	suanpan_info("\t-%-10s  --%-20s%s\n", "np", "noprint", "suppress most console output");
 	suanpan_info("\t-%-10s  --%-20s%s\n", "f", "file", "process model file");
 	suanpan_info("\t-%-10s  --%-20s%s\n", "o", "output", "set output file for logging");
-	// suanpan_info("\t-%-10s  --%-20s%s\n", "ma", "magma", "print magma environment");
 	suanpan_info("\n");
 }
 

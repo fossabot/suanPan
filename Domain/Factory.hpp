@@ -39,7 +39,7 @@ enum class AnalysisType { NONE, DISP, EIGEN, BUCKLE, STATICS, DYNAMICS };
 
 enum class StorageScheme { FULL, BAND, BANDSYMM, SYMMPACK, SPARSE };
 
-enum class SolverType { LAPACK, SPIKE, SUPERLU, MUMPS, MAGMA };
+enum class SolverType { LAPACK, SPIKE, SUPERLU, MUMPS, CUDA };
 
 template<typename T> class Factory final {
 	unsigned n_size = 0;               // number of degrees of freedom
@@ -740,12 +740,7 @@ template<typename T> void Factory<T>::initialize_auxiliary_resistance() {
 template<typename T> void Factory<T>::initialize_mass() {
 	switch(storage_type) {
 	case StorageScheme::FULL:
-#ifdef SUANPAN_MAGMA
-		if(SolverType::LAPACK == solver) global_mass = make_shared<FullMat<T>>(n_size, n_size);
-		else global_mass = make_shared<FullMatMAGMA<T>>(n_size, n_size);
-#else
 		global_mass = make_shared<FullMat<T>>(n_size, n_size);
-#endif
 		break;
 	case StorageScheme::BAND:
 		if(SolverType::SPIKE == solver) global_mass = make_shared<BandMatSpike<T>>(n_size, n_lobw, n_upbw);
@@ -758,10 +753,10 @@ template<typename T> void Factory<T>::initialize_mass() {
 		global_mass = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_MAGMA
+#ifdef SUANPAN_CUDA
 		if(SolverType::SUPERLU == solver) global_mass = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		else if(SolverType::MUMPS == solver) global_mass = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_mass = make_shared<SparseMatMAGMA<T>>(n_size, n_size, n_elem);
+		else global_mass = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #else
 		if(SolverType::MUMPS == solver) global_mass = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
 		else global_mass = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
@@ -776,12 +771,7 @@ template<typename T> void Factory<T>::initialize_mass() {
 template<typename T> void Factory<T>::initialize_damping() {
 	switch(storage_type) {
 	case StorageScheme::FULL:
-#ifdef SUANPAN_MAGMA
-		if(SolverType::LAPACK == solver) global_damping = make_shared<FullMat<T>>(n_size, n_size);
-		else global_damping = make_shared<FullMatMAGMA<T>>(n_size, n_size);
-#else
 		global_damping = make_shared<FullMat<T>>(n_size, n_size);
-#endif
 		break;
 	case StorageScheme::BAND:
 		if(SolverType::SPIKE == solver) global_damping = make_shared<BandMatSpike<T>>(n_size, n_lobw, n_upbw);
@@ -794,10 +784,10 @@ template<typename T> void Factory<T>::initialize_damping() {
 		global_damping = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_MAGMA
+#ifdef SUANPAN_CUDA
 		if(SolverType::SUPERLU == solver) global_damping = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		else if(SolverType::MUMPS == solver) global_damping = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_damping = make_shared<SparseMatMAGMA<T>>(n_size, n_size, n_elem);
+		else global_damping = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #else
 		if(SolverType::MUMPS == solver) global_damping = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
 		else global_damping = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
@@ -812,12 +802,7 @@ template<typename T> void Factory<T>::initialize_damping() {
 template<typename T> void Factory<T>::initialize_stiffness() {
 	switch(storage_type) {
 	case StorageScheme::FULL:
-#ifdef SUANPAN_MAGMA
-		if(SolverType::LAPACK == solver) global_stiffness = make_shared<FullMat<T>>(n_size, n_size);
-		else global_stiffness = make_shared<FullMatMAGMA<T>>(n_size, n_size);
-#else
 		global_stiffness = make_shared<FullMat<T>>(n_size, n_size);
-#endif
 		break;
 	case StorageScheme::BAND:
 		if(SolverType::SPIKE == solver) global_stiffness = make_shared<BandMatSpike<T>>(n_size, n_lobw, n_upbw);
@@ -830,10 +815,10 @@ template<typename T> void Factory<T>::initialize_stiffness() {
 		global_stiffness = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_MAGMA
+#ifdef SUANPAN_CUDA
 		if(SolverType::SUPERLU == solver) global_stiffness = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		else if(SolverType::MUMPS == solver) global_stiffness = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_stiffness = make_shared<SparseMatMAGMA<T>>(n_size, n_size, n_elem);
+		else global_stiffness = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #else
 		if(SolverType::MUMPS == solver) global_stiffness = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
 		else global_stiffness = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
@@ -850,12 +835,7 @@ template<typename T> void Factory<T>::initialize_geometry() {
 
 	switch(storage_type) {
 	case StorageScheme::FULL:
-#ifdef SUANPAN_MAGMA
-		if(SolverType::LAPACK == solver) global_geometry = make_shared<FullMat<T>>(n_size, n_size);
-		else global_geometry = make_shared<FullMatMAGMA<T>>(n_size, n_size);
-#else
 		global_geometry = make_shared<FullMat<T>>(n_size, n_size);
-#endif
 		break;
 	case StorageScheme::BAND:
 		if(SolverType::SPIKE == solver) global_geometry = make_shared<BandMatSpike<T>>(n_size, n_lobw, n_upbw);
@@ -868,10 +848,10 @@ template<typename T> void Factory<T>::initialize_geometry() {
 		global_geometry = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_MAGMA
+#ifdef SUANPAN_CUDA
 		if(SolverType::SUPERLU == solver) global_geometry = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		else if(SolverType::MUMPS == solver) global_geometry = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_geometry = make_shared<SparseMatMAGMA<T>>(n_size, n_size, n_elem);
+		else global_geometry = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #else
 		if(SolverType::MUMPS == solver) global_geometry = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
 		else global_geometry = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);

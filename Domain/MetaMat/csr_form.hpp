@@ -284,17 +284,17 @@ template<typename data_t, typename index_t> template<typename in_dt, typename in
 
 	init(index_t(in_mat.n_rows), index_t(in_mat.n_cols), index_t(in_mat.c_size));
 
-	if(in_mat.c_size == 0) return *this;
+	if(0 == in_mat.c_size) return *this;
 
 	access::rw(c_size) = index_t(in_mat.c_size);
 
-	std::copy(in_mat.col_idx, in_mat.col_idx + in_mat.c_size, col_idx);
-	std::copy(in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx);
+	std::transform(in_mat.col_idx, in_mat.col_idx + in_mat.c_size, col_idx, [](const in_it I) { return index_t(I); });
+	std::transform(in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx, [](const in_dt I) { return data_t(I); });
 
 	in_it current_pos = 0, current_row = 0;
 	while(current_pos < in_mat.c_size)
 		if(in_mat.row_idx[current_pos] < current_row) ++current_pos;
-		else row_ptr[current_row++] = current_pos;
+		else row_ptr[current_row++] = index_t(current_pos);
 
 	row_ptr[n_cols] = c_size;
 

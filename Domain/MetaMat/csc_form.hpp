@@ -87,7 +87,7 @@ template<typename data_t, typename index_t> void csc_form<data_t, index_t>::copy
 
 	auto bytes = size * sizeof(index_t);
 	memcpy(this->row_idx, in_row_idx, bytes);
-	bytes = (n_cols + 1l) * sizeof(index_t);
+	bytes = (n_cols + 1) * sizeof(index_t);
 	memcpy(this->col_ptr, in_col_ptr, bytes);
 	bytes = size * sizeof(data_t);
 	memcpy(this->val_idx, in_val_idx, bytes);
@@ -288,8 +288,8 @@ template<typename data_t, typename index_t> template<typename in_dt, typename in
 
 	access::rw(c_size) = index_t(in_mat.c_size);
 
-	std::copy(in_mat.row_idx, in_mat.row_idx + in_mat.c_size, row_idx);
-	std::copy(in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx);
+	std::transform(in_mat.row_idx, in_mat.row_idx + in_mat.c_size, row_idx, [](const in_it I) { return index_t(I); });
+	std::transform(in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx, [](const in_dt I) { return data_t(I); });
 
 	in_it current_pos = 0, current_col = 0;
 	while(current_pos < in_mat.c_size)

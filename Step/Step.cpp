@@ -38,7 +38,7 @@ int Step::initialize() {
 		// only LAPACK and SPIKE are supported
 		if(SolverType::LAPACK != system_solver && SolverType::SPIKE != system_solver) system_solver = SolverType::LAPACK;
 	} else if(!symm_mat && !band_mat) {
-		// only LAPACK and MAGMA solvers are supported
+		// only LAPACK and CUDA solvers are supported
 		if(SolverType::MUMPS == system_solver || SolverType::SUPERLU == system_solver || SolverType::SPIKE == system_solver) system_solver = SolverType::LAPACK;
 	}
 

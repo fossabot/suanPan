@@ -1365,9 +1365,6 @@
     <ClInclude Include="..\..\..\Domain\MetaMat\FullMat.hpp">
       <Filter>Domain\MetaMat</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Domain\MetaMat\FullMatMAGMA.hpp">
-      <Filter>Domain\MetaMat</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Domain\MetaMat\MetaMat.hpp">
       <Filter>Domain\MetaMat</Filter>
     </ClInclude>
@@ -1378,9 +1375,6 @@
       <Filter>Domain\MetaMat</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Domain\MetaMat\SparseMat.hpp">
-      <Filter>Domain\MetaMat</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Domain\MetaMat\SparseMatMAGMA.hpp">
       <Filter>Domain\MetaMat</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Domain\MetaMat\SparseMatMUMPS.hpp">
@@ -2292,6 +2286,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Material\ExternalMaterialData.h">
       <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Domain\MetaMat\SparseMatCUDA.hpp">
+      <Filter>Domain\MetaMat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
