@@ -33,13 +33,13 @@ int Step::initialize() {
 
 	if(sparse_mat) {
 		// LAPACK and SPIKE are for dense only
-		if(SolverType::LAPACK == system_solver || SolverType::SPIKE != system_solver) system_solver = SolverType::SUPERLU;
+		if(SolverType::LAPACK == system_solver || SolverType::SPIKE == system_solver) system_solver = SolverType::SUPERLU;
 	} else if(!symm_mat && band_mat) {
 		// only LAPACK and SPIKE are supported
 		if(SolverType::LAPACK != system_solver && SolverType::SPIKE != system_solver) system_solver = SolverType::LAPACK;
 	} else if(!symm_mat && !band_mat) {
-		// only LAPACK and CUDA solvers are supported
-		if(SolverType::MUMPS == system_solver || SolverType::SUPERLU == system_solver || SolverType::SPIKE == system_solver) system_solver = SolverType::LAPACK;
+		// only LAPACK solvers are supported
+		system_solver = SolverType::LAPACK;
 	}
 
 	if(converger_tag != 0 && t_domain->find_converger(converger_tag)) tester = t_domain->get_converger(converger_tag);

@@ -30,8 +30,6 @@
 #define METAMAT_HPP
 
 #include <Toolbox/debug.h>
-#include <Domain/MetaMat/csc_form.hpp>
-#include <Domain/MetaMat/csr_form.hpp>
 #include <Domain/MetaMat/triplet_form.hpp>
 
 enum class Precision { SINGLE, DOUBLE };

@@ -53,7 +53,7 @@ public:
 	void reset() const override;
 	void zeros() const override;
 
-	data_t max() const override;
+	[[nodiscard]] data_t max() const override;
 
 	bool init() override;
 	bool init(index_t) override;
@@ -288,8 +288,8 @@ template<typename data_t, typename index_t> template<typename in_dt, typename in
 
 	access::rw(c_size) = index_t(in_mat.c_size);
 
-	std::transform(in_mat.col_idx, in_mat.col_idx + in_mat.c_size, col_idx, [](const in_it I) { return index_t(I); });
-	std::transform(in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx, [](const in_dt I) { return data_t(I); });
+	std::transform(std::execution::par_unseq, in_mat.col_idx, in_mat.col_idx + in_mat.c_size, col_idx, [](const in_it I) { return index_t(I); });
+	std::transform(std::execution::par_unseq, in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx, [](const in_dt I) { return data_t(I); });
 
 	in_it current_pos = 0, current_row = 0;
 	while(current_pos < in_mat.c_size)

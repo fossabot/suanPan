@@ -43,6 +43,11 @@ public:
 
 	SparseMatCUDA();
 	SparseMatCUDA(uword, uword, uword = 0);
+	SparseMatCUDA(const SparseMatCUDA&);
+	SparseMatCUDA(SparseMatCUDA&&) noexcept = delete;
+	SparseMatCUDA& operator=(const SparseMatCUDA&) = delete;
+	SparseMatCUDA& operator=(SparseMatCUDA&&) noexcept = delete;
+	~SparseMatCUDA();
 
 	unique_ptr<MetaMat<T>> make_copy() override;
 
@@ -61,6 +66,14 @@ template<typename T> SparseMatCUDA<T>::SparseMatCUDA(const uword in_row, const u
 	cusparseCreateMatDescr(&descrA);
 }
 
+template<typename T> SparseMatCUDA<T>::SparseMatCUDA(const SparseMatCUDA& old_obj)
+	: SparseMat<T>(old_obj) {
+	cusolverSpCreate(&handle);
+	cusparseCreateMatDescr(&descrA);
+}
+
+template<typename T> SparseMatCUDA<T>::~SparseMatCUDA() { cusolverSpDestroy(handle); }
+
 template<typename T> unique_ptr<MetaMat<T>> SparseMatCUDA<T>::make_copy() { return make_unique<SparseMatCUDA<T>>(*this); }
 
 template<typename T> int SparseMatCUDA<T>::solve(Mat<T>& out_mat, const Mat<T>& in_mat) {
@@ -70,7 +83,12 @@ template<typename T> int SparseMatCUDA<T>::solve(Mat<T>& out_mat, const Mat<T>& 
 
 	int singularity;
 
-	const cusolverStatus_t info = cusolverSpDcsrlsvluHost(handle, csr_mat.n_rows, csr_mat.c_size, descrA, csr_mat.val_idx, csr_mat.row_ptr, csr_mat.col_idx, in_mat.memptr(), tolerance, 3, out_mat.memptr(), &singularity);
+	const cusolverStatus_t info = cusolverSpDcsrlsvluHost(handle, csr_mat.n_rows, csr_mat.c_size, descrA, csr_mat.val_idx, csr_mat.row_ptr, csr_mat.col_idx, in_mat.memptr(), tolerance, 2, out_mat.memptr(), &singularity);
+
+	if(-1 != singularity) {
+		suanpan_error("the matrix is singular.\n");
+		return SUANPAN_FAIL;
+	}
 
 	return CUSOLVER_STATUS_SUCCESS == info ? SUANPAN_SUCCESS : SUANPAN_FAIL;
 }
