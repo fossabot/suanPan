@@ -31,6 +31,9 @@
 
 #include <Toolbox/debug.h>
 #include <Domain/MetaMat/triplet_form.hpp>
+#ifdef SUANPAN_MT
+#include <execution>
+#endif
 
 enum class Precision { SINGLE, DOUBLE };
 
@@ -149,7 +152,11 @@ template<typename T> MetaMat<T>::MetaMat(const MetaMat& old_mat)
 	, precision(old_mat.precision)
 	, tolerance(old_mat.tolerance) {
 	MetaMat<T>::init();
-	if(nullptr != old_mat.memptr()) memcpy(MetaMat<T>::memptr(), old_mat.memptr(), old_mat.n_elem * sizeof(T));
+#ifdef SUANPAN_MT
+	if(nullptr != old_mat.memptr()) std::copy(std::execution::par_unseq, old_mat.memptr(), old_mat.memptr() + old_mat.n_elem, MetaMat<T>::memptr());
+#else
+	if(nullptr != old_mat.memptr()) std::copy(old_mat.memptr(), old_mat.memptr() + old_mat.n_elem, MetaMat<T>::memptr());
+#endif
 }
 
 template<typename T> MetaMat<T>::MetaMat(MetaMat&& old_mat) noexcept
@@ -174,7 +181,11 @@ template<typename T> MetaMat<T>& MetaMat<T>::operator=(const MetaMat& old_mat) {
 		access::rw(n_cols) = old_mat.n_cols;
 		access::rw(n_elem) = old_mat.n_elem;
 		init();
-		if(nullptr != old_mat.memptr()) memcpy(memptr(), old_mat.memptr(), old_mat.n_elem * sizeof(T));
+#ifdef SUANPAN_MT
+		if(nullptr != old_mat.memptr()) std::copy(std::execution::par_unseq, old_mat.memptr(), old_mat.memptr() + old_mat.n_elem, memptr());
+#else
+		if(nullptr != old_mat.memptr()) std::copy(old_mat.memptr(), old_mat.memptr() + old_mat.n_elem, memptr());
+#endif
 	}
 	return *this;
 }

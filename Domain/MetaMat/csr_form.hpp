@@ -85,12 +85,18 @@ public:
 template<typename data_t, typename index_t> void csr_form<data_t, index_t>::copy_memory(const index_t in_size, const index_t* const in_row_ptr, const index_t* const in_col_idx, const data_t* const in_val_idx) {
 	if(in_size > n_elem) resize(in_size);
 
+#ifdef SUANPAN_MT
+	std::copy(std::execution::par_unseq, in_row_ptr, in_row_ptr + n_rows + 1, this->row_ptr);
+	std::copy(std::execution::par_unseq, in_col_idx, in_col_idx + in_size, this->col_idx);
+	std::copy(std::execution::par_unseq, in_val_idx, in_val_idx + in_size, this->val_idx);
+#else
 	auto bytes = (n_rows + 1) * sizeof(index_t);
 	memcpy(this->row_ptr, in_row_ptr, bytes);
 	bytes = in_size * sizeof(index_t);
 	memcpy(this->col_idx, in_col_idx, bytes);
 	bytes = in_size * sizeof(data_t);
 	memcpy(this->val_idx, in_val_idx, bytes);
+#endif
 
 	access::rw(c_size) = in_size;
 }

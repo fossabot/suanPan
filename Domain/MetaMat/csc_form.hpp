@@ -82,17 +82,23 @@ public:
 	Mat<data_t> operator*(const Mat<data_t>&) override;
 };
 
-template<typename data_t, typename index_t> void csc_form<data_t, index_t>::copy_memory(const index_t size, const index_t* const in_row_idx, const index_t* const in_col_ptr, const data_t* const in_val_idx) {
-	if(size > n_elem) resize(size);
+template<typename data_t, typename index_t> void csc_form<data_t, index_t>::copy_memory(const index_t in_size, const index_t* const in_row_idx, const index_t* const in_col_ptr, const data_t* const in_val_idx) {
+	if(in_size > n_elem) resize(in_size);
 
-	auto bytes = size * sizeof(index_t);
+#ifdef SUANPAN_MT
+	std::copy(std::execution::par_unseq, in_row_idx, in_row_idx + in_size, this->row_idx);
+	std::copy(std::execution::par_unseq, in_col_ptr, in_col_ptr + n_cols + 1, this->col_ptr);
+	std::copy(std::execution::par_unseq, in_val_idx, in_val_idx + in_size, this->val_idx);
+#else
+	auto bytes = in_size * sizeof(index_t);
 	memcpy(this->row_idx, in_row_idx, bytes);
 	bytes = (n_cols + 1) * sizeof(index_t);
 	memcpy(this->col_ptr, in_col_ptr, bytes);
-	bytes = size * sizeof(data_t);
+	bytes = in_size * sizeof(data_t);
 	memcpy(this->val_idx, in_val_idx, bytes);
+#endif
 
-	access::rw(c_size) = size;
+	access::rw(c_size) = in_size;
 }
 
 template<typename data_t, typename index_t> csc_form<data_t, index_t>::~csc_form() { csc_form<data_t, index_t>::reset(); }

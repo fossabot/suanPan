@@ -12,9 +12,9 @@
 
 // my sparse implementation
 #include "comparator.hpp"
+#include "sparse_form.hpp"
 #include "csc_form.hpp"
 #include "csr_form.hpp"
-#include "sparse_form.hpp"
 #include "triplet_form.hpp"
 
 #include "operator_times.hpp"
