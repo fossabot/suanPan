@@ -309,6 +309,18 @@ int LeeNewmarkFull::process_constraint() const {
 		stiffness->triplet_mat.resize(get_amplifier() * t_stiff.c_size);
 		stiffness->zeros();
 
+		// ! deal with mass matrix first
+		// the intact mass matrix will be the correct mass to be used
+		// D->assemble_current_mass();
+
+		auto& t_mass = factory->get_mass()->triplet_mat;
+
+		access::rw(current_mass) = std::move(t_mass);
+
+		// must initialise it since nothing will be checked in if left uninitialised
+		t_mass = triplet_form<double, uword>(n_block, n_block, current_mass.c_size);
+
+		// ! now deal with stiffness matrix
 		auto& t_rabbit = access::rw(rabbit);
 
 		// use local variable to temporarily store the original effective stiffness matrix
@@ -317,18 +329,11 @@ int LeeNewmarkFull::process_constraint() const {
 		// preallocate to formulate current stiffness matrix
 		t_stiff = triplet_form<double, uword>(n_block, n_block, t_rabbit.c_size);
 
-		D->assemble_current_mass();
 		D->assemble_current_stiffness();
 		if(SUANPAN_SUCCESS != D->process_constraint()) return SUANPAN_FAIL;
 		t_stiff.csc_condense();
 
-		auto& t_mass = factory->get_mass()->triplet_mat;
-
-		access::rw(current_mass) = std::move(t_mass);
 		access::rw(current_stiffness) = std::move(t_stiff);
-
-		// must initialise it since nothing will be checked in if left uninitialised
-		t_mass = triplet_form<double, uword>(n_block, n_block, t_rabbit.c_size);
 
 		// now current mass and stiffness are formulated
 		// assemble unrolled damping matrix and the corresponding damping force

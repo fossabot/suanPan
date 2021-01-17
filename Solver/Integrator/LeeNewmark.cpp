@@ -91,9 +91,11 @@ int LeeNewmark::process_constraint() const {
 		stiffness->triplet_mat.resize((4 * n_damping + 2) * t_stiff->n_elem);
 		stiffness->zeros();
 
-		access::rw(current_mass).swap(t_mass);
-		D->assemble_current_mass();
-		access::rw(current_mass).swap(t_mass);
+		// access::rw(current_mass).swap(t_mass);
+		// D->assemble_current_mass();
+		// access::rw(current_mass).swap(t_mass);
+
+		access::rw(current_mass) = t_mass->make_copy();
 	} else {
 		// if not first iteration
 		// erase the tangent stiffness entries
