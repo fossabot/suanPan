@@ -57,7 +57,7 @@ public:
 	Recorder(Recorder&&) = delete;                 // move forbidden
 	Recorder& operator=(const Recorder&) = delete; // assign forbidden
 	Recorder& operator=(Recorder&&) = delete;      // assign forbidden
-	virtual ~Recorder();
+	~Recorder() override;
 
 	virtual void initialize(const shared_ptr<DomainBase>&);
 

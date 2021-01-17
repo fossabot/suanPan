@@ -1201,6 +1201,9 @@
     <ClCompile Include="..\..\..\Material\ExternalMaterial.cpp">
       <Filter>Material</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Recorder\AmplitudeRecorder.cpp">
+      <Filter>Recorder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Constraint\BC\GroupMultiplierBC.h">
@@ -2289,6 +2292,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Domain\MetaMat\SparseMatCUDA.hpp">
       <Filter>Domain\MetaMat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Recorder\AmplitudeRecorder.h">
+      <Filter>Recorder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

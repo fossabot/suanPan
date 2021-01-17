@@ -357,6 +357,7 @@
     <ClCompile Include="..\..\..\Material\MaterialParser.cpp" />
     <ClCompile Include="..\..\..\Material\MaterialTemplate.cpp" />
     <ClCompile Include="..\..\..\Material\MaterialTester.cpp" />
+    <ClCompile Include="..\..\..\Recorder\AmplitudeRecorder.cpp" />
     <ClCompile Include="..\..\..\Recorder\EigenRecorder.cpp" />
     <ClCompile Include="..\..\..\Recorder\ElementRecorder.cpp" />
     <ClCompile Include="..\..\..\Recorder\FrameRecorder.cpp" />
@@ -725,6 +726,7 @@
     <ClInclude Include="..\..\..\Material\MaterialParser.h" />
     <ClInclude Include="..\..\..\Material\MaterialTemplate.h" />
     <ClInclude Include="..\..\..\Material\MaterialTester.h" />
+    <ClInclude Include="..\..\..\Recorder\AmplitudeRecorder.h" />
     <ClInclude Include="..\..\..\Recorder\EigenRecorder.h" />
     <ClInclude Include="..\..\..\Recorder\ElementRecorder.h" />
     <ClInclude Include="..\..\..\Recorder\FrameRecorder.h" />

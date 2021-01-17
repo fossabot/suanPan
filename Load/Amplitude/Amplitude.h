@@ -70,7 +70,7 @@ protected:
 	double start_time = 0.; // T0
 public:
 	explicit Amplitude(unsigned = 0, unsigned = 0);
-	virtual ~Amplitude() = default;
+	~Amplitude() override = default;
 
 	virtual void initialize(const shared_ptr<DomainBase>&);
 

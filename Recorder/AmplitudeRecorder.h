@@ -15,40 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 /**
- * @class FrameRecorder
- * @brief A FrameRecorder class.
+ * @class AmplitudeRecorder
+ * @brief A AmplitudeRecorder class.
  *
  * @author tlc
- * @date 30/03/2019
+ * @date 16/01/2021
  * @version 0.1.0
- * @file FrameRecorder.h
+ * @file AmplitudeRecorder.h
  * @addtogroup Recorder
  * @{
  */
 
-#ifndef FRAMERECORDER_H
-#define FRAMERECORDER_H
+#ifndef AMPLITUDERECORDER_H
+#define AMPLITUDERECORDER_H
 
 #include <Recorder/Recorder.h>
 
-class FrameRecorder final : public Recorder {
-#ifdef SUANPAN_HDF5
-	hid_t file_id = 0;
-#endif
+class AmplitudeRecorder final : public Recorder {
 public:
-	FrameRecorder(unsigned,   // tag
-	              OutputType, // recorder type
-	              unsigned    // interval
-	);
-	FrameRecorder(const FrameRecorder&) = delete;
-	FrameRecorder(FrameRecorder&&) noexcept = delete;
-	FrameRecorder& operator=(const FrameRecorder&) = delete;
-	FrameRecorder& operator=(FrameRecorder&&) noexcept = delete;
-	~FrameRecorder() override;
+	using Recorder::Recorder;
+
+	void initialize(const shared_ptr<DomainBase>&) override;
 
 	void record(const shared_ptr<DomainBase>&) override;
-
-	void save() override;
 
 	void print() override;
 };

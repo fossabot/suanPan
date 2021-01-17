@@ -1660,7 +1660,7 @@ int create_new_recorder(const shared_ptr<DomainBase>& domain, istringstream& com
 	}
 
 	string variable_type;
-	if(!get_input(command, variable_type)) {
+	if(!is_equal(object_type, "Amplitude") && !get_input(command, variable_type)) {
 		suanpan_error("create_new_recorder() needs a valid recorder type.\n");
 		return SUANPAN_SUCCESS;
 	}
@@ -1702,6 +1702,7 @@ int create_new_recorder(const shared_ptr<DomainBase>& domain, istringstream& com
 	else if(is_equal(object_type, "GroupSum") && !domain->insert(make_shared<GroupSumRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, use_hdf5))) suanpan_error("create_new_recorder() fails to create a new group summation recorder.\n");
 	else if(is_equal(object_type, "Element") && !domain->insert(make_shared<ElementRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, use_hdf5))) suanpan_error("create_new_recorder() fails to create a new element recorder.\n");
 	else if(is_equal(object_type, "GroupElement") && !domain->insert(make_shared<GroupElementRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, use_hdf5))) suanpan_error("create_new_recorder() fails to create a new group element recorder.\n");
+	else if(is_equal(object_type, "Amplitude") && !domain->insert(make_shared<AmplitudeRecorder>(tag, uvec(object_tag), OutputType::NL, inverval, true, use_hdf5))) suanpan_error("create_new_recorder() fails to create a new amplitude recorder.\n");
 	else if(is_equal(object_type, "Global")) {
 		bool flag;
 		if(OutputType::K == to_list(variable_type.c_str())) flag = domain->insert(make_shared<GlobalStiffnessRecorder>(tag, inverval, true, use_hdf5));
@@ -1732,7 +1733,7 @@ int create_new_plainrecorder(const shared_ptr<DomainBase>& domain, istringstream
 	}
 
 	string variable_type;
-	if(!get_input(command, variable_type)) {
+	if(!is_equal(object_type, "Amplitude") && !get_input(command, variable_type)) {
 		suanpan_error("create_new_plainrecorder() needs a valid recorder type.\n");
 		return SUANPAN_SUCCESS;
 	}
@@ -1768,6 +1769,7 @@ int create_new_plainrecorder(const shared_ptr<DomainBase>& domain, istringstream
 	else if(is_equal(object_type, "GroupSum") && !domain->insert(make_shared<GroupSumRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, false))) suanpan_error("create_new_plainrecorder() fails to create a new group summation recorder.\n");
 	else if(is_equal(object_type, "Element") && !domain->insert(make_shared<ElementRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, false))) suanpan_error("create_new_plainrecorder() fails to create a new element recorder.\n");
 	else if(is_equal(object_type, "GroupElement") && !domain->insert(make_shared<GroupElementRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, false))) suanpan_error("create_new_plainrecorder() fails to create a new group element recorder.\n");
+	else if(is_equal(object_type, "Amplitude") && !domain->insert(make_shared<AmplitudeRecorder>(tag, uvec(object_tag), OutputType::NL, inverval, true, false))) suanpan_error("create_new_plainrecorder() fails to create a new amplitude recorder.\n");
 	else if(is_equal(object_type, "Global")) {
 		bool flag;
 		if(OutputType::K == to_list(variable_type.c_str())) flag = domain->insert(make_shared<GlobalStiffnessRecorder>(tag, inverval, true, false));
@@ -1798,7 +1800,7 @@ int create_new_hdf5recorder(const shared_ptr<DomainBase>& domain, istringstream&
 	}
 
 	string variable_type;
-	if(!get_input(command, variable_type)) {
+	if(!is_equal(object_type, "Amplitude") && !get_input(command, variable_type)) {
 		suanpan_error("create_new_hdf5recorder() needs a valid recorder type.\n");
 		return SUANPAN_SUCCESS;
 	}
@@ -1851,6 +1853,7 @@ int create_new_hdf5recorder(const shared_ptr<DomainBase>& domain, istringstream&
 	else if(is_equal(object_type, "GroupSum") && !domain->insert(make_shared<GroupSumRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, true))) suanpan_error("create_new_hdf5recorder() fails to create a new group summation recorder.\n");
 	else if(is_equal(object_type, "Element") && !domain->insert(make_shared<ElementRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, true))) suanpan_error("create_new_hdf5recorder() fails to create a new element recorder.\n");
 	else if(is_equal(object_type, "GroupElement") && !domain->insert(make_shared<GroupElementRecorder>(tag, uvec(object_tag), to_list(variable_type.c_str()), inverval, true, true))) suanpan_error("create_new_hdf5recorder() fails to create a new group element recorder.\n");
+	else if(is_equal(object_type, "Amplitude") && !domain->insert(make_shared<AmplitudeRecorder>(tag, uvec(object_tag), OutputType::NL, inverval, true, true))) suanpan_error("create_new_hdf5recorder() fails to create a new amplitude recorder.\n");
 	else if(is_equal(object_type, "Global")) {
 		bool flag;
 		if(OutputType::K == to_list(variable_type.c_str())) flag = domain->insert(make_shared<GlobalStiffnessRecorder>(tag, inverval, true, true));
