@@ -327,6 +327,9 @@ const char* to_char(const OutputType& L) {
 	case OutputType::HIST:
 		return "HIST";
 
+	case OutputType::AMP:
+		return "AMPLITUDE";
+
 	case OutputType::NL:
 	default:
 		return "NL";
@@ -494,6 +497,7 @@ OutputType to_list(const char* L) {
 	if(is_equal(L, "KE")) return OutputType::KE;
 
 	if(is_equal(L, "HIST")) return OutputType::HIST;
+	if(is_equal(L, "AMP")) return OutputType::AMP;
 
 	if(is_equal(L, "NL")) return OutputType::NL;
 

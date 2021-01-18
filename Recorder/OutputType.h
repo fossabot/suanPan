@@ -219,6 +219,9 @@ enum class OutputType {
 	// history variable
 	HIST,
 
+	// amplitude
+	AMP,
+
 	NL
 };
 
