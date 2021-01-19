@@ -64,6 +64,9 @@ parts:
       - libxcb1
       - libxdmcp6
   suanpan:
+    after:
+      - mkl
+      - vtk
     source: https://github.com/TLCFEM/suanPan.git
     plugin: cmake
     configflags:
