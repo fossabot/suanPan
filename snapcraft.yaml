@@ -76,7 +76,7 @@ parts:
       - -DUSE_EXTERNAL_VTK=ON
       - -DVTK_DIR=/build/suanpan/parts/vtk/install/lib/cmake/vtk-9.0/
       - -DUSE_MKL=ON
-      - -DMKLROOT=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl
+      - -DMKLROOT=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/
     build-environment:
       - CC: gcc-8
       - CXX: g++-8

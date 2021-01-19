@@ -146,3 +146,15 @@ if(HAVE_VTK)
 endif()
 
 message("suanPan CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
+message("Link Dir:")
+get_property(SDIR DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY LINK_DIRECTORIES)
+foreach(SDIRA ${SDIR})
+    message("${SDIRA}")
+endforeach()
+
+message("Include Dir:")
+get_property(SDIR DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(SDIRA ${SDIR})
+    message("${SDIRA}")
+endforeach()
