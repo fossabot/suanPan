@@ -31,13 +31,13 @@ parts:
       ./install.sh --silent ./silent.cfg
       mkdir -p /build/suanpan/parts/suanpan/install/bin/
       cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/lib/intel64/libiomp5.so /build/suanpan/parts/suanpan/install/bin/
-      cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/lib/intel64/libmkl_core.so /build/suanpan/parts/suanpan/install/bin/
-      cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/lib/intel64/libmkl_intel_lp64.so /build/suanpan/parts/suanpan/install/bin/
-      cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/lib/intel64/libmkl_intel_thread.so /build/suanpan/parts/suanpan/install/bin/
-      cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/lib/intel64/libmkl_def.so /build/suanpan/parts/suanpan/install/bin/
-      cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/lib/intel64/libmkl_avx512.so /build/suanpan/parts/suanpan/install/bin/
-      cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/lib/intel64/libmkl_avx2.so /build/suanpan/parts/suanpan/install/bin/
-      cp /build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/lib/intel64/libmkl_avx.so /build/suanpan/parts/suanpan/install/bin/
+      cp /build/suanpan/parts/mkl/intel/mkl/lib/intel64/libmkl_core.so /build/suanpan/parts/suanpan/install/bin/
+      cp /build/suanpan/parts/mkl/intel/mkl/lib/intel64/libmkl_intel_lp64.so /build/suanpan/parts/suanpan/install/bin/
+      cp /build/suanpan/parts/mkl/intel/mkl/lib/intel64/libmkl_intel_thread.so /build/suanpan/parts/suanpan/install/bin/
+      cp /build/suanpan/parts/mkl/intel/mkl/lib/intel64/libmkl_def.so /build/suanpan/parts/suanpan/install/bin/
+      cp /build/suanpan/parts/mkl/intel/mkl/lib/intel64/libmkl_avx512.so /build/suanpan/parts/suanpan/install/bin/
+      cp /build/suanpan/parts/mkl/intel/mkl/lib/intel64/libmkl_avx2.so /build/suanpan/parts/suanpan/install/bin/
+      cp /build/suanpan/parts/mkl/intel/mkl/lib/intel64/libmkl_avx.so /build/suanpan/parts/suanpan/install/bin/
   vtk:
     source: https://www.vtk.org/files/release/9.0/VTK-9.0.1.tar.gz
     plugin: cmake
