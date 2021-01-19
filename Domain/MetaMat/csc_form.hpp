@@ -85,18 +85,9 @@ public:
 template<typename data_t, typename index_t> void csc_form<data_t, index_t>::copy_memory(const index_t in_size, const index_t* const in_row_idx, const index_t* const in_col_ptr, const data_t* const in_val_idx) {
 	if(in_size > n_elem) resize(in_size);
 
-#ifdef SUANPAN_MT
-	std::copy(std::execution::par_unseq, in_row_idx, in_row_idx + in_size, this->row_idx);
-	std::copy(std::execution::par_unseq, in_col_ptr, in_col_ptr + n_cols + 1, this->col_ptr);
-	std::copy(std::execution::par_unseq, in_val_idx, in_val_idx + in_size, this->val_idx);
-#else
-	auto bytes = in_size * sizeof(index_t);
-	memcpy(this->row_idx, in_row_idx, bytes);
-	bytes = (n_cols + 1) * sizeof(index_t);
-	memcpy(this->col_ptr, in_col_ptr, bytes);
-	bytes = in_size * sizeof(data_t);
-	memcpy(this->val_idx, in_val_idx, bytes);
-#endif
+	std::copy(in_row_idx, in_row_idx + in_size, this->row_idx);
+	std::copy(in_col_ptr, in_col_ptr + n_cols + 1, this->col_ptr);
+	std::copy(in_val_idx, in_val_idx + in_size, this->val_idx);
 
 	access::rw(c_size) = in_size;
 }
@@ -294,13 +285,8 @@ template<typename data_t, typename index_t> template<typename in_dt, typename in
 
 	access::rw(c_size) = index_t(in_mat.c_size);
 
-#ifdef SUANPAN_MT
-	std::transform(std::execution::par_unseq, in_mat.row_idx, in_mat.row_idx + in_mat.c_size, row_idx, [](const in_it I) { return index_t(I); });
-	std::transform(std::execution::par_unseq, in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx, [](const in_dt I) { return data_t(I); });
-#else
 	std::transform(in_mat.row_idx, in_mat.row_idx + in_mat.c_size, row_idx, [](const in_it I) { return index_t(I); });
 	std::transform(in_mat.val_idx, in_mat.val_idx + in_mat.c_size, val_idx, [](const in_dt I) { return data_t(I); });
-#endif
 
 	in_it current_pos = 0, current_col = 0;
 	while(current_pos < in_mat.c_size)

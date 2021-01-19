@@ -23,9 +23,6 @@
 #include <armadillo/armadillo>
 #include <vector>
 #include <cstring>
-#ifdef SUANPAN_MT
-#include <execution>
-#endif
 
 template<typename data_t, typename index_t, typename form_t> class sparse_form {
 protected:

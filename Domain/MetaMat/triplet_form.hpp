@@ -156,18 +156,9 @@ template<typename data_t, typename index_t> void triplet_form<data_t, index_t>::
 template<typename data_t, typename index_t> void triplet_form<data_t, index_t>::copy_memory(const index_t size, const index_t* const in_row_idx, const index_t* const in_col_idx, const data_t* const in_val_idx) {
 	if(size > n_elem) resize(size);
 
-#ifdef SUANPAN_MT
-	std::copy(std::execution::par_unseq, in_row_idx, in_row_idx + size, this->row_idx);
-	std::copy(std::execution::par_unseq, in_col_idx, in_col_idx + size, this->col_idx);
-	std::copy(std::execution::par_unseq, in_val_idx, in_val_idx + size, this->val_idx);
-#else
-	auto bytes = size * sizeof(index_t);
-	memcpy(this->row_idx, in_row_idx, bytes);
-	memcpy(this->col_idx, in_col_idx, bytes);
-
-	bytes = size * sizeof(data_t);
-	memcpy(this->val_idx, in_val_idx, bytes);
-#endif
+	std::copy(in_row_idx, in_row_idx + size, this->row_idx);
+	std::copy(in_col_idx, in_col_idx + size, this->col_idx);
+	std::copy(in_val_idx, in_val_idx + size, this->val_idx);
 
 	access::rw(c_size) = size;
 }
