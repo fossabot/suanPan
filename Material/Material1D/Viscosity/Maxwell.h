@@ -62,6 +62,7 @@ public:
 
 	unique_ptr<Material> get_copy() override;
 
+	int update_trial_status(const vec&) override;
 	int update_trial_status(const vec&, const vec&) override;
 
 	int clear_status() override;

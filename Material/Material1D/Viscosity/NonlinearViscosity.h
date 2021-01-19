@@ -52,6 +52,7 @@ public:
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 
+	int update_trial_status(const vec&) override final;
 	int update_trial_status(const vec&, const vec&) override;
 
 	int clear_status() override;

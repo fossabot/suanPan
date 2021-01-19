@@ -26,8 +26,8 @@ void CoulombFriction::initialize(const shared_ptr<DomainBase>&) { trial_damping 
 unique_ptr<Material> CoulombFriction::get_copy() { return make_unique<CoulombFriction>(*this); }
 
 int CoulombFriction::update_trial_status(const vec&) {
-	suanpan_error("CoulombFriction should not pass strain to Coulumb model, check the model.\n");
-	return 0;
+	suanpan_error("CoulombFriction receives strain only from the associated element, check the model.\n");
+	return SUANPAN_FAIL;
 }
 
 int CoulombFriction::update_trial_status(const vec&, const vec& t_strain_rate) {

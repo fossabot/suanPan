@@ -63,6 +63,11 @@ void Maxwell::initialize(const shared_ptr<DomainBase>& D) {
 
 unique_ptr<Material> Maxwell::get_copy() { return make_unique<Maxwell>(*this); }
 
+int Maxwell::update_trial_status(const vec&) {
+	suanpan_error("Maxwell receives strain only from the associated element, check the model.\n");
+	return SUANPAN_FAIL;
+}
+
 int Maxwell::update_trial_status(const vec& t_strain, const vec& t_strain_rate) {
 	incre_strain = (trial_strain = t_strain) - current_strain;
 	incre_strain_rate = (trial_strain_rate = t_strain_rate) - current_strain_rate;

@@ -53,6 +53,11 @@ void Kelvin::initialize(const shared_ptr<DomainBase>& D) {
 
 unique_ptr<Material> Kelvin::get_copy() { return make_unique<Kelvin>(*this); }
 
+int Kelvin::update_trial_status(const vec&) {
+	suanpan_error("Kelvin receives strain only from the associated element, check the model.\n");
+	return SUANPAN_FAIL;
+}
+
 int Kelvin::update_trial_status(const vec& t_strain, const vec& t_strain_rate) {
 	incre_strain = (trial_strain = t_strain) - current_strain;
 	incre_strain_rate = (trial_strain_rate = t_strain_rate) - current_strain_rate;
