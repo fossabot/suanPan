@@ -761,7 +761,7 @@ template<typename T> void Factory<T>::initialize_mass() {
 #ifdef SUANPAN_CUDA
 		else if(SolverType::CUDA == solver) global_mass = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #endif
-		else throw;
+		else global_mass = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		break;
 	}
 
@@ -793,7 +793,7 @@ template<typename T> void Factory<T>::initialize_damping() {
 #ifdef SUANPAN_CUDA
 		else if(SolverType::CUDA == solver) global_damping = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #endif
-		else throw;
+		else global_damping = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		break;
 	}
 
@@ -825,7 +825,7 @@ template<typename T> void Factory<T>::initialize_stiffness() {
 #ifdef SUANPAN_CUDA
 		else if(SolverType::CUDA == solver) global_stiffness = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #endif
-		else throw;
+		else global_stiffness = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		break;
 	}
 
@@ -859,7 +859,7 @@ template<typename T> void Factory<T>::initialize_geometry() {
 #ifdef SUANPAN_CUDA
 		else if(SolverType::CUDA == solver) global_geometry = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
 #endif
-		else throw;
+		else global_geometry = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
 		break;
 	}
 
