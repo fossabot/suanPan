@@ -5,6 +5,8 @@
 ### User
 
 1. remove dependency on `MAGMA`, now `CUDA` is directly used as the GPU solver
+2. add `PARDISO` sparse solver
+3. upgrade to `Intel oneAPI Toolkit`
 
 ## version 1.1
 

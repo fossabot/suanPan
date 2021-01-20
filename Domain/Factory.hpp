@@ -39,7 +39,7 @@ enum class AnalysisType { NONE, DISP, EIGEN, BUCKLE, STATICS, DYNAMICS };
 
 enum class StorageScheme { FULL, BAND, BANDSYMM, SYMMPACK, SPARSE };
 
-enum class SolverType { LAPACK, SPIKE, SUPERLU, MUMPS, CUDA };
+enum class SolverType { LAPACK, SPIKE, SUPERLU, MUMPS, CUDA, PARDISO };
 
 template<typename T> class Factory final {
 	unsigned n_size = 0;               // number of degrees of freedom
@@ -753,14 +753,15 @@ template<typename T> void Factory<T>::initialize_mass() {
 		global_mass = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_CUDA
-		if(SolverType::SUPERLU == solver) global_mass = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
-		else if(SolverType::MUMPS == solver) global_mass = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_mass = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
-#else
 		if(SolverType::MUMPS == solver) global_mass = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_mass = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+		else if(SolverType::SUPERLU == solver) global_mass = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+#ifdef SUANPAN_MKL
+		else if(SolverType::PARDISO == solver) global_mass = make_shared<SparseMatPARDISO<T>>(n_size, n_size, n_elem);
 #endif
+#ifdef SUANPAN_CUDA
+		else if(SolverType::CUDA == solver) global_mass = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
+#endif
+		else throw;
 		break;
 	}
 
@@ -784,14 +785,15 @@ template<typename T> void Factory<T>::initialize_damping() {
 		global_damping = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_CUDA
-		if(SolverType::SUPERLU == solver) global_damping = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
-		else if(SolverType::MUMPS == solver) global_damping = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_damping = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
-#else
 		if(SolverType::MUMPS == solver) global_damping = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_damping = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+		else if(SolverType::SUPERLU == solver) global_damping = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+#ifdef SUANPAN_MKL
+		else if(SolverType::PARDISO == solver) global_damping = make_shared<SparseMatPARDISO<T>>(n_size, n_size, n_elem);
 #endif
+#ifdef SUANPAN_CUDA
+		else if(SolverType::CUDA == solver) global_damping = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
+#endif
+		else throw;
 		break;
 	}
 
@@ -815,14 +817,15 @@ template<typename T> void Factory<T>::initialize_stiffness() {
 		global_stiffness = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_CUDA
-		if(SolverType::SUPERLU == solver) global_stiffness = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
-		else if(SolverType::MUMPS == solver) global_stiffness = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_stiffness = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
-#else
 		if(SolverType::MUMPS == solver) global_stiffness = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_stiffness = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+		else if(SolverType::SUPERLU == solver) global_stiffness = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+#ifdef SUANPAN_MKL
+		else if(SolverType::PARDISO == solver) global_stiffness = make_shared<SparseMatPARDISO<T>>(n_size, n_size, n_elem);
 #endif
+#ifdef SUANPAN_CUDA
+		else if(SolverType::CUDA == solver) global_stiffness = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
+#endif
+		else throw;
 		break;
 	}
 
@@ -848,14 +851,15 @@ template<typename T> void Factory<T>::initialize_geometry() {
 		global_geometry = make_shared<SymmPackMat<T>>(n_size);
 		break;
 	case StorageScheme::SPARSE:
-#ifdef SUANPAN_CUDA
-		if(SolverType::SUPERLU == solver) global_geometry = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
-		else if(SolverType::MUMPS == solver) global_geometry = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_geometry = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
-#else
 		if(SolverType::MUMPS == solver) global_geometry = make_shared<SparseMatMUMPS<T>>(n_size, n_size, n_elem);
-		else global_geometry = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+		else if(SolverType::SUPERLU == solver) global_geometry = make_shared<SparseMatSuperLU<T>>(n_size, n_size, n_elem);
+#ifdef SUANPAN_MKL
+		else if(SolverType::PARDISO == solver) global_geometry = make_shared<SparseMatPARDISO<T>>(n_size, n_size, n_elem);
 #endif
+#ifdef SUANPAN_CUDA
+		else if(SolverType::CUDA == solver) global_geometry = make_shared<SparseMatCUDA<T>>(n_size, n_size, n_elem);
+#endif
+		else throw;
 		break;
 	}
 

@@ -12,6 +12,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         Domain/MetaMat/SparseMat.hpp
         Domain/MetaMat/SparseMatCUDA.hpp
         Domain/MetaMat/SparseMatMUMPS.hpp
+        Domain/MetaMat/SparseMatPARDISO.hpp
         Domain/MetaMat/SparseMatSuperLU.hpp
         Domain/MetaMat/SymmPackMat.hpp
         Domain/MetaMat/triplet_form.hpp

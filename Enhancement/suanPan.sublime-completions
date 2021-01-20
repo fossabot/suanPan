@@ -574,6 +574,7 @@
     "Optimisation",
     "OrthotropicElastic3D",
     "PS",
+    "PARDISO",
     "ParabolicCC",
     "Parallel",
     "ParticleCollision2D",

@@ -150,7 +150,7 @@ void print_version() {
 	suanpan_info("    The binary is compiled on %s\n", __DATE__);
 	suanpan_info("    The source code of suanPan is hosted on GitHub. https://tlcfem.github.io/suanPan/\n");
 	suanpan_info("    The documentation is hosted on GitBook and readthedocs. https://tlcfem.gitbook.io/suanpan-manual/ and https://suanpan-manual.readthedocs.io/\n");
-#ifdef MKL_DIRECT_CALL
+#ifdef SUANPAN_MKL
 	suanpan_info("    The linear algebra support is provided by Armadillo with Intel MKL. http://arma.sourceforge.net/\n");
 #else
 	suanpan_info("    The linear algebra support is provided by Armadillo. http://arma.sourceforge.net/\n");
