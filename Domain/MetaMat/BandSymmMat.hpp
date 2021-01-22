@@ -90,12 +90,12 @@ template<typename T> void BandSymmMat<T>::unify(const uword idx) {
 }
 
 template<typename T> const T& BandSymmMat<T>::operator()(const uword in_row, const uword in_col) const {
-	if(std::llabs(static_cast<long long>(in_row) - static_cast<long long>(in_col)) > static_cast<long long>(band)) return bin = 0.;
+	if(in_row > band + in_col) return bin = 0.;
 	return memory[in_row > in_col ? in_row - in_col + in_col * m_rows : in_col - in_row + in_row * m_rows];
 }
 
 template<typename T> T& BandSymmMat<T>::at(const uword in_row, const uword in_col) {
-	if(std::llabs(static_cast<long long>(in_row) - static_cast<long long>(in_col)) > static_cast<long long>(band) || in_row < in_col) return bin = 0.;
+	if(in_row > band + in_col || in_row < in_col) return bin = 0.;
 
 	return access::rw(memory[in_row - in_col + in_col * m_rows]);
 }

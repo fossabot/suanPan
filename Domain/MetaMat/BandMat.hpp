@@ -257,7 +257,7 @@ template<typename T> int BandMat<T>::solve_trs(Mat<T>& X, const Mat<T>& B) {
 
 	if(IPIV.is_empty()) return SUANPAN_FAIL;
 
-	suanpan_debug([&]() { if(n_rows != n_cols) throw invalid_argument("requires a square matrix");; });
+	suanpan_debug([&]() { if(n_rows != n_cols) throw invalid_argument("requires a square matrix"); });
 
 	auto INFO = 0;
 
