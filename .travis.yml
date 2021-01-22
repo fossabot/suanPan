@@ -5,7 +5,7 @@ git:
 branches:
   except:
     - /^suanPan/
-matrix:
+jobs:
   include:
     - os: osx
       before_script:
@@ -35,7 +35,7 @@ matrix:
         - git tag $SP_TIME
       deploy:
         provider: releases
-        api_key: $TOKEN
+        token: $TOKEN
         file: suanPan-macos-openblas.tar.gz
         overwrite: true
         skip_cleanup: true
@@ -70,7 +70,7 @@ matrix:
         - git tag $SP_TIME
       deploy:
         provider: releases
-        api_key: $TOKEN
+        token: $TOKEN
         file: suanPan-linux-openblas.tar.gz
         overwrite: true
         skip_cleanup: true
