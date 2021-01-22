@@ -763,7 +763,7 @@ int Domain::reorder_dof() {
 	const uvec idx_sorted = sort_index(idx_rcm);
 
 	// get bandwidth
-	auto low_bw = 1, up_bw = 1;
+	auto low_bw = 0, up_bw = 0;
 	for(unsigned i = 0; i < dof_counter; ++i) // lgtm [cpp/constant-comparison]
 		for(const auto& j : adjacency[idx_rcm(i)]) {
 			const auto t_bw = static_cast<int>(idx_sorted(j)) - static_cast<int>(i);

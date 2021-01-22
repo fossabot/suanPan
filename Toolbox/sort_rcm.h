@@ -40,7 +40,7 @@
 #ifndef RCM_H
 #define RCM_H
 
-#include <suanPan.h>
+#include <Domain/MetaMat/triplet_form.hpp>
 
 using std::vector;
 
@@ -49,6 +49,8 @@ uvec sort_rcm(const vector<uvec>&, const uvec&);
 template<typename eT> uvec sort_rcm(const SpMat<eT>&);
 
 template<typename eT> uvec sort_rcm(const Mat<eT>&);
+
+template<typename dt, typename it> uvec sort_rcm(const triplet_form<dt, it>&);
 
 #endif
 
