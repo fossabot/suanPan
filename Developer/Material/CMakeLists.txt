@@ -23,6 +23,7 @@ endif()
 link_libraries(suanPan)
 
 add_library(${PROJECT_NAME} SHARED
+    ElasticExternal.cpp
     MaterialExample.cpp
     ../../Domain/Tag.cpp
     ../../Material/Material.cpp
