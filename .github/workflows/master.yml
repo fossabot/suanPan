@@ -55,13 +55,18 @@ jobs:
           export CC=gcc-9 && export CXX=g++-9 && export FC=gfortran-9
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_PATH=./VTK-build .
           make -j4
-          cp Enhancement/suanPan.sh .
-          cp Enhancement/suanPan.sublime-completions .
-          cp Enhancement/suanPan.sublime-syntax .
-          cp Libs/gcc-mac/libtbb.dylib .
-          cp Libs/gcc-mac/libtbbmalloc.dylib .
-          cp Libs/gcc-mac/libtbbmalloc_proxy.dylib .
-          tar -cvzf suanPan-macos-openblas-vtk.tar.gz suanPan suanPan.sh suanPan.sublime-completions suanPan.sublime-syntax LICENSE README.md CHANGELOG.md libtbb.dylib libtbbmalloc.dylib libtbbmalloc_proxy.dylib
+          mkdir suanPan-macos-openblas-vtk
+          cp suanPan suanPan-macos-openblas-vtk
+          cp LICENSE suanPan-macos-openblas-vtk
+          cp README.md suanPan-macos-openblas-vtk
+          cp CHANGELOG.md suanPan-macos-openblas-vtk
+          cp Enhancement/suanPan.sh suanPan-macos-openblas-vtk
+          cp Enhancement/suanPan.sublime-completions suanPan-macos-openblas-vtk
+          cp Enhancement/suanPan.sublime-syntax suanPan-macos-openblas-vtk
+          cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas-vtk
+          cp Libs/gcc-mac/libtbbmalloc.dylib suanPan-macos-openblas-vtk
+          cp Libs/gcc-mac/libtbbmalloc_proxy.dylib suanPan-macos-openblas-vtk
+          tar cvzf suanPan-macos-openblas-vtk.tar.gz suanPan-macos-openblas-vtk
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
