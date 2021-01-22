@@ -60,7 +60,6 @@ jobs:
           cp LICENSE suanPan-macos-openblas-vtk
           cp README.md suanPan-macos-openblas-vtk
           cp CHANGELOG.md suanPan-macos-openblas-vtk
-          cp Enhancement/suanPan.sh suanPan-macos-openblas-vtk
           cp Enhancement/suanPan.sublime-completions suanPan-macos-openblas-vtk
           cp Enhancement/suanPan.sublime-syntax suanPan-macos-openblas-vtk
           cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas-vtk
