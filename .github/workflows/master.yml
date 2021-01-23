@@ -19,7 +19,7 @@ jobs:
           mkdir VTK-build
           mkdir VTK-out
           cd VTK-build
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/home/runner/work/suanPan/suanPan/VTK-out/ ../VTK-8.2.0
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/home/runner/work/suanPan/suanPan/VTK-out/ ../VTK-8.2.0
           make install -j4
           cd ..
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-out/lib/cmake/vtk-8.2/ .
@@ -57,15 +57,15 @@ jobs:
         run: |
           echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
           sudo brew update && sudo brew install glfw3 glew
-          export CC=gcc-9 && export CXX=g++-9 && export FC=gfortran-9
           wget https://www.vtk.org/files/release/8.2/VTK-8.2.0.tar.gz
           tar xf VTK-8.2.0.tar.gz
           mkdir VTK-build
           mkdir VTK-out
           cd VTK-build
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/Users/runner/work/suanPan/suanPan/VTK-out/ ../VTK-8.2.0
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/Users/runner/work/suanPan/suanPan/VTK-out/ ../VTK-8.2.0
           make install -j4
           cd ..
+          export CC=gcc-9 && export CXX=g++-9 && export FC=gfortran-9
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/Users/runner/work/suanPan/suanPan/VTK-out/lib/cmake/vtk-8.2/ .
           make -j4
           mkdir suanPan-macos-openblas-vtk
