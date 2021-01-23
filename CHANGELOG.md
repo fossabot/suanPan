@@ -2,11 +2,10 @@
 
 ## version 1.x
 
-### User
-
 1. remove dependency on `MAGMA`, now `CUDA` is directly used as the GPU solver
 2. add `PARDISO` sparse solver
 3. upgrade to `Intel oneAPI Toolkit`
+4. add C interface material model
 
 ## version 1.1
 
