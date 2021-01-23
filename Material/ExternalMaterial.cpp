@@ -72,62 +72,23 @@ bool ExternalMaterial::validate() {
 void ExternalMaterial::initialize(const shared_ptr<DomainBase>&) {
 	PureWrapper(this);
 
-	// ! very tricky implementation
 	// ! we need to make all variables wrappers of some external memory
-	// ! armadillo has no existing method to do so
-	// ! can only make a wrapper and steal everything from it to ensure compatibility
 
-	if(-1 != data.c_strain) {
-		vec t_holder(&data.pool[data.c_strain], data.size, false);
-		current_strain.steal_mem(t_holder);
-	} // current status
-	if(-1 != data.c_strain_rate) {
-		vec t_holder(&data.pool[data.c_strain_rate], data.size, false);
-		current_strain_rate.steal_mem(t_holder);
-	} // current status
-	if(-1 != data.c_stress) {
-		vec t_holder(&data.pool[data.c_stress], data.size, false);
-		current_stress.steal_mem(t_holder);
-	} // current status 
+	if(-1 != data.c_strain) current_strain = vec(&data.pool[data.c_strain], data.size, false);
+	if(-1 != data.c_strain_rate) current_strain_rate = vec(&data.pool[data.c_strain_rate], data.size, false);
+	if(-1 != data.c_stress) current_stress = vec(&data.pool[data.c_stress], data.size, false);
 
-	if(-1 != data.t_strain) {
-		vec t_holder(&data.pool[data.t_strain], data.size, false);
-		trial_strain.steal_mem(t_holder);
-	} // trial status
-	if(-1 != data.t_strain_rate) {
-		vec t_holder(&data.pool[data.t_strain_rate], data.size, false);
-		trial_strain_rate.steal_mem(t_holder);
-	} // trial status
-	if(-1 != data.t_stress) {
-		vec t_holder(&data.pool[data.t_stress], data.size, false);
-		trial_stress.steal_mem(t_holder);
-	} // trial status 
+	if(-1 != data.t_strain) trial_strain = vec(&data.pool[data.t_strain], data.size, false);
+	if(-1 != data.t_strain_rate) trial_strain_rate = vec(&data.pool[data.t_strain_rate], data.size, false);
+	if(-1 != data.t_stress) trial_stress = vec(&data.pool[data.t_stress], data.size, false);
 
-	if(-1 != data.i_stiffness) {
-		mat t_holder(&data.pool[data.i_stiffness], data.size, data.size, false);
-		initial_stiffness.steal_mem(t_holder);
-	} // stiffness matrix
-	if(-1 != data.c_stiffness) {
-		mat t_holder(&data.pool[data.c_stiffness], data.size, data.size, false);
-		current_stiffness.steal_mem(t_holder);
-	} // stiffness matrix
-	if(-1 != data.t_stiffness) {
-		mat t_holder(&data.pool[data.t_stiffness], data.size, data.size, false);
-		trial_stiffness.steal_mem(t_holder);
-	} // stiffness matrix
+	if(-1 != data.i_stiffness) initial_stiffness = mat(&data.pool[data.i_stiffness], data.size, data.size, false);
+	if(-1 != data.c_stiffness) current_stiffness = mat(&data.pool[data.c_stiffness], data.size, data.size, false);
+	if(-1 != data.t_stiffness) trial_stiffness = mat(&data.pool[data.t_stiffness], data.size, data.size, false);
 
-	if(-1 != data.i_damping) {
-		mat t_holder(&data.pool[data.i_damping], data.size, data.size, false);
-		initial_damping.steal_mem(t_holder);
-	} // damping matrix
-	if(-1 != data.c_damping) {
-		mat t_holder(&data.pool[data.c_damping], data.size, data.size, false);
-		current_damping.steal_mem(t_holder);
-	} // damping matrix
-	if(-1 != data.t_damping) {
-		mat t_holder(&data.pool[data.t_damping], data.size, data.size, false);
-		trial_damping.steal_mem(t_holder);
-	} // damping matrix
+	if(-1 != data.i_damping) initial_damping = mat(&data.pool[data.i_damping], data.size, data.size, false);
+	if(-1 != data.c_damping) current_damping = mat(&data.pool[data.c_damping], data.size, data.size, false);
+	if(-1 != data.t_damping) trial_damping = mat(&data.pool[data.t_damping], data.size, data.size, false);
 }
 
 void ExternalMaterial::initialize_history(unsigned) {}
