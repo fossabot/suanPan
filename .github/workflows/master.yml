@@ -14,27 +14,23 @@ jobs:
         run: |
           echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
           sudo apt update && sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
-          wget https://www.vtk.org/files/release/8.2/VTK-8.2.0.tar.gz
-          tar xf VTK-8.2.0.tar.gz
-          mkdir VTK-build
-          mkdir VTK-out
-          cd VTK-build
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/home/runner/work/suanPan/suanPan/VTK-out/ ../VTK-8.2.0
-          make install -j4
-          cd ..
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-out/lib/cmake/vtk-8.2/ .
+          wget https://github.com/TLCFEM/vtk-prebuild/releases/download/latest/VTK-8.2.0-linux.tar.gz
+          mkdir VTK-build && tar xf VTK-8.2.0-linux.tar.gz -c VTK-build
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
           make -j4
-          cp Enhancement/suanPan.sh .
-          cp Enhancement/suanPan.sublime-completions .
-          cp Enhancement/suanPan.sublime-syntax .
-          cp Libs/gcc-linux/libtbb.so .
-          cp Libs/gcc-linux/libtbb.so.2 .
-          cp Libs/gcc-linux/libtbbmalloc.so .
-          cp Libs/gcc-linux/libtbbmalloc.so.2 .
-          cp Libs/gcc-linux/libtbbmalloc_proxy.so .
-          cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 .
-          cp /home/runner/work/suanPan/suanPan/VTK-out/lib/*.so* .
-          tar cvzf suanPan-linux-openblas-vtk.tar.gz suanPan suanPan.sh suanPan.sublime-completions suanPan.sublime-syntax LICENSE README.md CHANGELOG.md libtbb.so libtbb.so.2 libtbbmalloc.so libtbbmalloc.so.2 libtbbmalloc_proxy.so libtbbmalloc_proxy.so.2
+          mkdir suanPan-linux-openblas-vtk
+          cp suanPan suanPan-linux-openblas-vtk
+          cp Enhancement/suanPan.sh suanPan-linux-openblas-vtk
+          cp Enhancement/suanPan.sublime-completions suanPan-linux-openblas-vtk
+          cp Enhancement/suanPan.sublime-syntax suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbb.so suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbb.so.2 suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc.so suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc.so.2 suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 suanPan-linux-openblas-vtk
+          cp VTK-build/lib/*.so* suanPan-linux-openblas-vtk
+          tar cvzf suanPan-linux-openblas-vtk.tar.gz suanPan-linux-openblas-vtk
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
@@ -57,16 +53,11 @@ jobs:
         run: |
           echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
           sudo brew update && sudo brew install glfw3 glew
-          wget https://www.vtk.org/files/release/8.2/VTK-8.2.0.tar.gz
-          tar xf VTK-8.2.0.tar.gz
+          wget https://github.com/TLCFEM/vtk-prebuild/releases/download/latest/VTK-8.2.0-macos.tar.gz
           mkdir VTK-build
-          mkdir VTK-out
-          cd VTK-build
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/Users/runner/work/suanPan/suanPan/VTK-out/ ../VTK-8.2.0
-          make install -j4
-          cd ..
+          tar xf VTK-8.2.0-macos.tar.gz -C VTK-build
           export CC=gcc-9 && export CXX=g++-9 && export FC=gfortran-9
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/Users/runner/work/suanPan/suanPan/VTK-out/lib/cmake/vtk-8.2/ .
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/Users/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
           make -j4
           mkdir suanPan-macos-openblas-vtk
           cp suanPan suanPan-macos-openblas-vtk
@@ -78,7 +69,7 @@ jobs:
           cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas-vtk
           cp Libs/gcc-mac/libtbbmalloc.dylib suanPan-macos-openblas-vtk
           cp Libs/gcc-mac/libtbbmalloc_proxy.dylib suanPan-macos-openblas-vtk
-          cp /Users/runner/work/suanPan/suanPan/VTK-out/*.dylib suanPan-macos-openblas-vtk
+          cp VTK-build/lib/*.dylib suanPan-macos-openblas-vtk
           tar cvzf suanPan-macos-openblas-vtk.tar.gz suanPan-macos-openblas-vtk
       - name: Upload
         uses: actions/upload-artifact@v1
