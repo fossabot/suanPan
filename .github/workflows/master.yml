@@ -15,7 +15,7 @@ jobs:
           echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
           sudo apt update && sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
           wget https://github.com/TLCFEM/vtk-prebuild/releases/download/latest/VTK-8.2.0-linux.tar.gz
-          mkdir VTK-build && tar xf VTK-8.2.0-linux.tar.gz -c VTK-build
+          mkdir VTK-build && tar xf VTK-8.2.0-linux.tar.gz -C VTK-build
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
           make -j4
           mkdir suanPan-linux-openblas-vtk
