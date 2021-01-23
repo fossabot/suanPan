@@ -147,18 +147,24 @@ void LeeNewmark::assemble_resistance() {
 
 	D->assemble_resistance();
 	D->assemble_inertial_force();
-	// considier independent viscous device
+	// consider independent viscous device
 	D->assemble_damping_force();
 
-	vec internal_velocity = CM * W->get_trial_velocity();
-	for(uword I = 0, J = n_block; I < n_damping; ++I, J += n_block) {
-		const vec n_internal(&trial_internal(J), n_block, false, true);
-		internal_velocity -= mass_coef(I) * n_internal;
+	if(nullptr != current_mass) {
+		vec internal_velocity = CM * W->get_trial_velocity();
+		for(uword I = 0, J = n_block; I < n_damping; ++I, J += n_block) {
+			const vec n_internal(&trial_internal(J), n_block, false, true);
+			internal_velocity -= mass_coef(I) * n_internal;
+		}
+		W->update_trial_damping_force(W->get_trial_damping_force() + current_mass * internal_velocity);
 	}
-
-	if(nullptr != current_mass) W->update_trial_damping_force(W->get_trial_damping_force() + current_mass * internal_velocity);
 
 	W->set_sushi(W->get_trial_resistance() + W->get_trial_damping_force() + W->get_trial_inertial_force());
 }
 
-void LeeNewmark::print() { suanpan_info("A Newmark solver using Lee's damping model. DOI: 10.1016/j.jsv.2020.115312\n"); }
+void LeeNewmark::print() {
+	suanpan_info("A Newmark solver using Lee's damping model. DOI: 10.1016/j.jsv.2020.115312\n");
+	const vec X = .25 * sqrt(mass_coef % stiffness_coef);
+	const vec F = sqrt(mass_coef / stiffness_coef);
+	for(auto I = 0llu; I < n_damping; ++I) suanpan_info("\tdamping ratio: %.4f\tfrequency: %.4f\n", X(I), F(I));
+}
