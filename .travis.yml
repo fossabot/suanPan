@@ -17,29 +17,29 @@ jobs:
         - mkdir cmake-build-release && cd cmake-build-release
         - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON ../
         - make -j4
-      after_success:
-        - cd ../
-        - mkdir suanPan-macos-openblas
-        - cp cmake-build-release/suanPan suanPan-macos-openblas
-        - cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas
-        - cp Libs/gcc-mac/libtbbmalloc.dylib suanPan-macos-openblas
-        - cp Libs/gcc-mac/libtbbmalloc_proxy.dylib suanPan-macos-openblas
-        - cp LICENSE suanPan-macos-openblas
-        - cp README.md suanPan-macos-openblas
-        - cp CHANGELOG.md suanPan-macos-openblas
-        - cp Enhancement/suanPan.sh suanPan-macos-openblas
-        - cp Enhancement/suanPan.sublime-syntax suanPan-macos-openblas
-        - cp Enhancement/suanPan.sublime-completions suanPan-macos-openblas
-        - tar cvzf suanPan-macos-openblas.tar.gz suanPan-macos-openblas
-      before_deploy:
-        - git tag $SP_TIME
-      deploy:
-        provider: releases
-        token: $TOKEN
-        file: suanPan-macos-openblas.tar.gz
-        overwrite: true
-        skip_cleanup: true
-        name: $SP_TIME
+      # after_success:
+      #   - cd ../
+      #   - mkdir suanPan-macos-openblas
+      #   - cp cmake-build-release/suanPan suanPan-macos-openblas
+      #   - cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas
+      #   - cp Libs/gcc-mac/libtbbmalloc.dylib suanPan-macos-openblas
+      #   - cp Libs/gcc-mac/libtbbmalloc_proxy.dylib suanPan-macos-openblas
+      #   - cp LICENSE suanPan-macos-openblas
+      #   - cp README.md suanPan-macos-openblas
+      #   - cp CHANGELOG.md suanPan-macos-openblas
+      #   - cp Enhancement/suanPan.sh suanPan-macos-openblas
+      #   - cp Enhancement/suanPan.sublime-syntax suanPan-macos-openblas
+      #   - cp Enhancement/suanPan.sublime-completions suanPan-macos-openblas
+      #   - tar cvzf suanPan-macos-openblas.tar.gz suanPan-macos-openblas
+      # before_deploy:
+      #   - git tag $SP_TIME
+      # deploy:
+      #   provider: releases
+      #   token: $TOKEN
+      #   file: suanPan-macos-openblas.tar.gz
+      #   overwrite: true
+      #   skip_cleanup: true
+      #   name: $SP_TIME
     - os: linux
       dist: focal
       before_script:
@@ -49,31 +49,31 @@ jobs:
         - mkdir cmake-build-release && cd cmake-build-release
         - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON ../
         - make -j4
-      after_success:
-        - cd ../
-        - mkdir suanPan-linux-openblas
-        - cp cmake-build-release/suanPan suanPan-linux-openblas
-        - cp Libs/gcc-linux/libtbb.so suanPan-linux-openblas
-        - cp Libs/gcc-linux/libtbbmalloc.so suanPan-linux-openblas
-        - cp Libs/gcc-linux/libtbbmalloc_proxy.so suanPan-linux-openblas
-        - cp Libs/gcc-linux/libtbb.so.2 suanPan-linux-openblas
-        - cp Libs/gcc-linux/libtbbmalloc.so.2 suanPan-linux-openblas
-        - cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 suanPan-linux-openblas
-        - cp LICENSE suanPan-linux-openblas
-        - cp README.md suanPan-linux-openblas
-        - cp CHANGELOG.md suanPan-linux-openblas
-        - cp Enhancement/suanPan.sh suanPan-linux-openblas
-        - cp Enhancement/suanPan.sublime-syntax suanPan-linux-openblas
-        - cp Enhancement/suanPan.sublime-completions suanPan-linux-openblas
-        - tar cvzf suanPan-linux-openblas.tar.gz suanPan-linux-openblas
-      before_deploy:
-        - git tag $SP_TIME
-      deploy:
-        provider: releases
-        token: $TOKEN
-        file: suanPan-linux-openblas.tar.gz
-        overwrite: true
-        skip_cleanup: true
-        name: $SP_TIME
+      # after_success:
+      #   - cd ../
+      #   - mkdir suanPan-linux-openblas
+      #   - cp cmake-build-release/suanPan suanPan-linux-openblas
+      #   - cp Libs/gcc-linux/libtbb.so suanPan-linux-openblas
+      #   - cp Libs/gcc-linux/libtbbmalloc.so suanPan-linux-openblas
+      #   - cp Libs/gcc-linux/libtbbmalloc_proxy.so suanPan-linux-openblas
+      #   - cp Libs/gcc-linux/libtbb.so.2 suanPan-linux-openblas
+      #   - cp Libs/gcc-linux/libtbbmalloc.so.2 suanPan-linux-openblas
+      #   - cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 suanPan-linux-openblas
+      #   - cp LICENSE suanPan-linux-openblas
+      #   - cp README.md suanPan-linux-openblas
+      #   - cp CHANGELOG.md suanPan-linux-openblas
+      #   - cp Enhancement/suanPan.sh suanPan-linux-openblas
+      #   - cp Enhancement/suanPan.sublime-syntax suanPan-linux-openblas
+      #   - cp Enhancement/suanPan.sublime-completions suanPan-linux-openblas
+      #   - tar cvzf suanPan-linux-openblas.tar.gz suanPan-linux-openblas
+      # before_deploy:
+      #   - git tag $SP_TIME
+      # deploy:
+      #   provider: releases
+      #   token: $TOKEN
+      #   file: suanPan-linux-openblas.tar.gz
+      #   overwrite: true
+      #   skip_cleanup: true
+      #   name: $SP_TIME
 notifications:
   email: false

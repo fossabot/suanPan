@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  linux:
+  linux-openblas-vtk:
     runs-on: ubuntu-20.04
     steps:
       - name: Clone
@@ -13,7 +13,7 @@ jobs:
       - name: Compile
         run: |
           echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
-          sudo apt update && sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+          sudo apt-get update && sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
           wget https://github.com/TLCFEM/vtk-prebuild/releases/download/latest/VTK-8.2.0-linux.tar.gz
           mkdir VTK-build && tar xf VTK-8.2.0-linux.tar.gz -C VTK-build
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
@@ -29,7 +29,6 @@ jobs:
           cp Libs/gcc-linux/libtbbmalloc.so.2 suanPan-linux-openblas-vtk
           cp Libs/gcc-linux/libtbbmalloc_proxy.so suanPan-linux-openblas-vtk
           cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 suanPan-linux-openblas-vtk
-          cp VTK-build/lib/*.so* suanPan-linux-openblas-vtk
           tar cvzf suanPan-linux-openblas-vtk.tar.gz suanPan-linux-openblas-vtk
       - name: Upload
         uses: actions/upload-artifact@v1
@@ -42,9 +41,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: suanPan-linux-openblas-vtk.tar.gz
           asset_name: suanPan-linux-openblas-vtk.tar.gz
-          tag: ${{ env.SP_TIME }}
+          tag: suanPan-latest
           overwrite: true
-  macos:
+  macos-openblas-vtk:
     runs-on: macos-latest
     steps:
       - name: Clone
@@ -82,5 +81,76 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: suanPan-macos-openblas-vtk.tar.gz
           asset_name: suanPan-macos-openblas-vtk.tar.gz
-          tag: ${{ env.SP_TIME }}
+          tag: suanPan-latest
+          overwrite: true
+  linux-openblas:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone
+        uses: actions/checkout@v2
+      - name: Compile
+        run: |
+          echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON .
+          make -j4
+          mkdir suanPan-linux-openblas
+          cp suanPan suanPan-linux-openblas
+          cp Enhancement/suanPan.sh suanPan-linux-openblas
+          cp Enhancement/suanPan.sublime-completions suanPan-linux-openblas
+          cp Enhancement/suanPan.sublime-syntax suanPan-linux-openblas
+          cp Libs/gcc-linux/libtbb.so suanPan-linux-openblas
+          cp Libs/gcc-linux/libtbb.so.2 suanPan-linux-openblas
+          cp Libs/gcc-linux/libtbbmalloc.so suanPan-linux-openblas
+          cp Libs/gcc-linux/libtbbmalloc.so.2 suanPan-linux-openblas
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so suanPan-linux-openblas
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 suanPan-linux-openblas
+          tar cvzf suanPan-linux-openblas.tar.gz suanPan-linux-openblas
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: suanPan-linux-openblas
+          path: suanPan-linux-openblas.tar.gz
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: suanPan-linux-openblas.tar.gz
+          asset_name: suanPan-linux-openblas.tar.gz
+          tag: suanPan-latest
+          overwrite: true
+  macos-openblas:
+    runs-on: macos-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v2
+      - name: Compile
+        run: |
+          echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
+          export CC=gcc-9 && export CXX=g++-9 && export FC=gfortran-9
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON .
+          make -j4
+          mkdir suanPan-macos-openblas
+          cp suanPan suanPan-macos-openblas
+          cp LICENSE suanPan-macos-openblas
+          cp README.md suanPan-macos-openblas
+          cp CHANGELOG.md suanPan-macos-openblas
+          cp Enhancement/suanPan.sublime-completions suanPan-macos-openblas
+          cp Enhancement/suanPan.sublime-syntax suanPan-macos-openblas
+          cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas
+          cp Libs/gcc-mac/libtbbmalloc.dylib suanPan-macos-openblas
+          cp Libs/gcc-mac/libtbbmalloc_proxy.dylib suanPan-macos-openblas
+          cp VTK-build/lib/*.dylib suanPan-macos-openblas
+          tar cvzf suanPan-macos-openblas.tar.gz suanPan-macos-openblas
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: suanPan-macos-openblas
+          path: suanPan-macos-openblas.tar.gz
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: suanPan-macos-openblas.tar.gz
+          asset_name: suanPan-macos-openblas.tar.gz
+          tag: suanPan-latest
           overwrite: true
