@@ -139,7 +139,6 @@ jobs:
           cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas
           cp Libs/gcc-mac/libtbbmalloc.dylib suanPan-macos-openblas
           cp Libs/gcc-mac/libtbbmalloc_proxy.dylib suanPan-macos-openblas
-          cp VTK-build/lib/*.dylib suanPan-macos-openblas
           tar cvzf suanPan-macos-openblas.tar.gz suanPan-macos-openblas
       - name: Upload
         uses: actions/upload-artifact@v1
