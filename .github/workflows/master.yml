@@ -41,7 +41,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: suanPan-linux-openblas-vtk.tar.gz
           asset_name: suanPan-linux-openblas-vtk.tar.gz
-          tag: suanPan-latest
+          tag: ${{ env.SP_TIME }}
           overwrite: true
   macos-openblas-vtk:
     runs-on: macos-latest
@@ -81,7 +81,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: suanPan-macos-openblas-vtk.tar.gz
           asset_name: suanPan-macos-openblas-vtk.tar.gz
-          tag: suanPan-latest
+          tag: ${{ env.SP_TIME }}
           overwrite: true
   linux-openblas:
     runs-on: ubuntu-20.04
@@ -116,7 +116,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: suanPan-linux-openblas.tar.gz
           asset_name: suanPan-linux-openblas.tar.gz
-          tag: suanPan-latest
+          tag: ${{ env.SP_TIME }}
           overwrite: true
   macos-openblas:
     runs-on: macos-latest
@@ -151,5 +151,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: suanPan-macos-openblas.tar.gz
           asset_name: suanPan-macos-openblas.tar.gz
-          tag: suanPan-latest
+          tag: ${{ env.SP_TIME }}
           overwrite: true
