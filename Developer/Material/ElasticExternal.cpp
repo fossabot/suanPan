@@ -36,7 +36,7 @@ void allocate_material(ExternalMaterialData* data, int* info) {
 
 	data->pool = new double[7];
 
-	if(nullptr == data) *info = -1;
+	if(nullptr == data->pool) *info = -1;
 
 	for(auto I = 0; I < 7; ++I) data->pool[I] = 0.;
 
