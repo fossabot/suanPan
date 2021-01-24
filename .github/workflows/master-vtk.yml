@@ -1,0 +1,95 @@
+name: With VTK
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  linux-openblas-vtk:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone
+        uses: actions/checkout@v2
+      - name: Install VTK
+        run: |
+          echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
+          wget https://github.com/TLCFEM/vtk-prebuild/releases/download/latest/VTK-8.2.0-linux.tar.gz
+          mkdir VTK-build && tar xf VTK-8.2.0-linux.tar.gz -C VTK-build
+      - name: Compile
+        run: |
+          sudo apt-get update && sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
+          make -j4
+      - name: Pack
+        run: |
+          mkdir suanPan-linux-openblas-vtk
+          cp suanPan suanPan-linux-openblas-vtk
+          cp README.md suanPan-linux-openblas-vtk
+          cp CHANGELOG.md suanPan-linux-openblas-vtk
+          cp LICENSE suanPan-linux-openblas-vtk
+          cp Enhancement/suanPan.sh suanPan-linux-openblas-vtk
+          cp Enhancement/suanPan.sublime-completions suanPan-linux-openblas-vtk
+          cp Enhancement/suanPan.sublime-syntax suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbb.so suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbb.so.2 suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc.so suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc.so.2 suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so suanPan-linux-openblas-vtk
+          cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 suanPan-linux-openblas-vtk
+          tar cvzf suanPan-linux-openblas-vtk.tar.gz suanPan-linux-openblas-vtk
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: suanPan-linux-openblas-vtk
+          path: suanPan-linux-openblas-vtk.tar.gz
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: suanPan-linux-openblas-vtk.tar.gz
+          asset_name: suanPan-linux-openblas-vtk.tar.gz
+          tag: ${{ env.SP_TIME }}
+          overwrite: true
+  macos-openblas-vtk:
+    runs-on: macos-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v2
+      - name: Install VTK
+        run: |
+          echo "SP_TIME=suanPan-daily-$(date +''%Y%m%d%H'')" >> $GITHUB_ENV
+          wget https://github.com/TLCFEM/vtk-prebuild/releases/download/latest/VTK-8.2.0-macos.tar.gz
+          mkdir VTK-build && tar xf VTK-8.2.0-macos.tar.gz -C VTK-build
+      - name: Compile
+        run: |
+          sudo brew update && sudo brew install glfw3 glew
+          export CC=gcc-9 && export CXX=g++-9 && export FC=gfortran-9
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/Users/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
+          make -j4
+      - name: Pack
+        run: |
+          mkdir suanPan-macos-openblas-vtk
+          cp suanPan suanPan-macos-openblas-vtk
+          cp LICENSE suanPan-macos-openblas-vtk
+          cp README.md suanPan-macos-openblas-vtk
+          cp CHANGELOG.md suanPan-macos-openblas-vtk
+          cp Enhancement/suanPan.sublime-completions suanPan-macos-openblas-vtk
+          cp Enhancement/suanPan.sublime-syntax suanPan-macos-openblas-vtk
+          cp Libs/gcc-mac/libtbb.dylib suanPan-macos-openblas-vtk
+          cp Libs/gcc-mac/libtbbmalloc.dylib suanPan-macos-openblas-vtk
+          cp Libs/gcc-mac/libtbbmalloc_proxy.dylib suanPan-macos-openblas-vtk
+          cp VTK-build/lib/*.dylib suanPan-macos-openblas-vtk
+          tar cvzf suanPan-macos-openblas-vtk.tar.gz suanPan-macos-openblas-vtk
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: suanPan-macos-openblas-vtk
+          path: suanPan-macos-openblas-vtk.tar.gz
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: suanPan-macos-openblas-vtk.tar.gz
+          asset_name: suanPan-macos-openblas-vtk.tar.gz
+          tag: ${{ env.SP_TIME }}
+          overwrite: true
