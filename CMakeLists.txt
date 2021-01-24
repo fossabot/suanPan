@@ -133,7 +133,7 @@ if(COMPILER_IDENTIFIER MATCHES "gcc-linux")
 elseif(COMPILER_IDENTIFIER MATCHES "gcc-win")
     install(FILES Libs/gcc-win/tbb.dll Libs/gcc-win/tbbmalloc.dll Libs/gcc-win/tbbmalloc_proxy.dll DESTINATION ${ROOT}/bin)
 elseif(COMPILER_IDENTIFIER MATCHES "vs")
-    install(FILES Libs/vs/hdf5.dll Libs/vs/hdf5_hl.dll Libs/vs/tbb.dll Libs/vs/tbbmalloc.dll Libs/vs/tbbmalloc_proxy.dll DESTINATION ${ROOT}/bin)
+    install(FILES Libs/vs/tbb.dll Libs/vs/tbbmalloc.dll Libs/vs/tbbmalloc_proxy.dll DESTINATION ${ROOT}/bin)
 endif()
 
 if(HAVE_VTK)

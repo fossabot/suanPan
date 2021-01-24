@@ -89,7 +89,13 @@ On Windows, to add file associations with `.sp` and `.supan` files, please run t
 On Linux, since CI/CD uses `GCC 9.3.0`, thus it may be required to update/install GCC version 9 or above.
 
 ```bash
-sudo apt install gcc-9 g++-9 gfortran-9
+sudo apt install gcc-9 g++-9 gfortran-9 libomp5
+```
+
+For VTK enabled versions, it may be necessary to install OpenGL.
+
+```bash
+sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
 ```
 
 ## Dependency
