@@ -46,7 +46,7 @@ Sample models are available for almost all models/commands. Please check the `Ex
 
 ## Installation
 
-All precompiled binaries can be executed out-of-box. Only 64-bit version is compiled. It is assumed that [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) is available thus if the program fails, please check if your CPU supports AVX.
+Only 64-bit version is compiled. It is assumed that [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) is available thus if the program fails, please check if your CPU supports AVX.
 
 ### Windows
 
@@ -68,7 +68,7 @@ The binaries, which are compiled with Intel MKL and VTK, are available on [Choco
 
 ### Linux
 
-Linux users are strongly recommended to obtain the binaries via snap. The snap supports visualization via VTK and uses Intel MKL for linear algebra.
+Linux users are recommended to obtain the binaries via snap. The snap supports visualization via VTK and uses Intel MKL for linear algebra.
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/suanpan)
 
@@ -76,7 +76,7 @@ Linux users are strongly recommended to obtain the binaries via snap. The snap s
 
 ### Other Platforms
 
-Binaries precompiled with [OpenBLAS](https://www.openblas.net/) are provided by CI/CD on MacOS, Windows and Ubuntu. Please download the file from the [release](https://github.com/TLCFEM/suanPan/releases) page.
+Precompiled binaries are provided via CI/CD on MacOS, Windows and Ubuntu. Please download the file from the [release](https://github.com/TLCFEM/suanPan/releases) page.
 
 Advanced users can compile the program from source by themselves in order to enable
 
@@ -84,7 +84,13 @@ Advanced users can compile the program from source by themselves in order to ena
 2. Visualization support provided by VTK library;
 3. High performing linear algebra provided by Intel MKL library.
 
-On Windows, to add file associations with `.sp` and `.supan` files, please run the `AddAssociation.bat` file with admin privilege. [Sublime Text](https://www.sublimetext.com/) autocompletion file is also provided. Please check the `Enhancement` folder.
+On Windows, to add file associations with `.sp` and `.supan` files, please run the `AddAssociation.bat` file with admin privilege. [Sublime Text](https://www.sublimetext.com/) autocompletion and syntax highlighting files are also provided. Please check the `Enhancement` folder.
+
+On Linux, since CI/CD uses `GCC 9.3.0`, thus it may be required to update/install GCC version 9 or above.
+
+```bash
+sudo apt install gcc-9 g++-9 gfortran-9
+```
 
 ## Dependency
 
@@ -100,7 +106,7 @@ Additional libraries used in **suanPan** are listed as follows.
 - [**VTK**](https://vtk.org/) version 8.2
 - [**CUDA**](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/) version 11.2
 - [**Armadillo**](http://arma.sourceforge.net/) version 10.1
-- [**Intel MKL**](https://software.intel.com/en-us/mkl)
+- [**Intel MKL**](https://software.intel.com/en-us/mkl) version 2020
 
 Those libraries may depend on other libraries such as [zlib](https://zlib.net/) and [Szip](https://support.hdfgroup.org/doc_resource/SZIP/). Additional tools may be used by **suanPan**, they are
 
