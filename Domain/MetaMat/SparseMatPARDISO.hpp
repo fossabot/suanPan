@@ -18,6 +18,8 @@
  * @class SparseMatPARDISO
  * @brief A SparseMatPARDISO class that holds matrices.
  *
+ * TODO: improve performance by storing factorization and resusing it
+ *
  * @author tlc
  * @date 20/01/2021
  * @version 0.1.0
@@ -55,8 +57,7 @@ template<typename T> int SparseMatPARDISO<T>::solve(Mat<T>& out_mat, const Mat<T
 
 	auto maxfct = 1;
 	auto mnum = 1;
-	auto mtype = 1;
-	auto phase = 13;
+	auto mtype = 11;
 	auto n = static_cast<int>(in_mat.n_rows);
 	auto nrhs = static_cast<int>(in_mat.n_cols);
 	auto msglvl = 0;
@@ -69,6 +70,7 @@ template<typename T> int SparseMatPARDISO<T>::solve(Mat<T>& out_mat, const Mat<T
 
 	iparm(34) = 1; // zero-based indexing
 
+	auto phase = 13;
 	pardiso((void*)pt.memptr(), &maxfct, &mnum, &mtype, &phase, &n, (void*)csr_mat.val_idx, csr_mat.row_ptr, csr_mat.col_idx, perm.mem, &nrhs, iparm.memptr(), &msglvl, (void*)in_mat.memptr(), (void*)out_mat.memptr(), &error);
 
 	phase = -1;
