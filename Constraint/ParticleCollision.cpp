@@ -35,8 +35,8 @@ ParticleCollision::ParticleCollision(const unsigned T, const unsigned S, const u
 	, num_dof(D) {}
 
 int ParticleCollision::initialize(const shared_ptr<DomainBase>& D) {
-	if(StorageScheme::FULL != D->get_factory()->get_storage_scheme()) {
-		suanpan_warning("DEM requires full matrix storage scheme.\n");
+	if(StorageScheme::FULL != D->get_factory()->get_storage_scheme() && StorageScheme::SPARSE != D->get_factory()->get_storage_scheme()) {
+		suanpan_warning("DEM requires full/sparse matrix storage scheme.\n");
 		D->disable_constraint(get_tag());
 		return SUANPAN_SUCCESS;
 	}
@@ -64,11 +64,20 @@ void ParticleCollision::apply_contact(const shared_ptr<DomainBase>& D, const sha
 
 	const mat d_norm = (compute_d_f(diff_norm) - force / diff_norm) * diff_pos * diff_pos.t() + force / diff_norm * eye(num_dof, num_dof);
 
-	for(auto K = 0u; K < num_dof; ++K)
-		for(auto L = 0u; L < num_dof; ++L) {
-			t_stiff->at(dof_i(K), dof_i(L)) -= d_norm(K, L);
-			t_stiff->at(dof_j(K), dof_j(L)) -= d_norm(K, L);
-			t_stiff->at(dof_i(K), dof_j(L)) += d_norm(K, L);
-			t_stiff->at(dof_j(K), dof_i(L)) += d_norm(K, L);
-		}
+	if(StorageScheme::SPARSE == W->get_storage_scheme())
+		for(auto K = 0u; K < num_dof; ++K)
+			for(auto L = 0u; L < num_dof; ++L) {
+				t_stiff->at(dof_i(K), dof_i(L)) = -d_norm(K, L);
+				t_stiff->at(dof_j(K), dof_j(L)) = -d_norm(K, L);
+				t_stiff->at(dof_i(K), dof_j(L)) = d_norm(K, L);
+				t_stiff->at(dof_j(K), dof_i(L)) = d_norm(K, L);
+			}
+	else
+		for(auto K = 0u; K < num_dof; ++K)
+			for(auto L = 0u; L < num_dof; ++L) {
+				t_stiff->at(dof_i(K), dof_i(L)) -= d_norm(K, L);
+				t_stiff->at(dof_j(K), dof_j(L)) -= d_norm(K, L);
+				t_stiff->at(dof_i(K), dof_j(L)) += d_norm(K, L);
+				t_stiff->at(dof_j(K), dof_i(L)) += d_norm(K, L);
+			}
 }
