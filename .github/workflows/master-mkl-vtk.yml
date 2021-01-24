@@ -24,7 +24,7 @@ jobs:
       - name: Compile
         run: |
           sudo apt-get update && sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ -DUSE_MKL=ON -DMKLROOT=/opt/intel/compilers_and_libraries/linux/mkl/ .
           make -j4
           mkdir suanPan-linux-mkl-vtk
           cp suanPan suanPan-linux-mkl-vtk
@@ -40,6 +40,14 @@ jobs:
           cp Libs/gcc-linux/libtbbmalloc.so.2 suanPan-linux-mkl-vtk
           cp Libs/gcc-linux/libtbbmalloc_proxy.so suanPan-linux-mkl-vtk
           cp Libs/gcc-linux/libtbbmalloc_proxy.so.2 suanPan-linux-mkl-vtk
+          cp /opt/intel/compilers_and_libraries/linux/lib/intel64/libiomp5.so suanPan-linux-mkl-vtk
+          cp /opt/intel/mkl/lib/intel64/libmkl_core.so suanPan-linux-mkl-vtk
+          cp /opt/intel/mkl/lib/intel64/libmkl_intel_lp64.so suanPan-linux-mkl-vtk
+          cp /opt/intel/mkl/lib/intel64/libmkl_intel_thread.so suanPan-linux-mkl-vtk
+          cp /opt/intel/mkl/lib/intel64/libmkl_def.so suanPan-linux-mkl-vtk
+          cp /opt/intel/mkl/lib/intel64/libmkl_avx512.so suanPan-linux-mkl-vtk
+          cp /opt/intel/mkl/lib/intel64/libmkl_avx2.so suanPan-linux-mkl-vtk
+          cp /opt/intel/mkl/lib/intel64/libmkl_avx.so suanPan-linux-mkl-vtk
           tar cvzf suanPan-linux-mkl-vtk.tar.gz suanPan-linux-mkl-vtk
       - name: Upload
         uses: actions/upload-artifact@v1
