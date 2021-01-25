@@ -40,10 +40,6 @@ RebarLayer::RebarLayer(const unsigned T, uvec&& N, vec&& C, const double TH, con
 	, rho_c(C(5)) {}
 
 void RebarLayer::initialize(const shared_ptr<DomainBase>& D) {
-	auto& material_a = D->get<Material>(material_tag(0));
-	auto& material_b = material_tag(1) == material_tag(0) ? material_a : D->get<Material>(material_tag(1));
-	auto& material_c = material_tag(2) == material_tag(0) ? material_a : material_tag(2) == material_tag(1) ? material_b : D->get<Material>(material_tag(2));
-
 	const auto ele_coor = get_coordinate(2);
 
 	const auto LX1 = ele_coor(1, 1) - ele_coor(0, 1);
@@ -55,43 +51,22 @@ void RebarLayer::initialize(const shared_ptr<DomainBase>& D) {
 	const auto LY3 = ele_coor(2, 0) - ele_coor(3, 0);
 	const auto LY4 = ele_coor(3, 0) - ele_coor(0, 0);
 
-	auto a_flag = false, b_flag = false, c_flag = false;
-	auto total_flag = 0;
-
-	if(rho_a != 0. && length_a != 0.) {
-		a_flag = true;
-		total_flag++;
-	}
-	if(rho_b != 0. && length_b != 0.) {
-		b_flag = true;
-		total_flag++;
-	}
-	if(rho_c != 0. && length_c != 0.) {
-		c_flag = true;
-		total_flag++;
-	}
-
-	// boundary one
-	const IntegrationPlan plan_b(total_flag == 1 ? 2 : 1, 2, IntegrationType::GAUSS);
-	// middle one
-	const IntegrationPlan plan_m(2, 2, IntegrationType::GAUSS);
-	// const IntegrationPlan plan_m(2, 3, IntegrationType::LOBATTO);
+	const IntegrationPlan plan(2, 2, IntegrationType::GAUSS);
 
 	int_pt.clear();
-	int_pt.reserve(plan_m.n_rows + 2llu * plan_b.n_rows);
+	int_pt.reserve(3llu * plan.n_rows);
 
-	// middle b
-	if(b_flag) for(unsigned I = 0; I < plan_m.n_rows; ++I) int_pt.emplace_back(vec{length_a - length_c + length_b * plan_m(I, 0), plan_m(I, 1)}, plan_m(I, 2) * rho_b * length_b, material_b->get_copy());
-
-	// boundary a
-	if(a_flag) {
-		if(total_flag == 1) for(unsigned I = 0; I < plan_b.n_rows; ++I) int_pt.emplace_back(vec{length_a - 1. + length_a * plan_b(I, 0), plan_b(I, 1)}, plan_b(I, 2) * rho_a * length_a, material_a->get_copy());
-		else for(unsigned I = 0; I < plan_b.n_rows; ++I) int_pt.emplace_back(vec{length_a - 1., plan_b(I, 0)}, plan_b(I, 1) * 2. * rho_a * length_a, material_a->get_copy());
+	if(rho_a > 0. && length_a > 0.) {
+		auto& material_a = D->get<Material>(material_tag(0));
+		for(unsigned I = 0; I < plan.n_rows; ++I) int_pt.emplace_back(vec{length_a - 1. + length_a * plan(I, 0), plan(I, 1)}, plan(I, 2) * rho_a * length_a, material_a->get_copy());
 	}
-	// boundary c
-	if(c_flag) {
-		if(total_flag == 1) for(unsigned I = 0; I < plan_b.n_rows; ++I) int_pt.emplace_back(vec{1. - length_c + length_c * plan_b(I, 0), plan_b(I, 1)}, plan_b(I, 2) * rho_c * length_c, material_c->get_copy());
-		else for(unsigned I = 0; I < plan_b.n_rows; ++I) int_pt.emplace_back(vec{1. - length_c, plan_b(I, 0)}, plan_b(I, 1) * 2. * rho_c * length_c, material_c->get_copy());
+	if(rho_b > 0. && length_b > 0.) {
+		auto& material_b = D->get<Material>(material_tag(1));
+		for(unsigned I = 0; I < plan.n_rows; ++I) int_pt.emplace_back(vec{length_a - length_c + length_b * plan(I, 0), plan(I, 1)}, plan(I, 2) * rho_b * length_b, material_b->get_copy());
+	}
+	if(rho_c > 0. && length_c > 0.) {
+		auto& material_c = D->get<Material>(material_tag(2));
+		for(unsigned I = 0; I < plan.n_rows; ++I) int_pt.emplace_back(vec{1. - length_c + length_c * plan(I, 0), plan(I, 1)}, plan(I, 2) * rho_c * length_c, material_c->get_copy());
 	}
 
 	if(direction == 'X') for(auto&& I : int_pt) I.coor = flipud(I.coor);
@@ -130,9 +105,9 @@ void RebarLayer::initialize(const shared_ptr<DomainBase>& D) {
 		const mat pnt_pxy = solve(jacob, pnt / 16.);
 
 		if(direction == 'Y')
-			for(unsigned J = 0, K = 0, L = 1, M = 2, N = 4; J < m_node; ++J, K += m_dof, L += m_dof, M += m_dof, ++N) {
-				I.strain_mat(L) = pn_pxy(1, J);
-				I.strain_mat(M) = pnt_pxy(1, N);
+			for(unsigned J = 0, K = 1, L = 2, M = 4; J < m_node; ++J, K += m_dof, L += m_dof, ++M) {
+				I.strain_mat(K) = pn_pxy(1, J);
+				I.strain_mat(L) = pnt_pxy(1, M);
 			}
 		else
 			for(unsigned J = 0, K = 0, L = 2; J < m_node; ++J, K += m_dof, L += m_dof) {
