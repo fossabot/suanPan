@@ -31,11 +31,6 @@ Stacked::Stacked(const Stacked& old_obj)
 }
 
 void Stacked::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D) {
-		D->disable_material(get_tag());
-		return;
-	}
-
 	initial_stiffness.zeros(6, 6);
 	mat_pool.clear();
 	mat_pool.reserve(mat_tag.n_elem);

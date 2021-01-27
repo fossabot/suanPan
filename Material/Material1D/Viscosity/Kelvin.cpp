@@ -32,7 +32,7 @@ Kelvin::Kelvin(const Kelvin& old_obj)
 	, spring(suanpan::make_copy(old_obj.spring)) {}
 
 void Kelvin::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(damper_tag) || !D->find_material(spring_tag)) {
+	if(!D->find_material(damper_tag) || !D->find_material(spring_tag)) {
 		D->disable_material(get_tag());
 		return;
 	}

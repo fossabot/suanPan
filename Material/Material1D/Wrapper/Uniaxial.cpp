@@ -37,7 +37,7 @@ Uniaxial::Uniaxial(const Uniaxial& old_obj)
 	, current_full_strain(old_obj.current_full_strain) {}
 
 void Uniaxial::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(base_tag) || D->get_material(base_tag)->get_material_type() != MaterialType::D3) {
+	if(!D->find_material(base_tag) || D->get_material(base_tag)->get_material_type() != MaterialType::D3) {
 		D->disable_material(get_tag());
 		return;
 	}

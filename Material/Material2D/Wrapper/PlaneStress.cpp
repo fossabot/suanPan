@@ -53,7 +53,7 @@ PlaneStress::PlaneStress(const PlaneStress& old_obj)
 	, current_full_strain(old_obj.current_full_strain) {}
 
 void PlaneStress::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(base_tag)) {
+	if(!D->find_material(base_tag)) {
 		D->disable_material(get_tag());
 		return;
 	}

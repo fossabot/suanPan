@@ -31,11 +31,6 @@ Laminated::Laminated(const Laminated& old_obj)
 }
 
 void Laminated::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D) {
-		D->disable_material(get_tag());
-		return;
-	}
-
 	initial_stiffness.zeros(3, 3);
 	mat_pool.clear();
 	mat_pool.reserve(mat_tag.n_elem);

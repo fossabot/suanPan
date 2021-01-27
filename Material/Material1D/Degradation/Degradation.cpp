@@ -28,7 +28,7 @@ Degradation::Degradation(const Degradation& old_obj)
 	, base(old_obj.base == nullptr ? nullptr : old_obj.base->get_copy()) {}
 
 void Degradation::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(mat_tag)) {
+	if(!D->find_material(mat_tag)) {
 		D->disable_material(get_tag());
 		return;
 	}

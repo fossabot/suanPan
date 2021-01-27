@@ -27,11 +27,6 @@ Parallel::Parallel(const Parallel& old_obj)
 	, mat_tag(old_obj.mat_tag) { for(const auto& I : old_obj.mat_pool) if(I != nullptr) mat_pool.emplace_back(I->get_copy()); }
 
 void Parallel::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D) {
-		D->disable_material(get_tag());
-		return;
-	}
-
 	mat_pool.clear();
 	mat_pool.reserve(mat_tag.n_elem);
 	for(unsigned I = 0; I < mat_tag.n_elem; ++I) {

@@ -28,11 +28,11 @@ Axisymmetric::Axisymmetric(const unsigned T, const unsigned BT)
 Axisymmetric::Axisymmetric(const Axisymmetric& old_obj)
 	: Material2D(old_obj)
 	, base_tag(old_obj.base_tag)
-	, base(old_obj.base == nullptr ? nullptr : old_obj.base->get_copy())
+	, base(nullptr == old_obj.base ? nullptr : old_obj.base->get_copy())
 	, full_strain(old_obj.full_strain) {}
 
 void Axisymmetric::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(base_tag)) {
+	if(!D->find_material(base_tag)) {
 		D->disable_material(get_tag());
 		return;
 	}
@@ -58,13 +58,9 @@ double Axisymmetric::get_parameter(const ParameterType P) const {
 unique_ptr<Material> Axisymmetric::get_copy() { return make_unique<Axisymmetric>(*this); }
 
 int Axisymmetric::update_trial_status(const vec& t_strain) {
-	incre_strain = (trial_strain = t_strain) - current_strain;
+	full_strain(F) = trial_strain = t_strain;
 
-	if(norm(incre_strain) <= datum::eps) return SUANPAN_SUCCESS;
-
-	full_strain(F) = trial_strain;
-
-	if(base->update_trial_status(full_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+	if(SUANPAN_SUCCESS != base->update_trial_status(full_strain)) return SUANPAN_FAIL;
 
 	trial_stress = base->get_trial_stress()(F);
 
@@ -99,6 +95,6 @@ int Axisymmetric::reset_status() {
 vector<vec> Axisymmetric::record(const OutputType P) { return base->record(P); }
 
 void Axisymmetric::print() {
-	suanpan_info("A axisymmetric wrapper.\n");
+	suanpan_info("An axisymmetric wrapper.\n");
 	base->print();
 }

@@ -83,7 +83,7 @@ Rotation3D::Rotation3D(const Rotation3D& old_obj)
 	, trans_mat(old_obj.trans_mat) {}
 
 void Rotation3D::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(mat_tag) || D->get_material(mat_tag)->get_material_type() != MaterialType::D3) {
+	if(!D->find_material(mat_tag) || D->get_material(mat_tag)->get_material_type() != MaterialType::D3) {
 		D->disable_material(get_tag());
 		return;
 	}

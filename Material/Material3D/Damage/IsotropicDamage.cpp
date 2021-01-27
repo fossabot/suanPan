@@ -28,7 +28,7 @@ IsotropicDamage::IsotropicDamage(const IsotropicDamage& old_obj)
 	, mat_ptr(nullptr == old_obj.mat_ptr ? nullptr : old_obj.mat_ptr->get_copy()) {}
 
 void IsotropicDamage::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find<Material>(mat_tag) || D->get<Material>(mat_tag)->get_material_type() != MaterialType::D3) {
+	if(!D->find<Material>(mat_tag) || D->get<Material>(mat_tag)->get_material_type() != MaterialType::D3) {
 		D->disable_material(get_tag());
 		return;
 	}
