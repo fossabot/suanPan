@@ -31,24 +31,23 @@
 #include <Material/Material2D/Material2D.h>
 
 class Rebar2D final : public Material2D {
-	const unsigned tag_major, tag_minor;
+	const unsigned tag_x, tag_y;
 
-	const double ratio_major, ratio_minor;
+	const double ratio_x, ratio_y;
 
-	const double inclination;
-
-	const mat trans_mat;
-
-	unique_ptr<Material> rebar_major, rebar_minor;
+	unique_ptr<Material> rebar_x, rebar_y;
 public:
-	Rebar2D(unsigned,   // tag
-	        unsigned,   // material tag along major axis
-	        unsigned,   // material tag along minor axis
-	        double,     // reinforcement ratio along major axis
-	        double,     // reinforcement ratio along minor axis
-	        double = 0. // inclination
+	Rebar2D(unsigned, // tag
+	        unsigned, // material tag along x axis
+	        unsigned, // material tag along y axis
+	        double,   // reinforcement ratio along x axis
+	        double    // reinforcement ratio along y axis
 	);
 	Rebar2D(const Rebar2D&);
+	Rebar2D(Rebar2D&&) noexcept = delete;
+	Rebar2D& operator=(const Rebar2D&) = delete;
+	Rebar2D& operator=(Rebar2D&&) noexcept = delete;
+	~Rebar2D() = default;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 

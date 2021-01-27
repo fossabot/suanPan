@@ -19,43 +19,39 @@
 #include <Domain/DomainBase.h>
 #include <Toolbox/tensorToolbox.h>
 
-Rebar2D::Rebar2D(const unsigned T, const unsigned XT, const unsigned YT, const double RX, const double RY, const double A)
+Rebar2D::Rebar2D(const unsigned T, const unsigned XT, const unsigned YT, const double RX, const double RY)
 	: Material2D(T, PlaneType::S, 0.)
-	, tag_major(XT)
-	, tag_minor(YT)
-	, ratio_major(RX)
-	, ratio_minor(RY)
-	, inclination(A)
-	, trans_mat(transform::strain::trans(inclination)) {}
+	, tag_x(XT)
+	, tag_y(YT)
+	, ratio_x(RX)
+	, ratio_y(RY) {}
 
 Rebar2D::Rebar2D(const Rebar2D& old_obj)
 	: Material2D(old_obj)
-	, tag_major(old_obj.tag_major)
-	, tag_minor(old_obj.tag_minor)
-	, ratio_major(old_obj.ratio_major)
-	, ratio_minor(old_obj.ratio_minor)
-	, inclination(old_obj.inclination)
-	, trans_mat(old_obj.trans_mat)
-	, rebar_major(old_obj.rebar_major == nullptr ? nullptr : old_obj.rebar_major->get_copy())
-	, rebar_minor(old_obj.rebar_minor == nullptr ? nullptr : old_obj.rebar_minor->get_copy()) {}
+	, tag_x(old_obj.tag_x)
+	, tag_y(old_obj.tag_y)
+	, ratio_x(old_obj.ratio_x)
+	, ratio_y(old_obj.ratio_y)
+	, rebar_x(nullptr == old_obj.rebar_x ? nullptr : old_obj.rebar_x->get_copy())
+	, rebar_y(nullptr == old_obj.rebar_y ? nullptr : old_obj.rebar_y->get_copy()) {}
 
 void Rebar2D::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(tag_major) || !D->find_material(tag_minor)) {
+	if(!D->find_material(tag_x) || !D->find_material(tag_y)) {
 		D->disable_material(get_tag());
 		return;
 	}
 
-	rebar_major = get_material(D, tag_major)->get_copy();
-	rebar_minor = get_material(D, tag_minor)->get_copy();
+	rebar_x = get_material(D, tag_x)->get_copy();
+	rebar_y = get_material(D, tag_y)->get_copy();
 
-	access::rw(density) = ratio_major * rebar_major->get_parameter() + ratio_minor * rebar_minor->get_parameter();
+	access::rw(density) = ratio_x * rebar_x->get_parameter() + ratio_y * rebar_y->get_parameter();
 
 	initial_stiffness.zeros(3, 3);
 
-	initial_stiffness(0, 0) = ratio_major * rebar_major->get_initial_stiffness().at(0);
-	initial_stiffness(1, 1) = ratio_minor * rebar_minor->get_initial_stiffness().at(0);
+	initial_stiffness(0, 0) = ratio_x * rebar_x->get_initial_stiffness().at(0);
+	initial_stiffness(1, 1) = ratio_y * rebar_y->get_initial_stiffness().at(0);
 
-	trial_stiffness = current_stiffness = initial_stiffness = trans_mat.t() * diagmat(initial_stiffness) * trans_mat;
+	trial_stiffness = current_stiffness = initial_stiffness;
 }
 
 unique_ptr<Material> Rebar2D::get_copy() { return make_unique<Rebar2D>(*this); }
@@ -63,27 +59,21 @@ unique_ptr<Material> Rebar2D::get_copy() { return make_unique<Rebar2D>(*this); }
 int Rebar2D::update_trial_status(const vec& t_strain) {
 	trial_strain = t_strain;
 
-	const vec main_strain = trans_mat * trial_strain;
-
 	// update status
-	rebar_major->update_trial_status(main_strain(0));
-	rebar_minor->update_trial_status(main_strain(1));
+	if(SUANPAN_SUCCESS != rebar_x->update_trial_status(trial_strain(0))) return SUANPAN_FAIL;
+	if(SUANPAN_SUCCESS != rebar_y->update_trial_status(trial_strain(1))) return SUANPAN_FAIL;
 
-	vec main_stress(3);
+	trial_stress.set_size(3);
 
 	// collect main stress components
-	main_stress(0) = ratio_major * rebar_major->get_trial_stress().at(0);
-	main_stress(1) = ratio_minor * rebar_minor->get_trial_stress().at(0);
-	main_stress(2) = 0.;
+	trial_stress(0) = ratio_x * rebar_x->get_trial_stress().at(0);
+	trial_stress(1) = ratio_y * rebar_y->get_trial_stress().at(0);
+	trial_stress(2) = 0.;
 
 	// collect principal stiffness components
-	trial_stiffness(0, 0) = ratio_major * rebar_major->get_trial_stiffness().at(0);
-	trial_stiffness(1, 1) = ratio_minor * rebar_minor->get_trial_stiffness().at(0);
-	trial_stiffness(2, 2) = 0.;
-
-	// transform back to nominal direction
-	trial_stress = trans_mat.t() * main_stress;
-	trial_stiffness = trans_mat.t() * diagmat(trial_stiffness) * trans_mat;
+	trial_stiffness.zeros(3, 3);
+	trial_stiffness(0, 0) = ratio_x * rebar_x->get_trial_stiffness().at(0);
+	trial_stiffness(1, 1) = ratio_y * rebar_y->get_trial_stiffness().at(0);
 
 	return SUANPAN_SUCCESS;
 }
@@ -94,27 +84,27 @@ int Rebar2D::clear_status() {
 	current_stress.zeros();
 	trial_stress.zeros();
 	trial_stiffness = current_stiffness = initial_stiffness;
-	return rebar_major->clear_status() + rebar_minor->clear_status();
+	return rebar_x->clear_status() + rebar_y->clear_status();
 }
 
 int Rebar2D::commit_status() {
 	current_strain = trial_strain;
 	current_stress = trial_stress;
 	current_stiffness = trial_stiffness;
-	return rebar_major->commit_status() + rebar_minor->commit_status();
+	return rebar_x->commit_status() + rebar_y->commit_status();
 }
 
 int Rebar2D::reset_status() {
 	trial_strain = current_strain;
 	trial_stress = current_stress;
 	trial_stiffness = current_stiffness;
-	return rebar_major->reset_status() + rebar_minor->reset_status();
+	return rebar_x->reset_status() + rebar_y->reset_status();
 }
 
 void Rebar2D::print() {
-	suanpan_info("A rebar layer with major/minor reinforcement ratio of %.3E and %.3E.\n", ratio_major, ratio_minor);
+	suanpan_info("A rebar layer with major/minor reinforcement ratio of %.3E and %.3E.\n", ratio_x, ratio_y);
 	suanpan_info("Major: ");
-	rebar_major->print();
+	rebar_x->print();
 	suanpan_info("Minor: ");
-	rebar_minor->print();
+	rebar_y->print();
 }
