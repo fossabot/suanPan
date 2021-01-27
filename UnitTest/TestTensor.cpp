@@ -34,3 +34,9 @@ TEST_CASE("Norm of Strain", "[Utility.Tensor]") {
 
 	REQUIRE(Approx(5) == tensor::strain::norm(strain));
 }
+
+TEST_CASE("Rotation of Strain", "[Utility.Tensor]") {
+	const auto strain = transform::strain::rotate({.01, -.01, 0.}, .25 * datum::pi);
+
+	REQUIRE(Approx(.02) == tensor::strain::norm(strain));
+}
