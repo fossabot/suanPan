@@ -35,15 +35,15 @@ class Rotation3D final : public Material3D {
 
 	unique_ptr<Material> mat_obj;
 
-	mat left, right;
+	mat trans_mat;
 
 	void form_transformation(mat&&);
 public:
 	Rotation3D(unsigned, // tag
 	           unsigned, // mat tag
-	           double,   // Euler angle
-	           double,   // Euler angle
-	           double    // Euler angle
+	           double,   // rotation vector
+	           double,   // rotation vector
+	           double    // rotation vector
 	);
 	Rotation3D(unsigned, // tag
 	           unsigned, // mat tag
@@ -52,7 +52,7 @@ public:
 	Rotation3D(Rotation3D&&) = delete;
 	Rotation3D& operator=(const Rotation3D&) = delete;
 	Rotation3D& operator=(Rotation3D&&) = delete;
-	~Rotation3D() = default;
+	~Rotation3D() override = default;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 
