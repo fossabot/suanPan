@@ -24,13 +24,14 @@ Parallel::Parallel(const unsigned T, uvec&& MT)
 
 Parallel::Parallel(const Parallel& old_obj)
 	: Material1D(old_obj)
-	, mat_tag(old_obj.mat_tag) { for(const auto& I : old_obj.mat_pool) if(I != nullptr) mat_pool.emplace_back(I->get_copy()); }
+	, mat_tag(old_obj.mat_tag) { for(const auto& I : old_obj.mat_pool) mat_pool.emplace_back(I->get_copy()); }
 
 void Parallel::initialize(const shared_ptr<DomainBase>& D) {
 	mat_pool.clear();
 	mat_pool.reserve(mat_tag.n_elem);
 	for(unsigned I = 0; I < mat_tag.n_elem; ++I) {
 		if(!D->find<Material>(mat_tag(I)) || D->get<Material>(mat_tag(I))->get_material_type() != MaterialType::D1) {
+			suanpan_error("Parallel requires 1D host material models.\n");
 			D->disable_material(get_tag());
 			return;
 		}
@@ -119,7 +120,14 @@ int Parallel::reset_status() {
 vector<vec> Parallel::record(const OutputType P) {
 	vector<vec> data;
 
-	for(const auto& I : mat_pool) for(const auto& J : I->record(P)) data.emplace_back(J);
+	auto max_size = 0llu;
+	for(const auto& I : mat_pool)
+		for(const auto& J : I->record(P)) {
+			if(J.n_elem > max_size) max_size = J.n_elem;
+			data.emplace_back(J);
+		}
+
+	for(auto&& I : data) I.resize(max_size);
 
 	return data;
 }

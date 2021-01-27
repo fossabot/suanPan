@@ -32,7 +32,8 @@ Axisymmetric::Axisymmetric(const Axisymmetric& old_obj)
 	, full_strain(old_obj.full_strain) {}
 
 void Axisymmetric::initialize(const shared_ptr<DomainBase>& D) {
-	if(!D->find_material(base_tag)) {
+	if(!D->find_material(base_tag) || D->get<Material>(base_tag)->get_material_type() != MaterialType::D3) {
+		suanpan_error("Axisymmetric requires a 3D host material model.\n");
 		D->disable_material(get_tag());
 		return;
 	}

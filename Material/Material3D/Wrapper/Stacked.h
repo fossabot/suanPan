@@ -53,6 +53,10 @@ public:
 	int clear_status() override;
 	int commit_status() override;
 	int reset_status() override;
+
+	vector<vec> record(OutputType) override;
+
+	void print() override;
 };
 
 #endif

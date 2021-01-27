@@ -32,7 +32,8 @@ PlaneStrain::PlaneStrain(const PlaneStrain& old_obj)
 	, full_strain(old_obj.full_strain) {}
 
 void PlaneStrain::initialize(const shared_ptr<DomainBase>& D) {
-	if(!D->find_material(base_tag)) {
+	if(!D->find_material(base_tag) || D->get<Material>(base_tag)->get_material_type() != MaterialType::D3) {
+		suanpan_error("PlaneStrain requires a 3D host material model.\n");
 		D->disable_material(get_tag());
 		return;
 	}
@@ -58,13 +59,9 @@ double PlaneStrain::get_parameter(const ParameterType P) const {
 unique_ptr<Material> PlaneStrain::get_copy() { return make_unique<PlaneStrain>(*this); }
 
 int PlaneStrain::update_trial_status(const vec& t_strain) {
-	incre_strain = (trial_strain = t_strain) - current_strain;
+	full_strain(F) = trial_strain = t_strain;
 
-	if(norm(incre_strain) <= datum::eps) return SUANPAN_SUCCESS;
-
-	full_strain(F) = trial_strain;
-
-	if(base->update_trial_status(full_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+	if(SUANPAN_SUCCESS != base->update_trial_status(full_strain)) return SUANPAN_FAIL;
 
 	trial_stress = base->get_trial_stress()(F);
 
@@ -74,11 +71,9 @@ int PlaneStrain::update_trial_status(const vec& t_strain) {
 }
 
 int PlaneStrain::clear_status() {
-	current_strain.zeros();
-	trial_strain.zeros();
-	current_stress.zeros();
-	trial_stress.zeros();
-	trial_stiffness = current_stiffness = initial_stiffness;
+	current_strain = trial_strain.zeros();
+	current_stress = trial_stress.zeros();
+	current_stiffness = trial_stiffness = initial_stiffness;
 	return base->clear_status();
 }
 

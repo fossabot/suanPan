@@ -27,7 +27,7 @@ Laminated::Laminated(const Laminated& old_obj)
 	, mat_tag(old_obj.mat_tag) {
 	mat_pool.clear();
 	mat_pool.reserve(old_obj.mat_pool.size());
-	for(const auto& I : old_obj.mat_pool) if(I != nullptr) mat_pool.emplace_back(I->get_copy());
+	for(const auto& I : old_obj.mat_pool) mat_pool.emplace_back(I->get_copy());
 }
 
 void Laminated::initialize(const shared_ptr<DomainBase>& D) {
@@ -36,6 +36,7 @@ void Laminated::initialize(const shared_ptr<DomainBase>& D) {
 	mat_pool.reserve(mat_tag.n_elem);
 	for(const auto I : mat_tag) {
 		if(!D->find<Material>(I) || D->get<Material>(I)->get_material_type() != MaterialType::D2) {
+			suanpan_error("Laminated requires 2D host material models.\n");
 			D->disable_material(get_tag());
 			return;
 		}
@@ -52,9 +53,7 @@ void Laminated::initialize(const shared_ptr<DomainBase>& D) {
 unique_ptr<Material> Laminated::get_copy() { return make_unique<Laminated>(*this); }
 
 int Laminated::update_trial_status(const vec& t_strain) {
-	incre_strain = (trial_strain = t_strain) - current_strain;
-
-	if(norm(incre_strain) <= datum::eps) return SUANPAN_SUCCESS;
+	trial_strain = t_strain;
 
 	trial_stress.zeros(3);
 	trial_stiffness.zeros(3, 3);
@@ -68,11 +67,9 @@ int Laminated::update_trial_status(const vec& t_strain) {
 }
 
 int Laminated::clear_status() {
-	current_strain.zeros();
-	trial_strain.zeros();
-	current_stress.zeros();
-	trial_stress.zeros();
-	trial_stiffness = current_stiffness = initial_stiffness;
+	current_strain = trial_strain.zeros();
+	current_stress = trial_stress.zeros();
+	current_stiffness = trial_stiffness = initial_stiffness;
 	auto code = 0;
 	for(const auto& I : mat_pool) code += I->clear_status();
 	return code;
@@ -99,7 +96,14 @@ int Laminated::reset_status() {
 vector<vec> Laminated::record(const OutputType P) {
 	vector<vec> data;
 
-	for(const auto& I : mat_pool) for(const auto& J : I->record(P)) data.emplace_back(J);
+	auto max_size = 0llu;
+	for(const auto& I : mat_pool)
+		for(const auto& J : I->record(P)) {
+			if(J.n_elem > max_size) max_size = J.n_elem;
+			data.emplace_back(J);
+		}
+
+	for(auto&& I : data) I.resize(max_size);
 
 	return data;
 }

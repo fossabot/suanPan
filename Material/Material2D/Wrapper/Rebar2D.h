@@ -47,7 +47,7 @@ public:
 	Rebar2D(Rebar2D&&) noexcept = delete;
 	Rebar2D& operator=(const Rebar2D&) = delete;
 	Rebar2D& operator=(Rebar2D&&) noexcept = delete;
-	~Rebar2D() = default;
+	~Rebar2D() override = default;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 
@@ -57,6 +57,8 @@ public:
 	int clear_status() override;
 	int commit_status() override;
 	int reset_status() override;
+
+	vector<vec> record(OutputType) override;
 
 	void print() override;
 };

@@ -31,6 +31,12 @@ Substepping::Substepping(const Substepping& old_obj)
 	, current_mat_obj(nullptr == old_obj.current_mat_obj ? nullptr : old_obj.current_mat_obj->get_copy()) {}
 
 void Substepping::initialize(const shared_ptr<DomainBase>& D) {
+	if(!D->find_material(mat_tag)) {
+		suanpan_error("Substepping requires a valid host material model.\n");
+		D->disable_material(get_tag());
+		return;
+	}
+
 	current_mat_obj = D->get<Material>(mat_tag)->get_copy();
 
 	current_mat_obj->Material::initialize(D);

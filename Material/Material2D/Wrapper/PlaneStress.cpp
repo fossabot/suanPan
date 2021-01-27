@@ -41,19 +41,20 @@ PlaneStress::PlaneStress(const unsigned T, const unsigned BT, const unsigned MI,
 	: Material2D(T, PlaneType::S, 0.)
 	, base_tag(BT)
 	, max_iteration(MI)
-	, use_full_matrix(FM) { access::rw(tolerance) = 1E2 * tolerance; }
+	, use_full_matrix(FM) { access::rw(tolerance) = 1E-12; }
 
 PlaneStress::PlaneStress(const PlaneStress& old_obj)
 	: Material2D(old_obj)
 	, base_tag(old_obj.base_tag)
 	, max_iteration(old_obj.max_iteration)
 	, use_full_matrix(old_obj.use_full_matrix)
-	, base(old_obj.base == nullptr ? nullptr : old_obj.base->get_copy())
+	, base(nullptr == old_obj.base ? nullptr : old_obj.base->get_copy())
 	, trial_full_strain(old_obj.trial_full_strain)
 	, current_full_strain(old_obj.current_full_strain) {}
 
 void PlaneStress::initialize(const shared_ptr<DomainBase>& D) {
-	if(!D->find_material(base_tag)) {
+	if(!D->find_material(base_tag) || D->get<Material>(base_tag)->get_material_type() != MaterialType::D3) {
+		suanpan_error("PlaneStress requires a 3D host material model.\n");
 		D->disable_material(get_tag());
 		return;
 	}
@@ -91,18 +92,18 @@ int PlaneStress::update_trial_status(const vec& t_strain) {
 
 		if(use_full_matrix)
 			while(++counter < max_iteration) {
-				if(base->update_trial_status(trial_full_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+				if(SUANPAN_SUCCESS != base->update_trial_status(trial_full_strain)) return SUANPAN_FAIL;
 				trial_full_strain(F2) -= solve(t_stiffness(F2, F2), t_stress(F2));
 				const auto error = norm(t_stress(F2));
-				suanpan_extra_debug("PlaneStress state determination error: %.4E.\n", error);
+				suanpan_extra_debug("PlaneStress local iteration error: %.4E.\n", error);
 				if(error < tolerance) break;
 			}
 		else
 			while(++counter < max_iteration) {
-				if(base->update_trial_status(trial_full_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+				if(SUANPAN_SUCCESS != base->update_trial_status(trial_full_strain)) return SUANPAN_FAIL;
 				trial_full_strain(F2) -= t_stress(F2) / vec(t_stiffness.diag())(F2);
 				const auto error = norm(t_stress(F2));
-				suanpan_extra_debug("PlaneStress state determination error: %.4E.\n", error);
+				suanpan_extra_debug("PlaneStress local iteration error: %.4E.\n", error);
 				if(error < tolerance) break;
 			}
 
@@ -111,21 +112,13 @@ int PlaneStress::update_trial_status(const vec& t_strain) {
 			return SUANPAN_FAIL;
 		}
 
-		suanpan_extra_debug("PlaneStress local iteration error: %u.\n", counter);
-
 		trial_stress = t_stress(F1);
-	} else if(use_full_matrix) {
+	} else {
 		trial_full_strain(F2) -= solve(t_stiffness(F2, F2), t_stress(F2) + t_stiffness(F2, F1) * incre_strain);
 
-		if(base->update_trial_status(trial_full_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+		if(SUANPAN_SUCCESS != base->update_trial_status(trial_full_strain)) return SUANPAN_FAIL;
 
 		trial_stress = t_stress(F1) - t_stiffness(F1, F2) * solve(t_stiffness(F2, F2), t_stress(F2));
-	} else {
-		trial_full_strain(F2) -= (t_stress(F2) + t_stiffness(F2, F1) * incre_strain) / vec(t_stiffness.diag())(F2);
-
-		if(base->update_trial_status(trial_full_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
-
-		trial_stress = t_stress(F1) - t_stiffness(F1, F2) * t_stress(F2) / vec(t_stiffness.diag())(F2);
 	}
 
 	trial_stiffness = form_stiffness(t_stiffness);

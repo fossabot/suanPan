@@ -38,6 +38,7 @@ Uniaxial::Uniaxial(const Uniaxial& old_obj)
 
 void Uniaxial::initialize(const shared_ptr<DomainBase>& D) {
 	if(!D->find_material(base_tag) || D->get_material(base_tag)->get_material_type() != MaterialType::D3) {
+		suanpan_error("Uniaxial requires a 3D host material model.\n");
 		D->disable_material(get_tag());
 		return;
 	}

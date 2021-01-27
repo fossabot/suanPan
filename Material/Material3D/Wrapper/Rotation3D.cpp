@@ -84,6 +84,7 @@ Rotation3D::Rotation3D(const Rotation3D& old_obj)
 
 void Rotation3D::initialize(const shared_ptr<DomainBase>& D) {
 	if(!D->find_material(mat_tag) || D->get_material(mat_tag)->get_material_type() != MaterialType::D3) {
+		suanpan_error("Rotation3D requires a 3D host material model.\n");
 		D->disable_material(get_tag());
 		return;
 	}

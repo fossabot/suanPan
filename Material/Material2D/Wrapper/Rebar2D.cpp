@@ -36,7 +36,8 @@ Rebar2D::Rebar2D(const Rebar2D& old_obj)
 	, rebar_y(nullptr == old_obj.rebar_y ? nullptr : old_obj.rebar_y->get_copy()) {}
 
 void Rebar2D::initialize(const shared_ptr<DomainBase>& D) {
-	if(!D->find_material(tag_x) || !D->find_material(tag_y)) {
+	if(!D->find_material(tag_x) || !D->find_material(tag_y) || D->get<Material>(tag_x)->get_material_type() != MaterialType::D1 || D->get<Material>(tag_y)->get_material_type() != MaterialType::D1) {
+		suanpan_error("Rebar2D requires 1D host material models.\n");
 		D->disable_material(get_tag());
 		return;
 	}
@@ -97,6 +98,15 @@ int Rebar2D::reset_status() {
 	trial_stress = current_stress;
 	trial_stiffness = current_stiffness;
 	return rebar_x->reset_status() + rebar_y->reset_status();
+}
+
+vector<vec> Rebar2D::record(const OutputType P) {
+	vector<vec> data;
+
+	for(const auto& I : rebar_x->record(P)) data.emplace_back(I);
+	for(const auto& I : rebar_y->record(P)) data.emplace_back(I);
+
+	return data;
 }
 
 void Rebar2D::print() {

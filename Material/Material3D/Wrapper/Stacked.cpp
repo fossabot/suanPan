@@ -27,7 +27,7 @@ Stacked::Stacked(const Stacked& old_obj)
 	, mat_tag(old_obj.mat_tag) {
 	mat_pool.clear();
 	mat_pool.reserve(old_obj.mat_pool.size());
-	for(const auto& I : old_obj.mat_pool) if(I != nullptr) mat_pool.emplace_back(I->get_copy());
+	for(const auto& I : old_obj.mat_pool) mat_pool.emplace_back(I->get_copy());
 }
 
 void Stacked::initialize(const shared_ptr<DomainBase>& D) {
@@ -36,6 +36,7 @@ void Stacked::initialize(const shared_ptr<DomainBase>& D) {
 	mat_pool.reserve(mat_tag.n_elem);
 	for(const auto I : mat_tag) {
 		if(!D->find<Material>(I) || D->get<Material>(I)->get_material_type() != MaterialType::D3) {
+			suanpan_error("Stacked requires 3D host material models.\n");
 			D->disable_material(get_tag());
 			return;
 		}
@@ -68,11 +69,9 @@ int Stacked::update_trial_status(const vec& t_strain) {
 }
 
 int Stacked::clear_status() {
-	current_strain.zeros();
-	trial_strain.zeros();
-	current_stress.zeros();
-	trial_stress.zeros();
-	trial_stiffness = current_stiffness = initial_stiffness;
+	current_strain = trial_strain.zeros();
+	current_stress = trial_stress.zeros();
+	current_stiffness = trial_stiffness = initial_stiffness;
 	auto code = 0;
 	for(const auto& I : mat_pool) code += I->clear_status();
 	return code;
@@ -94,4 +93,28 @@ int Stacked::reset_status() {
 	auto code = 0;
 	for(const auto& I : mat_pool) code += I->reset_status();
 	return code;
+}
+
+vector<vec> Stacked::record(const OutputType P) {
+	vector<vec> data;
+
+	auto max_size = 0llu;
+	for(const auto& I : mat_pool)
+		for(const auto& J : I->record(P)) {
+			if(J.n_elem > max_size) max_size = J.n_elem;
+			data.emplace_back(J);
+		}
+
+	for(auto&& I : data) I.resize(max_size);
+
+	return data;
+}
+
+void Stacked::print() {
+	suanpan_info("A stack wrapper for 3D problems.\n");
+	unsigned t_tag = 0;
+	for(const auto& I : mat_pool) {
+		suanpan_info("component %u: ", ++t_tag);
+		I->print();
+	}
 }

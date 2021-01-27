@@ -32,6 +32,7 @@ Rotation2D::Rotation2D(const Rotation2D& old_obj)
 
 void Rotation2D::initialize(const shared_ptr<DomainBase>& D) {
 	if(!D->find_material(mat_tag) || D->get_material(mat_tag)->get_material_type() != MaterialType::D2) {
+		suanpan_error("Rotation2D requires a 2D host material model.\n");
 		D->disable_material(get_tag());
 		return;
 	}
@@ -61,11 +62,9 @@ int Rotation2D::update_trial_status(const vec& t_strain) {
 }
 
 int Rotation2D::clear_status() {
-	current_strain.zeros();
-	trial_strain.zeros();
-	current_stress.zeros();
-	trial_stress.zeros();
-	trial_stiffness = current_stiffness = initial_stiffness;
+	current_strain = trial_strain.zeros();
+	current_stress = trial_stress.zeros();
+	current_stiffness = trial_stiffness = initial_stiffness;
 	return mat_obj->clear_status();
 }
 
