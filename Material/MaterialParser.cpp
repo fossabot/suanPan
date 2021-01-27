@@ -2350,27 +2350,19 @@ void new_rambergosgood(unique_ptr<Material>& return_obj, istringstream& command)
 void new_rebar2d(unique_ptr<Material>& return_obj, istringstream& command) {
 	unsigned tag;
 	if(!get_input(command, tag)) {
-		suanpan_error("new_rebarlayer() requires a valid tag.\n");
+		suanpan_error("new_rebar2d() requires a valid tag.\n");
 		return;
 	}
 
 	unsigned major_tag, minor_tag;
-	if(!get_input(command, major_tag)) {
-		suanpan_error("new_rebarlayer() requires a valid material tag.\n");
-		return;
-	}
-	if(!get_input(command, minor_tag)) {
-		suanpan_error("new_rebarlayer() requires a valid material tag.\n");
+	if(!get_input(command, major_tag) || !get_input(command, minor_tag)) {
+		suanpan_error("new_rebar2d() requires a valid material tag.\n");
 		return;
 	}
 
 	double major_ratio, minor_ratio;
-	if(!get_input(command, major_ratio)) {
-		suanpan_error("new_rebarlayer() requires a valid reinforcement ratio.\n");
-		return;
-	}
-	if(!get_input(command, minor_ratio)) {
-		suanpan_error("new_rebarlayer() requires a valid reinforcement ratio.\n");
+	if(!get_input(command, major_ratio) || !get_input(command, minor_ratio)) {
+		suanpan_error("new_rebar2d() requires a valid reinforcement ratio.\n");
 		return;
 	}
 
@@ -2385,29 +2377,13 @@ void new_rebar3d(unique_ptr<Material>& return_obj, istringstream& command) {
 	}
 
 	unsigned tag_x, tag_y, tag_z;
-	if(!get_input(command, tag_x)) {
-		suanpan_error("new_rebar3d() requires a valid material tag.\n");
-		return;
-	}
-	if(!get_input(command, tag_y)) {
-		suanpan_error("new_rebar3d() requires a valid material tag.\n");
-		return;
-	}
-	if(!get_input(command, tag_z)) {
+	if(!get_input(command, tag_x) || !get_input(command, tag_y) || !get_input(command, tag_z)) {
 		suanpan_error("new_rebar3d() requires a valid material tag.\n");
 		return;
 	}
 
 	double ratio_x, ratio_y, ratio_z;
-	if(!get_input(command, ratio_x)) {
-		suanpan_error("new_rebar3d() requires a valid reinforcement ratio.\n");
-		return;
-	}
-	if(!get_input(command, ratio_y)) {
-		suanpan_error("new_rebar3d() requires a valid reinforcement ratio.\n");
-		return;
-	}
-	if(!get_input(command, ratio_z)) {
+	if(!get_input(command, ratio_x) || !get_input(command, ratio_y) || !get_input(command, ratio_z)) {
 		suanpan_error("new_rebar3d() requires a valid reinforcement ratio.\n");
 		return;
 	}
@@ -2426,7 +2402,7 @@ void new_sequential(unique_ptr<Material>& return_obj, istringstream& command) {
 	vector<uword> m_pool;
 	while(!command.eof()) if(get_input(command, m_tag)) m_pool.emplace_back(m_tag);
 
-	if(m_pool.size() == 1) {
+	if(1 == m_pool.size()) {
 		suanpan_error("new_sequential() requires at least two material models.\n");
 		return;
 	}

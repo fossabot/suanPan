@@ -79,11 +79,9 @@ int Rebar2D::update_trial_status(const vec& t_strain) {
 }
 
 int Rebar2D::clear_status() {
-	current_strain.zeros();
-	trial_strain.zeros();
-	current_stress.zeros();
-	trial_stress.zeros();
-	trial_stiffness = current_stiffness = initial_stiffness;
+	current_strain = trial_strain.zeros();
+	current_stress = trial_stress.zeros();
+	current_stiffness = trial_stiffness = initial_stiffness;
 	return rebar_x->clear_status() + rebar_y->clear_status();
 }
 
