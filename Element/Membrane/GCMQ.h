@@ -34,7 +34,7 @@
 #ifndef GCMQ_H
 #define GCMQ_H
 
-#include <Element/Membrane/GCMQ/SGCMQ.h>
+#include "SGCMQ.h"
 
 class IntegrationPlan;
 

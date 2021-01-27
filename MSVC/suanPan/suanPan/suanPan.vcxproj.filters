@@ -55,9 +55,6 @@
     <Filter Include="Element\Visualisation">
       <UniqueIdentifier>{cb465d5f-9ee7-439b-8114-44162b62bfe6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Element\Membrane\GCMQ">
-      <UniqueIdentifier>{9cb34866-4d75-4547-b37d-dce043f5ac4e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Element\Special">
       <UniqueIdentifier>{ac13c010-0b1a-447c-9f0e-9ad2092d0229}</UniqueIdentifier>
     </Filter>
@@ -404,12 +401,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Element\Membrane\QE2.cpp">
       <Filter>Element\Membrane</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Element\Membrane\GCMQ\GCMQ.cpp">
-      <Filter>Element\Membrane\GCMQ</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Element\Membrane\GCMQ\SGCMQ.cpp">
-      <Filter>Element\Membrane\GCMQ</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Element\Modifier\ElementalModal.cpp">
       <Filter>Element\Modifier</Filter>
@@ -1192,6 +1183,12 @@
     <ClCompile Include="..\..\..\Material\Material2D\Wrapper\Rebar2D.cpp">
       <Filter>Material\Material2D\Wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Element\Membrane\GCMQ.cpp">
+      <Filter>Element\Membrane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Element\Membrane\SGCMQ.cpp">
+      <Filter>Element\Membrane</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Constraint\BC\GroupMultiplierBC.h">
@@ -1478,12 +1475,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Element\Membrane\QE2.h">
       <Filter>Element\Membrane</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Element\Membrane\GCMQ\GCMQ.h">
-      <Filter>Element\Membrane\GCMQ</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Element\Membrane\GCMQ\SGCMQ.h">
-      <Filter>Element\Membrane\GCMQ</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Element\Modifier\ElementalModal.h">
       <Filter>Element\Modifier</Filter>
@@ -2274,6 +2265,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Material\Material2D\Wrapper\Rebar2D.h">
       <Filter>Material\Material2D\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Element\Membrane\GCMQ.h">
+      <Filter>Element\Membrane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Element\Membrane\SGCMQ.h">
+      <Filter>Element\Membrane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
