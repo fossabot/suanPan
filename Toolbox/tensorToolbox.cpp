@@ -16,7 +16,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "tensorToolbox.h"
-#include "Quaternion.hpp"
 
 mat tensor::isotropic_stiffness(const double modulus, const double poissons_ratio) {
 	const auto shear_modulus = modulus / (2. + 2. * poissons_ratio);
@@ -415,7 +414,11 @@ vec transform::triangle::to_area_coordinate(const vec& g_coord, const mat& nodes
 	return solve(element_coor, a_coord);
 }
 
-double transform::strain::angle(const vec& strain) { return .5 * std::atan2(strain(2), strain(0) - strain(1)); }
+double transform::strain::angle(const vec& strain) {
+	suanpan_debug([&]() { if(strain.n_elem != 3) throw invalid_argument("need 2D strain in Voigt form"); });
+
+	return .5 * std::atan2(strain(2), strain(0) - strain(1));
+}
 
 mat transform::strain::trans(const double angle) {
 	const auto sin_angle = sin(2. * angle);
@@ -443,7 +446,11 @@ vec transform::strain::principal(const vec& strain) {
 	return p_strain;
 }
 
-vec transform::strain::rotate(const vec& strain, const double theta) { return trans(theta) * strain; }
+vec transform::strain::rotate(const vec& strain, const double theta) {
+	suanpan_debug([&]() { if(strain.n_elem != 3) throw invalid_argument("need 2D strain in Voigt form"); });
+
+	return trans(theta) * strain;
+}
 
 double transform::stress::angle(const vec& stress) { return .5 * std::atan2(2. * stress(2), stress(0) - stress(1)); }
 
