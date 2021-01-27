@@ -86,16 +86,12 @@ jobs:
           ./suanPan -f ../Example/Element/PatchQuad.supan > /dev/null
           ./suanPan -f ../Example/Element/PS.supan > /dev/null
           ./suanPan -f ../Example/Element/QE2.supan > /dev/null
-          ./suanPan -f ../Example/Element/RCP4.supan > /dev/null
-          ./suanPan -f ../Example/Element/RebarLayer.supan > /dev/null
-          ./suanPan -f ../Example/Element/RGCMQ.supan > /dev/null
           ./suanPan -f ../Example/Element/S4.supan > /dev/null
           ./suanPan -f ../Example/Element/SGCMQ.supan > /dev/null
           ./suanPan -f ../Example/Element/SGCMS.supan > /dev/null
           ./suanPan -f ../Example/Element/SingleSection.supan > /dev/null
           ./suanPan -f ../Example/Element/Spring01.supan > /dev/null
           ./suanPan -f ../Example/Element/Spring02.supan > /dev/null
-          ./suanPan -f ../Example/Element/SRGCMQ.supan > /dev/null
           ./suanPan -f ../Example/Element/T2D2.supan > /dev/null
           ./suanPan -f ../Example/Element/T3D2.supan > /dev/null
           ./suanPan -f ../Example/Element/T3D2S.supan > /dev/null

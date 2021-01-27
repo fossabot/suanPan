@@ -6,6 +6,7 @@
 2. add `PARDISO` sparse solver
 3. upgrade to `Intel oneAPI Toolkit`
 4. add C interface material model
+5. remove all reinforced elements, reinforcement can be handled by material models
 
 ## version 1.1
 
