@@ -17,50 +17,21 @@
 
 #include "Rotation2D.h"
 #include <Domain/DomainBase.h>
-
-void Rotation2D::form_transformation(mat&& R) {
-	const auto &R1 = R(0, 0), &R2 = R(0, 1);
-	const auto &R3 = R(1, 0), &R4 = R(1, 1);
-
-	right.set_size(3, 3);
-	left.set_size(3, 3);
-
-	right(span(0, 1), span(0, 1)) = square(R);
-
-	left(span(0, 1), span(0, 1)) = right(span(0, 1), span(0, 1)).t();
-
-	right(0, 2) = 2. * R1 * R2;
-	right(1, 2) = 2. * R3 * R4;
-
-	right(2, 0) = R1 * R3;
-	right(2, 1) = R2 * R4;
-	right(2, 2) = R1 * R4 + R2 * R3;
-
-	left(0, 2) = 2. * R1 * R3;
-	left(1, 2) = 2. * R2 * R4;
-
-	left(2, 0) = R1 * R2;
-	left(2, 1) = R3 * R4;
-	left(2, 2) = R1 * R4 + R2 * R3;
-}
+#include <Toolbox/tensorToolbox.h>
 
 Rotation2D::Rotation2D(const unsigned T, const unsigned MT, const double A)
 	: Material2D(T, PlaneType::N, 0.)
-	, mat_tag(MT) {
-	const auto C = cos(A), S = sin(A);
-
-	form_transformation({{C, -S}, {S, C}});
-}
+	, mat_tag(MT)
+	, trans_mat(transform::strain::trans(A)) {}
 
 Rotation2D::Rotation2D(const Rotation2D& old_obj)
 	: Material2D(old_obj)
 	, mat_tag(old_obj.mat_tag)
-	, mat_obj(old_obj.mat_obj == nullptr ? nullptr : old_obj.mat_obj->get_copy())
-	, left(old_obj.left)
-	, right(old_obj.right) {}
+	, mat_obj(nullptr == old_obj.mat_obj ? nullptr : old_obj.mat_obj->get_copy())
+	, trans_mat(old_obj.trans_mat) {}
 
 void Rotation2D::initialize(const shared_ptr<DomainBase>& D) {
-	if(nullptr == D || !D->find_material(mat_tag) || D->get_material(mat_tag)->get_material_type() != MaterialType::D2) {
+	if(!D->find_material(mat_tag) || D->get_material(mat_tag)->get_material_type() != MaterialType::D2) {
 		D->disable_material(get_tag());
 		return;
 	}
@@ -71,7 +42,7 @@ void Rotation2D::initialize(const shared_ptr<DomainBase>& D) {
 	mat_obj->initialize(D);
 	access::rw(density) = mat_obj->get_parameter(ParameterType::DENSITY);
 
-	trial_stiffness = current_stiffness = initial_stiffness = left * mat_obj->get_initial_stiffness() * right;
+	trial_stiffness = current_stiffness = initial_stiffness = trans_mat.t() * mat_obj->get_initial_stiffness() * trans_mat;
 }
 
 double Rotation2D::get_parameter(const ParameterType P) const { return mat_obj->get_parameter(P); }
@@ -79,14 +50,12 @@ double Rotation2D::get_parameter(const ParameterType P) const { return mat_obj->
 unique_ptr<Material> Rotation2D::get_copy() { return make_unique<Rotation2D>(*this); }
 
 int Rotation2D::update_trial_status(const vec& t_strain) {
-	incre_strain = (trial_strain = t_strain) - current_strain;
+	trial_strain = t_strain;
 
-	if(norm(incre_strain) <= datum::eps) return SUANPAN_SUCCESS;
+	if(SUANPAN_SUCCESS != mat_obj->update_trial_status(trans_mat * trial_strain)) return SUANPAN_FAIL;
 
-	if(mat_obj->update_trial_status(right * trial_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
-
-	trial_stress = left * mat_obj->get_trial_stress();
-	trial_stiffness = left * mat_obj->get_trial_stiffness() * right;
+	trial_stress = trans_mat.t() * mat_obj->get_trial_stress();
+	trial_stiffness = trans_mat.t() * mat_obj->get_trial_stiffness() * trans_mat;
 
 	return SUANPAN_SUCCESS;
 }
@@ -115,3 +84,8 @@ int Rotation2D::reset_status() {
 }
 
 vector<vec> Rotation2D::record(const OutputType P) { return mat_obj->record(P); }
+
+void Rotation2D::print() {
+	suanpan_info("A Rotation wrapper with the underlying material.\n");
+	if(nullptr != mat_obj) mat_obj->print();
+}

@@ -35,9 +35,7 @@ class Rotation2D final : public Material2D {
 
 	unique_ptr<Material> mat_obj;
 
-	mat left, right;
-
-	void form_transformation(mat&&);
+	mat trans_mat;
 public:
 	Rotation2D(unsigned, // tag
 	           unsigned, // mat tag
@@ -62,6 +60,8 @@ public:
 	int reset_status() override;
 
 	vector<vec> record(OutputType) override;
+
+	void print() override;
 };
 
 #endif
