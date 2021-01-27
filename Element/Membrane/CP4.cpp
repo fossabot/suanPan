@@ -209,7 +209,7 @@ CP4::CP4(const unsigned T, uvec&& N, const unsigned M, const double TH, const bo
 void CP4::initialize(const shared_ptr<DomainBase>& D) {
 	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(static_cast<double>(PlaneType::E) == material_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
+	if(suanpan::approx_equal(static_cast<double>(PlaneType::E), material_proto->get_parameter(ParameterType::PLANETYPE))) suanpan::hacker(thickness) = 1.;
 
 	const auto ele_coor = get_coordinate(2);
 

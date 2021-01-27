@@ -20,6 +20,7 @@
 #include <Material/Material2D/Material2D.h>
 #include <Toolbox/IntegrationPlan.h>
 #include <Toolbox/shapeFunction.h>
+#include <Toolbox/utility.h>
 
 CAX4::IntegrationPoint::IntegrationPoint(vec&& C, const double W, unique_ptr<Material>&& M)
 	: coor(std::forward<vec>(C))
@@ -44,7 +45,7 @@ CAX4::CAX4(const unsigned T, uvec&& N, const unsigned M, const bool F)
 void CAX4::initialize(const shared_ptr<DomainBase>& D) {
 	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(static_cast<double>(PlaneType::A) != material_proto->get_parameter(ParameterType::PLANETYPE)) {
+	if(!suanpan::approx_equal(static_cast<double>(PlaneType::A), material_proto->get_parameter(ParameterType::PLANETYPE))) {
 		D->disable_element(get_tag());
 		return;
 	}

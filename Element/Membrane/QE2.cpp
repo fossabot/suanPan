@@ -21,10 +21,14 @@
 #include <Recorder/OutputType.h>
 #include <Toolbox/IntegrationPlan.h>
 #include <Toolbox/shapeFunction.h>
-#include <Toolbox/tensorToolbox.h>
 #include <Toolbox/utility.h>
 
-mat QE2::mapping;
+mat QE2::mapping = []() {
+	mat t_mapping(4, 4);
+	t_mapping.fill(.25);
+	t_mapping(1, 0) = t_mapping(1, 3) = t_mapping(2, 0) = t_mapping(2, 1) = t_mapping(3, 1) = t_mapping(3, 3) = -.25;
+	return t_mapping;
+}();
 
 QE2::IntegrationPoint::IntegrationPoint(vec&& C, const double F, unique_ptr<Material>&& M)
 	: coor(std::forward<vec>(C))
@@ -37,19 +41,12 @@ vec QE2::form_stress_mode(const double X, const double Y) { return vec{0., X, Y,
 
 QE2::QE2(const unsigned T, uvec&& N, const unsigned M, const double TH)
 	: MaterialElement2D(T, m_node, m_dof, std::forward<uvec>(N), uvec{M}, false)
-	, thickness(TH) {
-	if(mapping.is_empty()) {
-		mat t_mapping(4, 4);
-		t_mapping.fill(.25);
-		t_mapping(1, 0) = t_mapping(1, 3) = t_mapping(2, 0) = t_mapping(2, 1) = t_mapping(3, 1) = t_mapping(3, 3) = -.25;
-		mapping = t_mapping;
-	}
-}
+	, thickness(TH) {}
 
 void QE2::initialize(const shared_ptr<DomainBase>& D) {
 	auto& mat_proto = D->get<Material>(material_tag(0));
 
-	if(static_cast<double>(PlaneType::E) == mat_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
+	if(suanpan::approx_equal(static_cast<double>(PlaneType::E), mat_proto->get_parameter(ParameterType::PLANETYPE))) suanpan::hacker(thickness) = 1.;
 
 	access::rw(mat_stiffness) = mat_proto->get_initial_stiffness();
 

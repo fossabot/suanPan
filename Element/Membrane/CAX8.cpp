@@ -21,6 +21,7 @@
 #include <Material/Material2D/Material2D.h>
 #include <Toolbox/IntegrationPlan.h>
 #include <Toolbox/shapeFunction.h>
+#include <Toolbox/utility.h>
 
 CAX8::IntegrationPoint::IntegrationPoint(vec&& C, const double W, unique_ptr<Material>&& M)
 	: coor(std::forward<vec>(C))
@@ -29,14 +30,7 @@ CAX8::IntegrationPoint::IntegrationPoint(vec&& C, const double W, unique_ptr<Mat
 	, strain_mat(4, m_size, fill::zeros) {}
 
 vec CAX8::isoparametric_mapping(const vec& in) {
-	const auto& X1 = in(0);
-	const auto& X2 = in(1);
-	const auto& X3 = in(2);
-	const auto& X4 = in(3);
-	const auto& X5 = in(4);
-	const auto& X6 = in(5);
-	const auto& X7 = in(6);
-	const auto& X8 = in(7);
+	const auto &X1 = in(0), &X2 = in(1), &X3 = in(2), &X4 = in(3), &X5 = in(4), &X6 = in(5), &X7 = in(6), &X8 = in(7);
 
 	vec out(8);
 
@@ -59,7 +53,7 @@ CAX8::CAX8(const unsigned T, uvec&& N, const unsigned M, const bool R, const boo
 void CAX8::initialize(const shared_ptr<DomainBase>& D) {
 	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(material_proto->get_parameter(ParameterType::PLANETYPE) != static_cast<double>(PlaneType::A)) {
+	if(!suanpan::approx_equal(static_cast<double>(PlaneType::A), material_proto->get_parameter(ParameterType::PLANETYPE))) {
 		D->disable_element(get_tag());
 		return;
 	}

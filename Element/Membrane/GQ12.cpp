@@ -20,6 +20,7 @@
 #include <Material/Material2D/Material2D.h>
 #include <Toolbox/IntegrationPlan.h>
 #include <Toolbox/shapeFunction.h>
+#include <Toolbox/utility.h>
 
 GQ12::IntegrationPoint::IntegrationPoint(vec&& C, const double W, unique_ptr<Material>&& M)
 	: coor(std::forward<vec>(C))
@@ -34,7 +35,7 @@ GQ12::GQ12(const unsigned T, uvec&& N, const unsigned M, const double TH)
 void GQ12::initialize(const shared_ptr<DomainBase>& D) {
 	auto& mat_proto = D->get<Material>(material_tag(0));
 
-	if(static_cast<double>(PlaneType::E) == mat_proto->get_parameter(ParameterType::PLANETYPE)) access::rw(thickness) = 1.;
+	if(suanpan::approx_equal(static_cast<double>(PlaneType::E), mat_proto->get_parameter(ParameterType::PLANETYPE))) suanpan::hacker(thickness) = 1.;
 
 	auto& mat_stiff = mat_proto->get_initial_stiffness();
 

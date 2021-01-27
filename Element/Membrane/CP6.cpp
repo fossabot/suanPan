@@ -37,7 +37,7 @@ CP6::CP6(const unsigned T, uvec&& NT, const unsigned MT, const double TH, const 
 void CP6::initialize(const shared_ptr<DomainBase>& D) {
 	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(static_cast<double>(PlaneType::E) == material_proto->get_parameter(ParameterType::PLANETYPE)) suanpan::hacker(thickness) = 1.;
+	if(suanpan::approx_equal(static_cast<double>(PlaneType::E), material_proto->get_parameter(ParameterType::PLANETYPE))) suanpan::hacker(thickness) = 1.;
 
 	mat ele_coor(m_node, m_node);
 	ele_coor.col(0).fill(1.);

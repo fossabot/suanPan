@@ -19,6 +19,7 @@
 #include <Domain/DomainBase.h>
 #include <Domain/Node.h>
 #include <Material/Material2D/Material2D.h>
+#include <Toolbox/utility.h>
 
 CAX3::CAX3(const unsigned T, uvec&& NT, const unsigned MT, const bool R)
 	: MaterialElement2D(T, m_node, m_dof, std::forward<uvec>(NT), uvec{MT}, R) {}
@@ -26,7 +27,7 @@ CAX3::CAX3(const unsigned T, uvec&& NT, const unsigned MT, const bool R)
 void CAX3::initialize(const shared_ptr<DomainBase>& D) {
 	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(material_proto->get_parameter(ParameterType::PLANETYPE) != static_cast<double>(PlaneType::A)) {
+	if(!suanpan::approx_equal(static_cast<double>(PlaneType::A), material_proto->get_parameter(ParameterType::PLANETYPE))) {
 		D->disable_element(get_tag());
 		return;
 	}

@@ -20,6 +20,7 @@
 #include <Material/Material2D/Material2D.h>
 #include <Toolbox/IntegrationPlan.h>
 #include <Toolbox/shapeFunction.h>
+#include <Toolbox/utility.h>
 
 CP4I::IntegrationPoint::IntegrationPoint(vec&& C, const double W, unique_ptr<Material>&& M, mat&& PNPXY)
 	: coor(std::forward<vec>(C))
@@ -240,7 +241,7 @@ CP4I::CP4I(const unsigned T, uvec&& N, const unsigned M, const double TH)
 void CP4I::initialize(const shared_ptr<DomainBase>& D) {
 	auto& material_proto = D->get<Material>(material_tag(0));
 
-	if(static_cast<double>(PlaneType::E) == material_proto->get_parameter(ParameterType::PLANETYPE)) access::rw(thickness) = 1.;
+	if(suanpan::approx_equal(static_cast<double>(PlaneType::E), material_proto->get_parameter(ParameterType::PLANETYPE))) suanpan::hacker(thickness) = 1.;
 
 	auto& ini_stiffness = material_proto->get_initial_stiffness();
 
