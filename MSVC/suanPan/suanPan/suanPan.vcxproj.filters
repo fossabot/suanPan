@@ -798,9 +798,6 @@
     <ClCompile Include="..\..\..\Material\Material2D\Material2D.cpp">
       <Filter>Material\Material2D</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Material\Material2D\Rebar2D.cpp">
-      <Filter>Material\Material2D</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Material\Material.cpp">
       <Filter>Material</Filter>
     </ClCompile>
@@ -1191,6 +1188,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Recorder\AmplitudeRecorder.cpp">
       <Filter>Recorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Material\Material2D\Wrapper\Rebar2D.cpp">
+      <Filter>Material\Material2D\Wrapper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1878,9 +1878,6 @@
     <ClInclude Include="..\..\..\Material\Material2D\Material2D.h">
       <Filter>Material\Material2D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Material\Material2D\Rebar2D.h">
-      <Filter>Material\Material2D</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Material\Material.h">
       <Filter>Material</Filter>
     </ClInclude>
@@ -2274,6 +2271,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Domain\MetaMat\SparseMatPARDISO.hpp">
       <Filter>Domain\MetaMat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Material\Material2D\Wrapper\Rebar2D.h">
+      <Filter>Material\Material2D\Wrapper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
