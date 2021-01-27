@@ -34,40 +34,24 @@
 #ifndef GCMQ_H
 #define GCMQ_H
 
-#include <Element/MaterialElement.h>
+#include <Element/Membrane/GCMQ/SGCMQ.h>
 
 class IntegrationPlan;
 
-class GCMQ final : public MaterialElement2D {
-	class ResultantConverter final {
+class GCMQ final : public SGCMQ {
+	struct ResultantConverter final {
+		enum class Edge { A, B, C, D };
+
 		mat converter_a, converter_b;
 		mat direction_cosine;
-	public:
-		ResultantConverter(unsigned, double, const vector<weak_ptr<Node>>&, const IntegrationPlan&, const mat&);
+		ResultantConverter(Edge, double, const mat&, const IntegrationPlan&, const mat&);
 		[[nodiscard]] double F(const vec&) const;
 		[[nodiscard]] double V(const vec&) const;
 		[[nodiscard]] double M(const vec&) const;
 	};
 
-	struct IntegrationPoint final {
-		vec coor;
-		const double factor;
-		unique_ptr<Material> m_material;
-		mat poly_stress, poly_strain;
-		IntegrationPoint(vec&&, double, unique_ptr<Material>&&);
-	};
-
-	static constexpr unsigned m_node = 4, m_dof = 3, m_size = m_dof * m_node;
-
 	static constexpr int enhanced_mode = 2;
 
-	static const mat mapping;
-
-	const double thickness;
-
-	const char int_scheme;
-
-	vector<IntegrationPoint> int_pt;
 	vector<ResultantConverter> edge;
 
 	const mat mat_stiffness, iso_mapping;
@@ -84,18 +68,9 @@ class GCMQ final : public MaterialElement2D {
 	vec pre_disp;
 
 	static mat form_transformation(const mat&);
-	static mat form_drilling_mass(const vec&, const vec&);
-	static mat form_drilling_displacement(const vec&, const vec&);
-	static mat form_displacement(const mat&, const mat&);
 	static mat form_enhanced_strain(const vec&, int);
-	static vec form_stress_mode(double, double);
 public:
-	GCMQ(unsigned,    // element tag
-	     uvec&&,      // node tag
-	     unsigned,    // material tag
-	     double = 1., // thickness
-	     char = 'I'   // integration type
-	);
+	using SGCMQ::SGCMQ;
 
 	void initialize(const shared_ptr<DomainBase>&) override;
 
@@ -110,10 +85,7 @@ public:
 	void print() override;
 
 #ifdef SUANPAN_VTK
-	void Setup() override;
-	void GetData(vtkSmartPointer<vtkDoubleArray>&, OutputType) override;
 	mat GetData(OutputType) override;
-	void SetDeformation(vtkSmartPointer<vtkPoints>&, double) override;
 #endif
 };
 

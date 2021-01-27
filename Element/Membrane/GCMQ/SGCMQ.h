@@ -36,31 +36,33 @@
 
 #include <Element/MaterialElement.h>
 
-class IntegrationPlan;
-
-class SGCMQ final : public MaterialElement2D {
+class SGCMQ : public MaterialElement2D {
 	struct IntegrationPoint final {
 		vec coor;
 		const double factor;
 		unique_ptr<Material> m_material;
-		mat poly_strain;
+		mat poly_stress, poly_strain;
 		IntegrationPoint(vec&&, double, unique_ptr<Material>&&);
 	};
 
+protected:
 	static constexpr unsigned m_node = 4, m_dof = 3, m_size = m_dof * m_node;
 
 	static const mat mapping;
 
 	const double thickness;
 
-	const char int_scheme;
+	const char scheme;
 
 	vector<IntegrationPoint> int_pt;
 
-	static mat form_drilling_mass(const vec&, const vec&);
-	static mat form_drilling_displacement(const vec&, const vec&);
-	static mat form_displacement(const mat&, const mat&);
+	static vec form_diff_coor(const mat&);
+	static mat form_drilling_n(const vec&, const vec&);
+	static mat form_drilling_dn(const vec&, const vec&);
+	static mat form_displacement_dn(const mat&, const mat&);
 	static vec form_stress_mode(double, double);
+	void form_mass(double, const mat&);
+	void form_body_force(const mat&);
 public:
 	SGCMQ(unsigned,    // element tag
 	      uvec&&,      // node tag
