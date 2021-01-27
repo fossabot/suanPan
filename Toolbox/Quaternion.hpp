@@ -47,8 +47,8 @@ public:
 	T norm() const;
 	Quaternion& normalise();
 
-	Quaternion inv() const;
-	Quaternion conj() const;
+	[[nodiscard]] Quaternion inv() const;
+	[[nodiscard]] Quaternion conj() const;
 
 	Quaternion operator+(const Quaternion&) const;
 	Quaternion& operator+=(const Quaternion&);
@@ -60,6 +60,8 @@ public:
 	Quaternion& operator/=(const Quaternion&);
 
 	Mat<T> operator*(const Mat<T>&) const;
+
+	Mat<T> to_mat() const;
 };
 
 template<typename T> Quaternion<T>::Quaternion()
@@ -140,11 +142,9 @@ template<typename T> Quaternion<T> Quaternion<T>::operator/(const Quaternion& B)
 
 template<typename T> Quaternion<T>& Quaternion<T>::operator/=(const Quaternion& B) { return *this = *this * B.inv(); }
 
-template<typename T> Mat<T> Quaternion<T>::operator*(const Mat<T>& I) const {
-	const Mat<T> R = 2. * re * transform::skew_symm(im) + 2. * im * im.t() + (re * re - arma::dot(im, im)) * eye(3, 3);
+template<typename T> Mat<T> Quaternion<T>::operator*(const Mat<T>& I) const { return to_mat() * I; }
 
-	return R * I;
-}
+template<typename T> Mat<T> Quaternion<T>::to_mat() const { return 2. * re * transform::skew_symm(im) + 2. * im * im.t() + (re * re - arma::dot(im, im)) * eye(3, 3); }
 
 #endif
 
