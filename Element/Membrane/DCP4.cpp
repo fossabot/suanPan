@@ -46,7 +46,7 @@ void DCP4::initialize(const shared_ptr<DomainBase>& D) {
 
 	const auto ele_coor = get_coordinate(2);
 
-	if(0 >= characteristic_length) access::rw(characteristic_length) = 2. * sqrt(area::shoelace(ele_coor));
+	if(0. >= characteristic_length) access::rw(characteristic_length) = 2. * sqrt(area::shoelace(ele_coor));
 
 	auto& ini_stiffness = material_proto->get_initial_stiffness();
 

@@ -23,14 +23,13 @@
 
 const double VAFCRP::root_three_two = sqrt(1.5);
 const mat VAFCRP::unit_dev_tensor = tensor::unit_deviatoric_tensor4();
-const double VAFCRP::unit_time = 1.;
 
 VAFCRP::VAFCRP(const unsigned T, const double E, const double V, const double Y, const double S, const double H, const double M, const double MU, const double EP, vec&& A, vec&& B, const double R)
 	: DataVAFCRP{E, V, Y, S, H, M, MU, EP, std::forward<vec>(A), std::forward<vec>(B)}
 	, Material3D(T, R) { access::rw(tolerance) = 1E-15; }
 
 void VAFCRP::initialize(const shared_ptr<DomainBase>& D) {
-	incre_time = nullptr == D ? &unit_time : &D->get_factory()->get_incre_time();
+	incre_time = &D->get_factory()->get_incre_time();
 
 	trial_stiffness = current_stiffness = initial_stiffness = tensor::isotropic_stiffness(elastic_modulus, poissons_ratio);
 
@@ -56,7 +55,7 @@ int VAFCRP::update_trial_status(const vec& t_strain) {
 	const auto trial_s = tensor::dev(trial_stress);
 
 	auto eta = trial_s;
-	for(unsigned I = 0; I < size; ++I) eta -= vec{&trial_history(1 + 6ull * I), 6, false, true};
+	for(unsigned I = 0; I < size; ++I) eta -= vec{&trial_history(1 + 6llu * I), 6, false, true};
 
 	const auto residual = root_three_two * tensor::stress::norm(eta) - std::max(0., yield + hardening * p + saturated * (1. - exp(-m * p)));
 
@@ -83,7 +82,7 @@ int VAFCRP::update_trial_status(const vec& t_strain) {
 		auto sum_b = 0.;
 		for(unsigned I = 0; I < size; ++I) {
 			const auto denom = 1. + b(I) * gamma;
-			sum_a += vec{&trial_history(1 + 6ull * I), 6, false, true} / denom;
+			sum_a += vec{&trial_history(1 + 6llu * I), 6, false, true} / denom;
 			sum_b += a(I) * gamma / denom;
 		}
 
@@ -93,7 +92,7 @@ int VAFCRP::update_trial_status(const vec& t_strain) {
 		exp_gamma = pow(*incre_time / (*incre_time + mu * gamma), epsilon);
 
 		sum_b = 0.;
-		for(unsigned I = 0; I < size; ++I) sum_b += (b(I) / norm_xi * tensor::stress::double_contraction(xi, vec{&trial_history(1 + 6ull * I), 6, false, true}) - a(I)) * pow(1. + b(I) * gamma, -2.);
+		for(unsigned I = 0; I < size; ++I) sum_b += (b(I) / norm_xi * tensor::stress::double_contraction(xi, vec{&trial_history(1 + 6llu * I), 6, false, true}) - a(I)) * pow(1. + b(I) * gamma, -2.);
 
 		jacobian = exp_gamma * (root_three_two * sum_b - three_shear - q * epsilon * mu / (*incre_time + mu * gamma)) - dk;
 
@@ -109,7 +108,7 @@ int VAFCRP::update_trial_status(const vec& t_strain) {
 
 	vec sum_c(6, fill::zeros);
 	for(unsigned I = 0; I < size; ++I) {
-		vec beta(&trial_history(1 + 6ull * I), 6, false, true);
+		vec beta(&trial_history(1 + 6llu * I), 6, false, true);
 		sum_c += b(I) * pow(1. + b(I) * gamma, -2.) * (beta - tensor::stress::double_contraction(u, beta) * u);
 		beta = (beta + a(I) * gamma * u) / (1. + b(I) * gamma);
 	}
