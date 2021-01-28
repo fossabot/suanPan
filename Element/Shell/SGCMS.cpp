@@ -22,7 +22,12 @@
 #include <Toolbox/IntegrationPlan.h>
 #include <Toolbox/shapeFunction.h>
 
-const mat SGCMS::mapping;
+const mat SGCMS::mapping = []() {
+	mat t_mapping(4, 4);
+	t_mapping.fill(.25);
+	t_mapping(1, 0) = t_mapping(1, 3) = t_mapping(2, 0) = t_mapping(2, 1) = t_mapping(3, 1) = t_mapping(3, 3) = -.25;
+	return t_mapping;
+}();
 
 SGCMS::IntegrationPoint::SectionIntegrationPoint::SectionIntegrationPoint(const double E, const double F, unique_ptr<Material>&& M)
 	: eccentricity(E)
@@ -32,7 +37,7 @@ SGCMS::IntegrationPoint::SectionIntegrationPoint::SectionIntegrationPoint(const 
 SGCMS::IntegrationPoint::SectionIntegrationPoint::SectionIntegrationPoint(const SectionIntegrationPoint& old_obj)
 	: eccentricity(old_obj.eccentricity)
 	, factor(old_obj.factor)
-	, s_material(old_obj.s_material == nullptr ? nullptr : old_obj.s_material->get_copy()) {}
+	, s_material(nullptr == old_obj.s_material ? nullptr : old_obj.s_material->get_copy()) {}
 
 SGCMS::IntegrationPoint::IntegrationPoint(vec&& C)
 	: coor(std::forward<vec>(C))
@@ -94,8 +99,8 @@ field<mat> SGCMS::form_plate_transformation(const mat& C) {
 	return {BX, BY};
 }
 
-mat SGCMS::form_drilling_mass(const vec& coor, const vec& lxy) {
-	mat poly_mass(2, 12, fill::zeros);
+mat SGCMS::form_drilling_n(const vec& coor, const vec& lxy) {
+	mat poly(2, 12, fill::zeros);
 
 	auto &X = coor(0), &Y = coor(1);
 
@@ -104,22 +109,20 @@ mat SGCMS::form_drilling_mass(const vec& coor, const vec& lxy) {
 
 	const auto XX = X * X - 1., YY = Y * Y - 1., YP = 1. + Y, YM = 1. - Y, XP = 1. + X, XM = 1. - X;
 
-	poly_mass(0, 2) = LX1 * XX * YM - LX4 * YY * XM;
-	poly_mass(0, 5) = LX2 * YY * XP - LX1 * XX * YM;
-	poly_mass(0, 8) = LX3 * XX * YP - LX2 * YY * XP;
-	poly_mass(0, 11) = LX4 * YY * XM - LX3 * XX * YP;
-	poly_mass(1, 2) = LY1 * XX * YM - LY4 * YY * XM;
-	poly_mass(1, 5) = LY2 * YY * XP - LY1 * XX * YM;
-	poly_mass(1, 8) = LY3 * XX * YP - LY2 * YY * XP;
-	poly_mass(1, 11) = LY4 * YY * XM - LY3 * XX * YP;
+	poly(0, 2) = LX1 * XX * YM - LX4 * YY * XM;
+	poly(0, 5) = LX2 * YY * XP - LX1 * XX * YM;
+	poly(0, 8) = LX3 * XX * YP - LX2 * YY * XP;
+	poly(0, 11) = LX4 * YY * XM - LX3 * XX * YP;
+	poly(1, 2) = LY1 * XX * YM - LY4 * YY * XM;
+	poly(1, 5) = LY2 * YY * XP - LY1 * XX * YM;
+	poly(1, 8) = LY3 * XX * YP - LY2 * YY * XP;
+	poly(1, 11) = LY4 * YY * XM - LY3 * XX * YP;
 
-	poly_mass /= 16.;
-
-	return poly_mass;
+	return poly /= 16.;
 }
 
-mat SGCMS::form_drilling_displacement(const vec& coor, const vec& lxy) {
-	mat poly_drilling(2, 8);
+mat SGCMS::form_drilling_dn(const vec& coor, const vec& lxy) {
+	mat poly(2, 8);
 
 	auto &X = coor(0), &Y = coor(1);
 
@@ -128,54 +131,43 @@ mat SGCMS::form_drilling_displacement(const vec& coor, const vec& lxy) {
 
 	const auto X2 = 2. * X, Y2 = 2. * Y, XP = X + 1., XM = X - 1., YP = Y + 1., YM = Y - 1.;
 
-	poly_drilling(0, 0) = +YM * (LX4 * YP - LX1 * X2);
-	poly_drilling(0, 1) = +YM * (LX2 * YP + LX1 * X2);
-	poly_drilling(0, 2) = -YP * (LX2 * YM - LX3 * X2);
-	poly_drilling(0, 3) = -YP * (LX4 * YM + LX3 * X2);
-	poly_drilling(0, 4) = +YM * (LY4 * YP - LY1 * X2);
-	poly_drilling(0, 5) = +YM * (LY2 * YP + LY1 * X2);
-	poly_drilling(0, 6) = -YP * (LY2 * YM - LY3 * X2);
-	poly_drilling(0, 7) = -YP * (LY4 * YM + LY3 * X2);
-	poly_drilling(1, 0) = -XM * (LX1 * XP - LX4 * Y2);
-	poly_drilling(1, 1) = +XP * (LX1 * XM + LX2 * Y2);
-	poly_drilling(1, 2) = +XP * (LX3 * XM - LX2 * Y2);
-	poly_drilling(1, 3) = -XM * (LX3 * XP + LX4 * Y2);
-	poly_drilling(1, 4) = -XM * (LY1 * XP - LY4 * Y2);
-	poly_drilling(1, 5) = +XP * (LY1 * XM + LY2 * Y2);
-	poly_drilling(1, 6) = +XP * (LY3 * XM - LY2 * Y2);
-	poly_drilling(1, 7) = -XM * (LY3 * XP + LY4 * Y2);
+	poly(0, 0) = +YM * (LX4 * YP - LX1 * X2);
+	poly(0, 1) = +YM * (LX2 * YP + LX1 * X2);
+	poly(0, 2) = -YP * (LX2 * YM - LX3 * X2);
+	poly(0, 3) = -YP * (LX4 * YM + LX3 * X2);
+	poly(0, 4) = +YM * (LY4 * YP - LY1 * X2);
+	poly(0, 5) = +YM * (LY2 * YP + LY1 * X2);
+	poly(0, 6) = -YP * (LY2 * YM - LY3 * X2);
+	poly(0, 7) = -YP * (LY4 * YM + LY3 * X2);
+	poly(1, 0) = -XM * (LX1 * XP - LX4 * Y2);
+	poly(1, 1) = +XP * (LX1 * XM + LX2 * Y2);
+	poly(1, 2) = +XP * (LX3 * XM - LX2 * Y2);
+	poly(1, 3) = -XM * (LX3 * XP + LX4 * Y2);
+	poly(1, 4) = -XM * (LY1 * XP - LY4 * Y2);
+	poly(1, 5) = +XP * (LY1 * XM + LY2 * Y2);
+	poly(1, 6) = +XP * (LY3 * XM - LY2 * Y2);
+	poly(1, 7) = -XM * (LY3 * XP + LY4 * Y2);
 
-	poly_drilling /= 16.;
-
-	return poly_drilling;
+	return poly /= 16.;
 }
 
-mat SGCMS::form_displacement(const mat& pn_pxy, const mat& pnt_pxy) {
-	mat poly_disp(3, 12, fill::zeros);
+mat SGCMS::form_displacement_dn(const mat& pn_pxy, const mat& pnt_pxy) {
+	mat poly(3, 12, fill::zeros);
 
 	for(unsigned J = 0, K = 0, L = 1, M = 2, N = 4; J < s_node; ++J, K += 3, L += 3, M += 3, ++N) {
-		poly_disp(0, K) = poly_disp(2, L) = pn_pxy(0, J);
-		poly_disp(2, K) = poly_disp(1, L) = pn_pxy(1, J);
-		poly_disp(0, M) = pnt_pxy(0, J);
-		poly_disp(1, M) = pnt_pxy(1, N);
-		poly_disp(2, M) = pnt_pxy(0, N) + pnt_pxy(1, J);
+		poly(0, K) = poly(2, L) = pn_pxy(0, J);
+		poly(2, K) = poly(1, L) = pn_pxy(1, J);
+		poly(0, M) = pnt_pxy(0, J);
+		poly(1, M) = pnt_pxy(1, N);
+		poly(2, M) = pnt_pxy(0, N) + pnt_pxy(1, J);
 	}
 
-	return poly_disp;
+	return poly;
 }
-
-vec SGCMS::form_stress_mode(const double X, const double Y) { return vec{0., X, Y, X * Y}; }
 
 SGCMS::SGCMS(const unsigned T, uvec&& N, const unsigned M, const double TH)
 	: ShellBase(T, s_node, s_dof, std::forward<uvec>(N), uvec{M}, false)
-	, thickness(TH) {
-	if(mapping.is_empty()) {
-		mat t_mapping(4, 4);
-		t_mapping.fill(.25);
-		t_mapping(1, 0) = t_mapping(1, 3) = t_mapping(2, 0) = t_mapping(2, 1) = t_mapping(3, 1) = t_mapping(3, 3) = -.25;
-		access::rw(mapping) = t_mapping;
-	}
-}
+	, thickness(TH) {}
 
 void SGCMS::initialize(const shared_ptr<DomainBase>& D) {
 	auto& mat_proto = D->get<Material>(material_tag(0));
@@ -218,11 +210,11 @@ void SGCMS::initialize(const shared_ptr<DomainBase>& D) {
 		const auto pn = shape::quad(c_ip.coor, 1);
 		const mat jacob = pn * ele_coor;
 
-		const auto poly_stress = shape::stress11(iso_mapping * form_stress_mode(X, Y));
+		const auto poly_stress = shape::stress11(iso_mapping * vec{0., X, Y, X * Y});
 		c_ip.BM = solve(mat_stiff, poly_stress);
 
 		const auto factor = det(jacob) * m_plan(I, 2) * thickness;
-		N += factor * poly_stress.t() * form_displacement(solve(jacob, pn), solve(jacob, form_drilling_displacement(c_ip.coor, diff_coor)));
+		N += factor * poly_stress.t() * form_displacement_dn(solve(jacob, pn), solve(jacob, form_drilling_dn(c_ip.coor, diff_coor)));
 		H += factor * poly_stress.t() * c_ip.BM;
 		HT += factor * c_ip.BM.t() * mat_stiff * c_ip.BM;
 	}

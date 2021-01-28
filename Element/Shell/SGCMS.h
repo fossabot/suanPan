@@ -60,10 +60,9 @@ class SGCMS final : public ShellBase {
 	vector<IntegrationPoint> int_pt;
 
 	static field<mat> form_plate_transformation(const mat&);
-	static mat form_drilling_mass(const vec&, const vec&);
-	static mat form_drilling_displacement(const vec&, const vec&);
-	static mat form_displacement(const mat&, const mat&);
-	static vec form_stress_mode(double, double);
+	static mat form_drilling_n(const vec&, const vec&);
+	static mat form_drilling_dn(const vec&, const vec&);
+	static mat form_displacement_dn(const mat&, const mat&);
 public:
 	SGCMS(unsigned,   // tag
 	      uvec&&,     // node tag
