@@ -62,7 +62,7 @@ void ParticleCollision::apply_contact(const shared_ptr<DomainBase>& D, const sha
 	t_load(dof_i) -= force * diff_pos;
 	t_load(dof_j) += force * diff_pos;
 
-	const mat d_norm = (compute_d_f(diff_norm) - force / diff_norm) * diff_pos * diff_pos.t() + force / diff_norm * eye(num_dof, num_dof);
+	const mat d_norm = (compute_df(diff_norm) - force / diff_norm) * diff_pos * diff_pos.t() + force / diff_norm * eye(num_dof, num_dof);
 
 	if(StorageScheme::SPARSE == W->get_storage_scheme())
 		for(auto K = 0u; K < num_dof; ++K)

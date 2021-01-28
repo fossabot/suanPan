@@ -39,7 +39,7 @@ void B31::initialize(const shared_ptr<DomainBase>& D) {
 	const mat sec_stiff = sec_proto->get_initial_stiffness()(b_span, b_span);
 
 	if(!D->find_orientation(orientation_tag)) {
-		suanpan_warning("B31: needs a valid transformation.\n");
+		suanpan_warning("B31 needs a valid transformation.\n");
 		D->disable_element(get_tag());
 		return;
 	}
@@ -65,8 +65,7 @@ void B31::initialize(const shared_ptr<DomainBase>& D) {
 
 	trial_stiffness = current_stiffness = initial_stiffness = b_trans->to_global_stiffness_mat(local_stiffness);
 
-	const auto linear_density = sec_proto->get_parameter(ParameterType::LINEARDENSITY);
-	if(linear_density > 0.) trial_mass = current_mass = initial_mass = b_trans->to_global_mass_mat(linear_density);
+	if(const auto linear_density = sec_proto->get_parameter(ParameterType::LINEARDENSITY); linear_density > 0.) trial_mass = current_mass = initial_mass = b_trans->to_global_mass_mat(linear_density);
 }
 
 int B31::update_status() {

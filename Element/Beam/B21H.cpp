@@ -73,8 +73,7 @@ void B21H::initialize(const shared_ptr<DomainBase>& D) {
 	}
 	trial_stiffness = current_stiffness = initial_stiffness = b_trans->to_global_stiffness_mat(local_stiffness);
 
-	const auto linear_density = section_proto->get_parameter(ParameterType::LINEARDENSITY);
-	if(linear_density > 0.) trial_mass = current_mass = initial_mass = b_trans->to_global_mass_mat(linear_density);
+	if(const auto linear_density = section_proto->get_parameter(ParameterType::LINEARDENSITY); linear_density > 0.) trial_mass = current_mass = initial_mass = b_trans->to_global_mass_mat(linear_density);
 }
 
 int B21H::update_status() {
@@ -85,7 +84,7 @@ int B21H::update_status() {
 	auto local_stiffness = elastic_local_stiffness;
 	vec local_resistance = elastic_local_stiffness * local_deformation;
 	for(const auto& I : int_pt) {
-		if(I.b_section->update_trial_status(I.strain_mat * local_deformation / length) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+		if(SUANPAN_SUCCESS != I.b_section->update_trial_status(I.strain_mat * local_deformation / length)) return SUANPAN_FAIL;
 		local_stiffness += I.strain_mat.t() * I.b_section->get_trial_stiffness() * I.strain_mat * I.weight / length;
 		local_resistance += I.strain_mat.t() * I.b_section->get_trial_resistance() * I.weight;
 	}

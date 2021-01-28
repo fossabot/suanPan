@@ -78,7 +78,7 @@ PenaltyBC::~PenaltyBC() = default;
 int PenaltyBC::process(const shared_ptr<DomainBase>& D) {
 	auto& t_matrix = D->get_factory()->get_stiffness();
 
-	if(D->get_factory()->get_storage_scheme() == StorageScheme::SPARSE) {
+	if(StorageScheme::SPARSE == D->get_factory()->get_storage_scheme()) {
 		const auto max_term = std::min(multiplier * t_matrix->max(), 1E13);
 
 		for(const auto& I : nodes)

@@ -44,7 +44,7 @@ class ParticleCollision : public Constraint {
 	 * \brief Compute the derivative of force w.r.t. distance between two particles.
 	 * \return the derivative of force w.r.t. distance
 	 */
-	[[nodiscard]] virtual double compute_d_f(double) const = 0;
+	[[nodiscard]] virtual double compute_df(double) const = 0;
 protected:
 	[[nodiscard]] vec get_postion(const shared_ptr<Node>&) const;
 public:

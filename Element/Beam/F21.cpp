@@ -60,8 +60,7 @@ void F21::initialize(const shared_ptr<DomainBase>& D) {
 
 	trial_stiffness = current_stiffness = initial_stiffness = b_trans->to_global_stiffness_mat(inv(initial_local_flexibility));
 
-	const auto linear_density = section_proto->get_parameter(ParameterType::LINEARDENSITY);
-	if(linear_density > 0.) trial_mass = current_mass = initial_mass = b_trans->to_global_mass_mat(linear_density);
+	if(const auto linear_density = section_proto->get_parameter(ParameterType::LINEARDENSITY); linear_density > 0.) trial_mass = current_mass = initial_mass = b_trans->to_global_mass_mat(linear_density);
 
 	trial_local_deformation = current_local_deformation.zeros(3);
 	trial_local_resistance = current_local_resistance.zeros(3);
@@ -90,7 +89,7 @@ int F21::update_status() {
 			// compute unbalanced deformation
 			if(!solve(incre_deformation, I.b_section->get_trial_stiffness(), target_section_resistance - I.b_section->get_trial_resistance())) return SUANPAN_FAIL;
 			// update status
-			if(I.b_section->update_trial_status(I.b_section->get_trial_deformation() + incre_deformation) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+			if(SUANPAN_SUCCESS != I.b_section->update_trial_status(I.b_section->get_trial_deformation() + incre_deformation)) return SUANPAN_FAIL;
 			// collect new flexibility and deformation
 			trial_local_flexibility += I.weight * length * I.B.t() * solve(I.b_section->get_trial_stiffness(), I.B);
 			residual_deformation += I.weight * length * I.B.t() * solve(I.b_section->get_trial_stiffness(), I.b_section->get_trial_resistance() - target_section_resistance);
@@ -100,7 +99,7 @@ int F21::update_status() {
 		suanpan_extra_debug("F21 local iteration error: %.4E.\n", error);
 		if(norm(residual_deformation) <= tolerance) break;
 		if(max_iteration == ++counter) {
-			suanpan_error("F21: element %u fails to converge.\n", get_tag());
+			suanpan_error("F21 element %u fails to converge.\n", get_tag());
 			return SUANPAN_FAIL;
 		}
 	}

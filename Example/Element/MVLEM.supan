@@ -14,13 +14,13 @@ element MVLEM 2 2 3 3 .4 .2 1 .02 1 2 .2 1 .02 1 2 .2 1 .02 1 2 .2 1 .02 1 2 .2 
 fix 1 P 1
 
 step static 1
-set ini_step_size 1E-1
+set ini_step_size 2E-1
 set fixed_step_size 1
 set symm_mat false
 
 displacement 1 0 2E-2 2 3
 
-converger RelIncreDisp 1 1E-8 10 1
+converger RelIncreDisp 1 1E-10 10 1
 
 analyze
 

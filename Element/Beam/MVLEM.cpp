@@ -17,7 +17,6 @@
 
 #include "MVLEM.h"
 #include <Domain/DomainBase.h>
-#include <Domain/Node.h>
 #include <Material/Material.h>
 
 MVLEM::Fibre::Fibre(const double B, const double H, const double R)
@@ -46,11 +45,10 @@ MVLEM::MVLEM(const unsigned T, uvec&& NT, const vector<double>& B, const vector<
 }
 
 void MVLEM::initialize(const shared_ptr<DomainBase>& D) {
-	auto& coord_i = node_ptr.at(0).lock()->get_coordinate();
-	auto& coord_j = node_ptr.at(1).lock()->get_coordinate();
+	const auto coor = get_coordinate(2);
 
 	// chord vector
-	const vec pos_diff = coord_j(span(0, 1)) - coord_i(span(0, 1));
+	const rowvec pos_diff = coor.row(1) - coor.row(0);
 	length = norm(pos_diff);
 	shear_height_a = shear_height * length;
 	shear_height_b = shear_height_a - length;
@@ -112,19 +110,8 @@ void MVLEM::initialize(const shared_ptr<DomainBase>& D) {
 }
 
 int MVLEM::update_status() {
-	const auto& node_i = node_ptr.at(0).lock();
-	const auto& node_j = node_ptr.at(1).lock();
-
-	auto& disp_i = node_i->get_trial_displacement();
-	auto& disp_j = node_j->get_trial_displacement();
-
-	vec trial_disp(6);
-	for(unsigned I = 0; I < b_dof; ++I) {
-		trial_disp(I) = disp_i(I);
-		trial_disp(I + 3llu) = disp_j(I);
-	}
 	// local displacement
-	trial_disp = trans_mat * trial_disp;
+	const vec trial_disp = trans_mat * get_trial_displacement();
 
 	vec converter(6, fill::zeros);
 	converter(1) = -(converter(4) = 1.);

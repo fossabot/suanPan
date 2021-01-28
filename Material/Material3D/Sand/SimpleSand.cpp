@@ -172,6 +172,4 @@ int SimpleSand::reset_status() {
 	return SUANPAN_SUCCESS;
 }
 
-vector<vec> SimpleSand::record(const OutputType P) { return Material3D::record(P); }
-
 void SimpleSand::print() { suanpan_info("A simple sand model.\n"); }

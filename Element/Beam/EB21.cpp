@@ -40,7 +40,7 @@ void EB21::initialize(const shared_ptr<DomainBase>& D) {
 
 	trial_stiffness = current_stiffness = initial_stiffness = b_trans->to_global_stiffness_mat(local_stiff);
 
-	if(b_material->get_parameter(ParameterType::DENSITY) != 0.) initial_mass = b_trans->to_global_mass_mat(b_material->get_parameter(ParameterType::DENSITY) * area);
+	if(b_material->get_parameter(ParameterType::DENSITY) > 0.) initial_mass = b_trans->to_global_mass_mat(b_material->get_parameter(ParameterType::DENSITY) * area);
 
 	ConstantMass(this);
 }

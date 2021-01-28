@@ -42,7 +42,7 @@ int B21E::update_status() {
 		local_resistance.zeros();
 
 		for(const auto& I : int_pt) {
-			if(I.b_section->update_trial_status(I.strain_mat * local_deformation / length) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+			if(SUANPAN_SUCCESS != I.b_section->update_trial_status(I.strain_mat * local_deformation / length)) return SUANPAN_FAIL;
 			local_stiffness += I.strain_mat.t() * I.b_section->get_trial_stiffness() * I.strain_mat * I.weight / length;
 			local_resistance += I.strain_mat.t() * I.b_section->get_trial_resistance() * I.weight;
 		}

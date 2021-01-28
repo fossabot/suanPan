@@ -43,7 +43,7 @@ class ParticleCollision3D final : public ParticleCollision {
 	const double alpha = 1.;
 
 	[[nodiscard]] double compute_f(double) const override;
-	[[nodiscard]] double compute_d_f(double) const override;
+	[[nodiscard]] double compute_df(double) const override;
 public:
 	ParticleCollision3D(unsigned, unsigned, double = 1., double = 1.);
 
