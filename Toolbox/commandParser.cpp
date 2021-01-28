@@ -1558,7 +1558,7 @@ int create_new_modifier(const shared_ptr<DomainBase>& domain, istringstream& com
 			}
 	}
 
-	if(new_modifier == nullptr || !domain->insert(std::move(new_modifier))) suanpan_error("create_new_modifier() fails to create new modifier.\n");
+	if(nullptr == new_modifier || !domain->insert(std::move(new_modifier))) suanpan_error("create_new_modifier() fails to create new modifier.\n");
 
 	return SUANPAN_SUCCESS;
 }

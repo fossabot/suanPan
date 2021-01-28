@@ -939,6 +939,9 @@ int Domain::initialize() {
 	// initialize modifier based on updated element pool
 	suanpan_for_each(modifier_pond.cbegin(), modifier_pond.cend(), [&](const std::pair<unsigned, shared_ptr<Modifier>>& t_modifier) { t_modifier.second->initialize(shared_from_this()); });
 	modifier_pond.update();
+	// sort to ensure lower performs first
+	if(auto& t_modifier_pool = access::rw(modifier_pond.get()); t_modifier_pool.size() > 1)
+		suanpan_sort(t_modifier_pool.begin(), t_modifier_pool.end(), [&](const shared_ptr<Modifier>& a, const shared_ptr<Modifier>& b) { return a->get_tag() < b->get_tag(); });
 
 	// recorder may depend on groups, nodes, elements, etc.
 	suanpan_for_each(recorder_pond.cbegin(), recorder_pond.cend(), [&](const std::pair<unsigned, shared_ptr<Recorder>>& t_recorder) { t_recorder.second->initialize(shared_from_this()); });
@@ -1024,12 +1027,8 @@ int Domain::process_criterion() {
 
 int Domain::process_modifier() const {
 	auto code = 0;
-	// sort to ensure lower performs first
-	auto t_modifier_pool = modifier_pond.get();
-	if(t_modifier_pool.size() > 1)
-		suanpan_sort(t_modifier_pool.begin(), t_modifier_pool.end(), [&](const shared_ptr<Modifier>& a, const shared_ptr<Modifier>& b) { return a->get_tag() < b->get_tag(); });
 	// use sequential for_each only
-	std::for_each(t_modifier_pool.cbegin(), t_modifier_pool.cend(), [&](const shared_ptr<Modifier>& t_modifier) { code += t_modifier->update_status(); });
+	for(auto& I : modifier_pond.get()) code += I->update_status();
 	return code;
 }
 
@@ -1053,8 +1052,8 @@ void Domain::enable_all() {
 }
 
 void Domain::summary() const {
-	suanpan_info("Domain %u contains:\n\t%u nodes, %u elements, %u materials,\n", get_tag(), static_cast<unsigned>(get_node()), static_cast<unsigned>(get_element()), static_cast<unsigned>(get_material()));
-	suanpan_info("\t%u loads, %u constraints and %u recorders.\n", static_cast<unsigned>(get_load()), static_cast<unsigned>(get_constraint()), static_cast<unsigned>(get_recorder()));
+	suanpan_info("Domain %u contains:\n\t%llu nodes, %llu elements, %llu materials,\n", get_tag(), get_node(), get_element(), get_material());
+	suanpan_info("\t%llu loads, %llu constraints and %llu recorders.\n", get_load(), get_constraint(), get_recorder());
 }
 
 void Domain::update_current_resistance() const {

@@ -33,11 +33,9 @@ int ElementalModal::update_status() {
 
 				const cx_mat theta = t_ptr->get_current_mass() * eigvec;
 
-				for(uword I = 0; I < eigval.n_elem; ++I) if(abs(eigval(I)) < cut_off_freq && abs(eigval(I)) > 1E-6) t_damping += theta.col(I) * theta.col(I).t() * damping * sqrt(eigval(I)) / dot(theta.col(I), t_ptr->get_current_mass() * theta.col(I));
+				for(uword I = 0; I < eigval.n_elem; ++I) if(abs(eigval(I)) < cut_off_freq) t_damping += theta.col(I) * theta.col(I).t() * damping * sqrt(eigval(I)) / dot(theta.col(I), t_ptr->get_current_mass() * theta.col(I));
 
-				access::rw(t_ptr->get_trial_damping()) = abs(t_damping);
-
-				access::rw(t_ptr->get_trial_damping_force()) = t_ptr->get_trial_damping() * get_trial_velocity(t_ptr.get());
+				access::rw(t_ptr->get_trial_damping_force()) = (access::rw(t_ptr->get_trial_damping()) = abs(t_damping)) * get_trial_velocity(t_ptr.get());
 			}
 	});
 
