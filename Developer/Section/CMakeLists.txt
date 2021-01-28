@@ -17,6 +17,7 @@ endif()
 if(COMPILER_IDENTIFIER MATCHES "vs")
     link_libraries(libopenblas)
 else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     link_libraries(openblas)
 endif()
 
