@@ -17,7 +17,7 @@ jobs:
           mkdir VTK-build && tar xf VTK-8.2.0-linux.tar.gz -C VTK-build
       - name: Compile
         run: |
-          sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+          sudo apt-get update && sudo env ACCEPT_EULA=Y apt-get upgrade -y && sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MULTITHREAD=ON -DUSE_HDF5=ON -DUSE_EXTERNAL_VTK=ON -DVTK_DIR=/home/runner/work/suanPan/suanPan/VTK-build/lib/cmake/vtk-8.2/ .
           make -j4
       - name: Pack
