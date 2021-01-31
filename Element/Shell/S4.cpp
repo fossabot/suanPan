@@ -74,10 +74,10 @@ void S4::initialize(const shared_ptr<DomainBase>& D) {
 	auto pn = shape::quad(t_vec, 1);
 	mat jacob = pn * ele_coor, pn_pxy = solve(jacob, pn);
 	mat penalty_mat(2, 3 * s_node, fill::zeros);
-	for(unsigned I = 0; I < 4; ++I) {
-		penalty_mat(0, I * 3llu) = pn_pxy(1, I);
-		penalty_mat(1, I * 3llu) = pn_pxy(0, I);
-		penalty_mat(0, I * 3llu + 1llu) = -(penalty_mat(1, I * 3llu + 2llu) = n(I));
+	for(unsigned I = 0, J = 0; I < 4; ++I, J += 3) {
+		penalty_mat(0, J) = pn_pxy(1, I);
+		penalty_mat(1, J) = pn_pxy(0, I);
+		penalty_mat(0, J + 1llu) = -(penalty_mat(1, J + 2llu) = n(I));
 	}
 	auto p_stiffness = penalty_stiffness = 10. / 3. * shear_modulus * thickness * det(jacob) * penalty_mat.t() * penalty_mat;
 
@@ -88,7 +88,8 @@ void S4::initialize(const shared_ptr<DomainBase>& D) {
 
 	mat m_stiffness(s_size / 2, s_size / 2, fill::zeros), pnt(2, 8);
 
-	int_pt.clear(), int_pt.reserve(m_plan.n_rows);
+	int_pt.clear();
+	int_pt.reserve(m_plan.n_rows);
 	for(unsigned I = 0; I < m_plan.n_rows; ++I) {
 		int_pt.emplace_back(vec{m_plan(I, 0), m_plan(I, 1)});
 
@@ -135,7 +136,8 @@ void S4::initialize(const shared_ptr<DomainBase>& D) {
 		}
 
 		auto& s_ip = m_ip.sec_int_pt;
-		s_ip.clear(), s_ip.reserve(t_plan.n_rows);
+		s_ip.clear();
+		s_ip.reserve(t_plan.n_rows);
 		for(unsigned J = 0; J < t_plan.n_rows; ++J) {
 			const auto t_eccentricity = .5 * t_plan(J, 0) * thickness;
 			s_ip.emplace_back(t_eccentricity, .5 * thickness * t_plan(J, 1) * m_plan(I, 2) * det_jacob, mat_proto->get_copy());
@@ -167,9 +169,10 @@ int S4::update_status() {
 	for(const auto& I : int_pt) {
 		const vec m_strain = I.BM * m_disp, p_strain = I.BP * p_disp;
 
-		for(const auto& J : I.sec_int_pt) if(J.s_material->update_trial_status(m_strain + J.eccentricity * p_strain) != SUANPAN_SUCCESS) return SUANPAN_FAIL;
+		for(const auto& J : I.sec_int_pt) if(SUANPAN_SUCCESS != J.s_material->update_trial_status(m_strain + J.eccentricity * p_strain)) return SUANPAN_FAIL;
 
-		t_stress.zeros(), t_stiffness.zeros();
+		t_stress.zeros();
+		t_stiffness.zeros();
 		for(const auto& J : I.sec_int_pt) {
 			t_stress += J.factor * J.s_material->get_trial_stress();
 			t_stiffness += J.factor * J.s_material->get_trial_stiffness();
@@ -177,7 +180,8 @@ int S4::update_status() {
 		m_resistance += I.BM.t() * t_stress;
 		m_stiffness += I.BM.t() * t_stiffness * I.BM;
 
-		t_stress.zeros(), t_stiffness.zeros();
+		t_stress.zeros();
+		t_stiffness.zeros();
 		for(const auto& J : I.sec_int_pt) {
 			t_stress += J.factor * J.eccentricity * J.s_material->get_trial_stress();
 			t_stiffness += J.factor * J.eccentricity * J.eccentricity * J.s_material->get_trial_stiffness();

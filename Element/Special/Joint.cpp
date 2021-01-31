@@ -21,7 +21,7 @@
 
 Joint::Joint(const unsigned T, uvec&& NT, uvec&& MT)
 	: MaterialElement1D(T, j_node, static_cast<unsigned>(MT.n_elem), std::forward<uvec>(NT), std::forward<uvec>(MT), false)
-	, j_dof(get_dof_number()) {}
+	, j_dof(Element::get_dof_number()) {}
 
 void Joint::initialize(const shared_ptr<DomainBase>& D) {
 	if(j_dof != material_tag.n_elem) {

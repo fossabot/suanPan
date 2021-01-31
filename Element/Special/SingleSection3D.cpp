@@ -29,7 +29,7 @@ void SingleSection3D::initialize(const shared_ptr<DomainBase>& D) {
 }
 
 int SingleSection3D::update_status() {
-	s_section->update_trial_status(get_trial_displacement());
+	if(SUANPAN_SUCCESS != s_section->update_trial_status(get_trial_displacement())) return SUANPAN_FAIL;
 
 	trial_stiffness = s_section->get_trial_stiffness();
 
