@@ -39,6 +39,8 @@ void B3DL::update_transformation() {
 	direction_cosine.col(0) = normalise(x_axis);
 	direction_cosine.col(1) = normalise(cross(z_axis, x_axis));
 	direction_cosine.col(2) = normalise(z_axis);
+
+	if(std::fabs(dot(direction_cosine.col(0), direction_cosine.col(2))) > 1E-4) suanpan_warning("the local z axis of Element %u is not perpendicular to its cord, please check.\n", element_ptr->get_tag());
 }
 
 vec B3DL::to_local_vec(const vec& g_disp) const {
