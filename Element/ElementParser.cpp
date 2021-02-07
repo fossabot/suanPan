@@ -256,16 +256,13 @@ void new_b31(unique_ptr<Element>& return_obj, istringstream& command) {
 		return;
 	}
 
-	unsigned int_pt = 5;
+	unsigned int_pt = 6;
 	if(!get_optional_input(command, int_pt)) {
 		suanpan_error("new_b31() needs a valid number of integration points.\n");
 		return;
 	}
 
-	string nonlinear = "false";
-	if(!get_optional_input(command, nonlinear)) suanpan_error("new_b31() needs a valid nonlinear geomtery switch (0,1).\n");
-
-	return_obj = make_unique<B31>(tag, std::move(node_tag), section_id, orientation_id, int_pt, is_true(nonlinear));
+	return_obj = make_unique<B31>(tag, std::move(node_tag), section_id, orientation_id, int_pt, false);
 }
 
 void new_c3d20(unique_ptr<Element>& return_obj, istringstream& command) {
@@ -1380,11 +1377,7 @@ void new_f31(unique_ptr<Element>& return_obj, istringstream& command) {
 		return;
 	}
 
-	string nonlinear = "false";
-	if(command.eof()) suanpan_debug("new_b31() assumes linear geometry.\n");
-	else if(!get_input(command, nonlinear)) suanpan_error("new_f31() needs a valid nonlinear geomtery switch (0,1).\n");
-
-	return_obj = make_unique<F31>(tag, std::move(node_tag), section_id, orientation_id, int_pt, is_true(nonlinear));
+	return_obj = make_unique<F31>(tag, std::move(node_tag), section_id, orientation_id, int_pt, false);
 }
 
 void new_gcmq(unique_ptr<Element>& return_obj, istringstream& command) {
