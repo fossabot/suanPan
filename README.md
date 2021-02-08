@@ -13,12 +13,10 @@
 [![codecov](https://codecov.io/gh/TLCFEM/suanPan/branch/dev/graph/badge.svg)](https://codecov.io/gh/TLCFEM/suanPan)
 [![codacy](https://api.codacy.com/project/badge/Grade/0754f66f6fae4829993eb879b222a32a)](https://www.codacy.com/app/TLCFEM/suanPan?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TLCFEM/suanPan&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/tlcfem/suanpan/badge)](https://www.codefactor.io/repository/github/tlcfem/suanpan)
-[![language](https://img.shields.io/lgtm/grade/cpp/g/TLCFEM/suanPan.svg?logo=lgtm)](https://lgtm.com/projects/g/TLCFEM/suanPan/context:cpp)
 [![language](https://img.shields.io/github/languages/count/TLCFEM/suanPan.svg?color=44cc11)](https://github.com/TLCFEM/suanPan)
 [![language](https://img.shields.io/github/languages/top/TLCFEM/suanPan.svg?color=44cc11&logo=c%2B%2B)](https://github.com/TLCFEM/suanPan)
 [![size](https://img.shields.io/github/languages/code-size/TLCFEM/suanPan.svg?color=44cc11)](https://img.shields.io/github/languages/code-size/TLCFEM/suanPan.svg?color=44cc11)
 [![issues](https://img.shields.io/github/issues/TLCFEM/suanPan.svg?color=44cc11)](https://github.com/TLCFEM/suanPan/issues)
-[![alerts](https://img.shields.io/lgtm/alerts/g/TLCFEM/suanPan.svg?logo=lgtm)](https://lgtm.com/projects/g/TLCFEM/suanPan/alerts/)
 [![chat](https://badges.gitter.im/suanPan-dev/community.svg)](https://gitter.im/suanPan-dev/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Introduction

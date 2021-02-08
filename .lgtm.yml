@@ -1,6 +1,0 @@
-path_classifiers:
-    library:
-        - Include/
-        - Toolbox/superlu-src/
-        - Toolbox/superlumt-src/
-        - Toolbox/mumps-src/
