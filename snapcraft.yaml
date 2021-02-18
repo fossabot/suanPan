@@ -1,5 +1,5 @@
 name: suanpan
-base: core20
+base: core18
 version: "1.2"
 summary: An Open Source, Parallel and Heterogeneous Finite Element Analysis Framework
 description: |
@@ -25,77 +25,68 @@ parts:
       - cpio
     override-build: |
       wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/16533/l_mkl_2020.1.217.tgz
-      tar -xzf l_mkl_2020.1.217.tgz && cd l_mkl_2020.1.217
+      tar xzf l_mkl_2020.1.217.tgz && cd l_mkl_2020.1.217
       sed -i 's/decline/accept/g' ./silent.cfg
       sed -i 's/\/opt\/intel/\/build\/suanpan\/parts\/mkl\/intel/g' ./silent.cfg
       ./install.sh --silent ./silent.cfg
-      export MTO=/build/suanpan/parts/suanpan/install/bin/
-      mkdir -p $MTO
+      export MDEST=/build/suanpan/parts/suanpan/install/bin/
+      mkdir -p $MDEST
       export MFROM=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/lib/intel64/
-      cp $MFROM/libiomp5.so $MTO
+      cp $MFROM/libiomp5.so $MDEST
       export MFROM=/build/suanpan/parts/mkl/intel/mkl/lib/intel64/
-      cp $MFROM/libmkl_core.so $MTO
-      cp $MFROM/libmkl_intel_lp64.so $MTO
-      cp $MFROM/libmkl_intel_thread.so $MTO
-      cp $MFROM/libmkl_def.so $MTO
-      cp $MFROM/libmkl_avx512.so $MTO
-      cp $MFROM/libmkl_avx2.so $MTO
-      cp $MFROM/libmkl_avx.so $MTO
+      cp $MFROM/libmkl_core.so $MDEST
+      cp $MFROM/libmkl_intel_lp64.so $MDEST
+      cp $MFROM/libmkl_intel_thread.so $MDEST
+      cp $MFROM/libmkl_def.so $MDEST
+      cp $MFROM/libmkl_avx512.so $MDEST
+      cp $MFROM/libmkl_avx2.so $MDEST
+      cp $MFROM/libmkl_avx.so $MDEST
   vtk:
-    source: https://www.vtk.org/files/release/9.0/VTK-9.0.1.tar.gz
-    plugin: cmake
-    cmake-parameters:
-      - -DCMAKE_BUILD_TYPE=Release
-      - -DBUILD_SHARED_LIBS=OFF
-      - -DCMAKE_INSTALL_PREFIX=
-    build-environment:
-      - CC: gcc-9
-      - CXX: g++-9
-      - FC: gfortran-9
+    plugin: nil
     build-packages:
-      - gcc-9
-      - g++-9
-      - gfortran-9
+      - wget
+      - cpio
+      - cmake
+      - gcc-8
+      - g++-8
+      - gfortran-8
       - libglu1-mesa-dev
       - freeglut3-dev
       - mesa-common-dev
-    stage-packages:
-      - libgl1
-      - libglvnd0
-      - libglx0
-      - libx11-6
-      - libxau6
-      - libxcb1
-      - libxdmcp6
+    override-build: |
+      wget https://www.vtk.org/files/release/9.0/VTK-9.0.1.tar.gz
+      tar xzf VTK-9.0.1.tar.gz && mkdir VTK-build && cd VTK-build
+      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/build/suanpan/parts/suanpan/VTK/ ../VTK-9.0.1
+      make install -j4
   suanpan:
     after:
       - mkl
       - vtk
     source: https://github.com/TLCFEM/suanPan.git
     plugin: cmake
-    cmake-parameters:
+    configflags:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_MULTITHREAD=ON
       - -DUSE_HDF5=ON
       - -DUSE_EXTERNAL_VTK=ON
-      - -DVTK_DIR=/build/suanpan/parts/vtk/install/lib/cmake/vtk-9.0/
+      - -DVTK_DIR=/build/suanpan/parts/suanpan/VTK/lib/cmake/vtk-9.0/
       - -DUSE_MKL=ON
       - -DMKLROOT=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/
-      - -DCMAKE_INSTALL_PREFIX=
     build-environment:
-      - CC: gcc-9
-      - CXX: g++-9
-      - FC: gfortran-9
+      - CC: gcc-8
+      - CXX: g++-8
+      - FC: gfortran-8
     build-packages:
-      - gcc-9
-      - g++-9
-      - gfortran-9
+      - gcc-8
+      - g++-8
+      - gfortran-8
     stage-packages:
       - libgfortran5
-      - libgl1
+      - libgomp1
+      - libquadmath0
       - libglvnd0
       - libglx0
-      - libquadmath0
+      - libopengl0
       - libx11-6
       - libxau6
       - libxcb1
