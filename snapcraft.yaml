@@ -58,6 +58,14 @@ parts:
       - libglu1-mesa-dev
       - freeglut3-dev
       - mesa-common-dev
+    stage-packages:
+      - libgl1
+      - libglvnd0
+      - libglx0
+      - libx11-6
+      - libxau6
+      - libxcb1
+      - libxdmcp6
   suanpan:
     after:
       - mkl
@@ -72,7 +80,6 @@ parts:
       - -DVTK_DIR=/build/suanpan/parts/vtk/install/usr/local/lib/cmake/vtk-9.0/
       - -DUSE_MKL=ON
       - -DMKLROOT=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/
-      - -DCMAKE_INSTALL_PREFIX=/build/suanpan/parts/suanpan/install/
     build-environment:
       - CC: gcc-9
       - CXX: g++-9
@@ -81,3 +88,13 @@ parts:
       - gcc-9
       - g++-9
       - gfortran-9
+    stage-packages:
+      - libgfortran5
+      - libgl1
+      - libglvnd0
+      - libglx0
+      - libquadmath0
+      - libx11-6
+      - libxau6
+      - libxcb1
+      - libxdmcp6
