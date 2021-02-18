@@ -51,7 +51,6 @@ parts:
       - CC: gcc-9
       - CXX: g++-9
       - FC: gfortran-9
-      - DESTDIR: /build/suanpan/parts/vtk/install/
     build-packages:
       - gcc-9
       - g++-9
@@ -70,14 +69,14 @@ parts:
       - -DBUILD_MULTITHREAD=ON
       - -DUSE_HDF5=ON
       - -DUSE_EXTERNAL_VTK=ON
-      - -DVTK_DIR=/build/suanpan/parts/vtk/install/lib/cmake/vtk-9.0/
+      - -DVTK_DIR=/build/suanpan/parts/vtk/install/usr/local/lib/cmake/vtk-9.0/
       - -DUSE_MKL=ON
       - -DMKLROOT=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/
+      - -DCMAKE_INSTALL_PREFIX=/build/suanpan/parts/suanpan/install/
     build-environment:
       - CC: gcc-9
       - CXX: g++-9
       - FC: gfortran-9
-      - DESTDIR: /build/suanpan/parts/suanpan/install/
     build-packages:
       - gcc-9
       - g++-9
