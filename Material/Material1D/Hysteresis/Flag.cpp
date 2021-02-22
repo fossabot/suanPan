@@ -19,11 +19,11 @@
 #include <Toolbox/utility.h>
 
 Flag::Flag(const unsigned T, const double E, const double YT, const double RT, const double HT, const double YC, const double RC, const double HC, const double D)
-	: DataFlag{fabs(E), HT, fabs(YT), fabs(RT), HC, fabs(YC), fabs(RC)}
+	: DataFlag{fabs(E), HT, fabs(YT), RT, HC, -fabs(YC), RC}
 	, Material1D(T, D) {}
 
 Flag::Flag(const unsigned T, const double E, const double YT, const double RT, const double HT, const double D)
-	: DataFlag{fabs(E), HT, fabs(YT), fabs(RT), HT, fabs(YT), fabs(RT)}
+	: DataFlag{fabs(E), HT, fabs(YT), RT, HT, -fabs(YT), -RT}
 	, Material1D(T, D) {}
 
 void Flag::initialize(const shared_ptr<DomainBase>&) {
@@ -60,8 +60,8 @@ int Flag::update_trial_status(const vec& t_strain) {
 		break;
 	case Status::CLOAD:
 		if(load_direction > 0.) {
-			cr_low_strain = ((current_stress(0) + c_residual_stress) / elastic_modulus - c_residual_strain * c_hardening_ratio - (cr_strain = current_strain(0))) / (c_hardening_ratio - 1.);
-			trial_status = trial_strain(0) < cr_low_strain ? Status::CUNLOAD : trial_strain(0) < -c_residual_strain ? Status::CLOW : trial_strain(0) < 0. ? Status::CLOAD : Status::TLOAD;
+			cr_low_strain = ((current_stress(0) - c_residual_stress) / elastic_modulus + c_residual_strain * c_hardening_ratio - (cr_strain = current_strain(0))) / (c_hardening_ratio - 1.);
+			trial_status = trial_strain(0) < cr_low_strain ? Status::CUNLOAD : trial_strain(0) < c_residual_strain ? Status::CLOW : trial_strain(0) < 0. ? Status::CLOAD : Status::TLOAD;
 		}
 		break;
 	case Status::TLOW:
@@ -72,25 +72,25 @@ int Flag::update_trial_status(const vec& t_strain) {
 		break;
 	case Status::CLOW:
 		if(load_direction < 0.) {
-			cr_strain = (cr_low_strain = current_strain(0)) - c_yield_strain + c_residual_strain;
+			cr_strain = (cr_low_strain = current_strain(0)) + c_yield_strain - c_residual_strain;
 			trial_status = trial_strain(0) > cr_strain ? Status::CUNLOAD : Status::CLOAD;
-		} else trial_status = trial_strain(0) < -c_residual_strain ? Status::CLOW : trial_strain(0) < 0. ? Status::CLOAD : Status::TLOAD;
+		} else trial_status = trial_strain(0) < c_residual_strain ? Status::CLOW : trial_strain(0) < 0. ? Status::CLOAD : Status::TLOAD;
 		break;
 	case Status::TUNLOAD:
 		trial_status = trial_strain(0) > tr_strain ? Status::TLOAD : trial_strain(0) > tr_low_strain ? Status::TUNLOAD : trial_strain(0) > t_residual_strain ? Status::TLOW : trial_strain(0) > 0. ? Status::TLOAD : Status::CLOAD;
 		break;
 	case Status::CUNLOAD:
-		trial_status = trial_strain(0) < cr_strain ? Status::CLOAD : trial_strain(0) < cr_low_strain ? Status::CUNLOAD : trial_strain(0) < -c_residual_strain ? Status::CLOW : trial_strain(0) < 0. ? Status::CLOAD : Status::TLOAD;
+		trial_status = trial_strain(0) < cr_strain ? Status::CLOAD : trial_strain(0) < cr_low_strain ? Status::CUNLOAD : trial_strain(0) < c_residual_strain ? Status::CLOW : trial_strain(0) < 0. ? Status::CLOAD : Status::TLOAD;
 		break;
 	}
 
 	trial_stiffness = elastic_modulus;
 
-	if(trial_status == Status::TLOAD) trial_strain(0) > t_yield_strain ? trial_stress = t_yield_stress + (trial_stiffness *= t_hardening_ratio) * (trial_strain(0) - t_yield_strain) : trial_stress = trial_stiffness * trial_strain(0);
-	else if(trial_status == Status::CLOAD) trial_strain(0) < -c_yield_strain ? trial_stress = -c_yield_stress + (trial_stiffness *= c_hardening_ratio) * (trial_strain(0) + c_yield_strain) : trial_stress = trial_stiffness * trial_strain(0);
-	else if(trial_status == Status::TUNLOAD || trial_status == Status::CUNLOAD) trial_stress = current_stress + trial_stiffness * incre_strain;
-	else if(trial_status == Status::TLOW) trial_stress = t_residual_stress + (trial_stiffness *= t_hardening_ratio) * (trial_strain - t_residual_strain);
-	else if(trial_status == Status::CLOW) trial_stress = -c_residual_stress + (trial_stiffness *= c_hardening_ratio) * (trial_strain + c_residual_strain);
+	if(Status::TLOAD == trial_status) trial_strain(0) > t_yield_strain ? trial_stress = t_yield_stress + (trial_stiffness *= t_hardening_ratio) * (trial_strain(0) - t_yield_strain) : trial_stress = trial_stiffness * trial_strain(0);
+	else if(Status::CLOAD == trial_status) trial_strain(0) < c_yield_strain ? trial_stress = c_yield_stress + (trial_stiffness *= c_hardening_ratio) * (trial_strain(0) - c_yield_strain) : trial_stress = trial_stiffness * trial_strain(0);
+	else if(Status::TUNLOAD == trial_status || Status::CUNLOAD == trial_status) trial_stress = current_stress + trial_stiffness * incre_strain;
+	else if(Status::TLOW == trial_status) trial_stress = t_residual_stress + (trial_stiffness *= t_hardening_ratio) * (trial_strain - t_residual_strain);
+	else if(Status::CLOW == trial_status) trial_stress = c_residual_stress + (trial_stiffness *= c_hardening_ratio) * (trial_strain - c_residual_strain);
 
 	return SUANPAN_SUCCESS;
 }
@@ -123,6 +123,6 @@ int Flag::reset_status() {
 }
 
 void Flag::print() {
-	suanpan_info("A bilinear flag material model with an elastic modulus of %.3E and a hardening ratio of %.2f.\n", elastic_modulus, t_hardening_ratio);
+	suanpan_info("A bilinear flag material model with an elastic modulus of %.3E, a tension hardening ratio of %.2f and a compression hardening ratio of %.2f.\n", elastic_modulus, t_hardening_ratio, c_hardening_ratio);
 	suanpan_info("current strain: %.3E\tcurrent stress: %.3E\n", current_strain(0), current_stress(0));
 }
