@@ -1,5 +1,5 @@
 name: suanpan
-base: core18
+base: core20
 version: "1.2"
 summary: An Open Source, Parallel and Heterogeneous Finite Element Analysis Framework
 description: |
@@ -10,7 +10,7 @@ architectures:
   - build-on: amd64
 apps:
   suanpan:
-    command: bin/suanPan
+    command: usr/local/bin/suanPan
     plugs:
       - home
       - desktop
@@ -27,13 +27,12 @@ parts:
       wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/16533/l_mkl_2020.1.217.tgz
       tar xzf l_mkl_2020.1.217.tgz && cd l_mkl_2020.1.217
       sed -i 's/decline/accept/g' ./silent.cfg
-      sed -i 's/\/opt\/intel/\/build\/suanpan\/parts\/mkl\/intel/g' ./silent.cfg
       ./install.sh --silent ./silent.cfg
-      export MDEST=/build/suanpan/parts/suanpan/install/bin/
+      export MDEST=/build/suanpan/parts/suanpan/install/usr/local/bin/
       mkdir -p $MDEST
-      export MFROM=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/lib/intel64/
+      export MFROM=/opt/intel/compilers_and_libraries/linux/lib/intel64/
       cp $MFROM/libiomp5.so $MDEST
-      export MFROM=/build/suanpan/parts/mkl/intel/mkl/lib/intel64/
+      export MFROM=/opt/intel/mkl/lib/intel64/
       cp $MFROM/libmkl_core.so $MDEST
       cp $MFROM/libmkl_intel_lp64.so $MDEST
       cp $MFROM/libmkl_intel_thread.so $MDEST
@@ -47,9 +46,9 @@ parts:
       - wget
       - cpio
       - cmake
-      - gcc-8
-      - g++-8
-      - gfortran-8
+      - gcc-9
+      - g++-9
+      - gfortran-9
       - libglu1-mesa-dev
       - freeglut3-dev
       - mesa-common-dev
@@ -64,22 +63,22 @@ parts:
       - vtk
     source: https://github.com/TLCFEM/suanPan.git
     plugin: cmake
-    configflags:
+    cmake-parameters:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_MULTITHREAD=ON
       - -DUSE_HDF5=ON
       - -DUSE_EXTERNAL_VTK=ON
       - -DVTK_DIR=/build/suanpan/parts/suanpan/VTK/lib/cmake/vtk-9.0/
       - -DUSE_MKL=ON
-      - -DMKLROOT=/build/suanpan/parts/mkl/intel/compilers_and_libraries/linux/mkl/
+      - -DMKLROOT=/opt/intel/compilers_and_libraries/linux/mkl/
     build-environment:
-      - CC: gcc-8
-      - CXX: g++-8
-      - FC: gfortran-8
+      - CC: gcc-9
+      - CXX: g++-9
+      - FC: gfortran-9
     build-packages:
-      - gcc-8
-      - g++-8
-      - gfortran-8
+      - gcc-9
+      - g++-9
+      - gfortran-9
     stage-packages:
       - libgfortran5
       - libgomp1
