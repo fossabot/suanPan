@@ -1,5 +1,5 @@
 name: suanpan
-base: core20
+base: core18
 version: "1.2"
 summary: An Open Source, Parallel and Heterogeneous Finite Element Analysis Framework
 description: |
@@ -10,7 +10,7 @@ architectures:
   - build-on: amd64
 apps:
   suanpan:
-    command: usr/local/bin/suanPan
+    command: bin/suanPan
     plugs:
       - home
       - desktop
@@ -28,7 +28,7 @@ parts:
       tar xzf l_mkl_2020.1.217.tgz && cd l_mkl_2020.1.217
       sed -i 's/decline/accept/g' ./silent.cfg
       ./install.sh --silent ./silent.cfg
-      export MDEST=/build/suanpan/parts/suanpan/install/usr/local/bin/
+      export MDEST=/build/suanpan/parts/suanpan/install/bin/
       mkdir -p $MDEST
       export MFROM=/opt/intel/compilers_and_libraries/linux/lib/intel64/
       cp $MFROM/libiomp5.so $MDEST
@@ -46,9 +46,9 @@ parts:
       - wget
       - cpio
       - cmake
-      - gcc-9
-      - g++-9
-      - gfortran-9
+      - gcc-8
+      - g++-8
+      - gfortran-8
       - libglu1-mesa-dev
       - freeglut3-dev
       - mesa-common-dev
@@ -63,7 +63,7 @@ parts:
       - vtk
     source: https://github.com/TLCFEM/suanPan.git
     plugin: cmake
-    cmake-parameters:
+    configflags:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_MULTITHREAD=ON
       - -DUSE_HDF5=ON
@@ -72,13 +72,13 @@ parts:
       - -DUSE_MKL=ON
       - -DMKLROOT=/opt/intel/compilers_and_libraries/linux/mkl/
     build-environment:
-      - CC: gcc-9
-      - CXX: g++-9
-      - FC: gfortran-9
+      - CC: gcc-8
+      - CXX: g++-8
+      - FC: gfortran-8
     build-packages:
-      - gcc-9
-      - g++-9
-      - gfortran-9
+      - gcc-8
+      - g++-8
+      - gfortran-8
     stage-packages:
       - libgfortran5
       - libgomp1
